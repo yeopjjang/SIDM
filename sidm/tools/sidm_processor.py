@@ -13,7 +13,7 @@ import vector
 #local
 from sidm.tools import selection, cutflow, histogram, utilities
 from sidm.definitions.hists import hist_defs, counter_defs
-from sidm.definitions.objects import primary_objs
+from sidm.definitions.objects import primary_objs, llpNanoAod_objs
 # always reload local modules to pick up changes during development
 importlib.reload(selection)
 importlib.reload(cutflow)
@@ -37,7 +37,8 @@ class SidmProcessor(processor.ProcessorABC):
         lj_reco_choices=["0"],
         selections_cfg="../configs/selections.yaml",
         histograms_cfg="../configs/hist_collections.yaml",
-        unweighted_hist=False
+        llpnanoaod=False,
+        unweighted_hist=False,
     ):
         self.channel_names = channel_names
         self.hist_collection_names = hist_collection_names
@@ -45,13 +46,15 @@ class SidmProcessor(processor.ProcessorABC):
         self.selections_cfg = selections_cfg
         self.histograms_cfg = histograms_cfg
         self.unweighted_hist = unweighted_hist
+        self.obj_defs = llpNanoAod_objs if llpnanoaod else primary_objs
+        self.llpnanoaod = llpnanoaod
 
     def process(self, events):
         """Apply selections, make histograms and cutflow"""
 
         # create object collections
         objs = {}
-        for obj_name, obj_def in primary_objs.items():
+        for obj_name, obj_def in self.obj_defs.items():
             try:
                 objs[obj_name] = obj_def(events)
                 # pt order
@@ -100,9 +103,9 @@ class SidmProcessor(processor.ProcessorABC):
 
                 # define event weights
                 if self.unweighted_hist:
-                    evt_weights =  ak.ones_like( events.weightProduct[ evt_selection.all_evt_cuts.all( *evt_selection.evt_cuts) ])
+                    evt_weights =  ak.ones_like(self.obj_defs["weight"](events)[ evt_selection.all_evt_cuts.all( *evt_selection.evt_cuts) ])
                 else:
-                    evt_weights = events.weightProduct[evt_selection.all_evt_cuts.all(*evt_selection.evt_cuts)]
+                    evt_weights = self.obj_defs["weight"](events)[evt_selection.all_evt_cuts.all(*evt_selection.evt_cuts)]
 
                 # fill histograms for this channel+lj_reco pair
                 for h in hists.values():
@@ -111,7 +114,7 @@ class SidmProcessor(processor.ProcessorABC):
                 # make cutflow
                 if lj_reco not in cutflows:
                     cutflows[str(lj_reco)] = {}
-                cutflows[str(lj_reco)][channel] = cutflow.Cutflow(evt_selection.all_evt_cuts, evt_selection.evt_cuts, events.weightProduct)
+                cutflows[str(lj_reco)][channel] = cutflow.Cutflow(evt_selection.all_evt_cuts, evt_selection.evt_cuts, self.obj_defs["weight"](events))
 
                 # Fill counters
                 if lj_reco not in counters:
@@ -136,6 +139,19 @@ class SidmProcessor(processor.ProcessorABC):
 
         return {events.metadata["dataset"]: out}
 
+    def make_vector(self, objs, collection, type_id=None, mass=None, charge=None):
+        shape = ak.ones_like(objs[collection].pt)
+        return vector.zip(
+            {
+                "part_type": objs[collection]["type"] if type_id is None else type_id*shape,
+                "charge": objs[collection].charge if charge is None else charge*shape,
+                "pt": objs[collection].pt,
+                "eta": objs[collection].eta,
+                "phi": objs[collection].phi,
+                "mass": objs[collection].mass if mass is None else mass*shape,
+            }
+        )
+
     def build_lepton_jets(self, objs, lj_reco):
         """Reconstruct lepton jets according to defintion given by lj_reco"""
         # fixme: can define other LJ variables
@@ -145,68 +161,17 @@ class SidmProcessor(processor.ProcessorABC):
             ljs = objs["ntuple_ljs"]
 
         # reconstruct lepton jets from scratch
-        elif lj_reco < 0 or lj_reco > 0:
-
-            if lj_reco < 0: #Use ljsource collection
-
-                lj_inputs = vector.zip(
-                    {
-                        "part_type": objs["ljsources"]["type"],
-                        "charge": objs["ljsources"].charge,
-                        "px": objs["ljsources"].px,
-                        "py": objs["ljsources"].py,
-                        "pz": objs["ljsources"].pz,
-                        "E":  objs["ljsources"].energy,
-                    },
-                )
+        else:
+            if lj_reco < 0: # Use ljsource collection
+                lj_inputs = self.make_vector(objs, "ljsources")
 
             else: #Use electron/muon/photon/dsamuon collections with a custom distance parameter
-
-                muon_inputs = vector.zip(
-                    {
-                        "part_type": 3,
-                        "charge": objs["muons"].charge,
-                        "px": objs["muons"].px,
-                        "py": objs["muons"].py,
-                        "pz": objs["muons"].pz,
-                        "E":  objs["muons"].energy,
-                    },
-                )
-
-                dsamuon_inputs = vector.zip(
-                    {
-                        "part_type": 8,
-                        "charge": objs["dsaMuons"].charge,
-                        "px": objs["dsaMuons"].px,
-                        "py": objs["dsaMuons"].py,
-                        "pz": objs["dsaMuons"].pz,
-                        "E":  objs["dsaMuons"].energy,
-                    },
-                )
-
-                ele_inputs = vector.zip(
-                    {
-                        "part_type": 2,
-                        "charge": objs["electrons"].charge,
-                        "px": objs["electrons"].px,
-                        "py": objs["electrons"].py,
-                        "pz": objs["electrons"].pz,
-                        "E":  objs["electrons"].energy,
-                    },
-                )
-
-                photon_inputs = vector.zip(
-                    {
-                        "part_type": 4,
-                        "charge": ak.without_parameters(ak.zeros_like(objs["photons"].px), behavior={}),
-                        "px": objs["photons"].px,
-                        "py": objs["photons"].py,
-                        "pz": objs["photons"].pz,
-                        "E":  objs["photons"].energy,
-                    },
-                )
-
-                lj_inputs = ak.concatenate([muon_inputs, dsamuon_inputs, ele_inputs, photon_inputs],axis=-1)
+                muon_inputs = self.make_vector(objs, "muons", type_id=3)
+                dsa_inputs = self.make_vector(objs, "dsaMuons", type_id=8, mass=0.106)
+                ele_inputs = self.make_vector(objs, "electrons", type_id=2)
+                photon_inputs = self.make_vector(objs, "photons", type_id=4, charge=0)
+                lj_inputs = ak.concatenate([muon_inputs, dsa_inputs, ele_inputs, photon_inputs],
+                                           axis=-1)
 
             distance_param = abs(lj_reco)
             jet_def = fastjet.JetDefinition(fastjet.antikt_algorithm, distance_param)
@@ -261,8 +226,7 @@ class SidmProcessor(processor.ProcessorABC):
 
             # pt order the new LJs
             ljs = self.order(ljs)
-        else:
-            raise NotImplementedError(f"{lj_reco} is not a recognized LJ reconstruction choice")
+
         # return the new LJ collection
         return ljs
 
