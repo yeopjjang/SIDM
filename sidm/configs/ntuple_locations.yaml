@@ -2,6 +2,50 @@
 # Automatically generated using sidm/scripts/add_ntuples.py
 
 # 2018 UL LLPNanoAOD signal
+llpNanoAOD_v1_merged:
+  path: root://xcache//store/user/
+  samples:
+    2mu2e_500GeV_5GeV_0p08mm:
+      files:
+      - SIDM_BsTo2DpTo2Mu2e_MBs-500_MDp-5p0_ctau-0p08.root
+      path: dlee3/      
+    2mu2e_500GeV_5GeV_0p8mm:
+      files:
+      - SIDM_BsTo2DpTo2Mu2e_MBs-500_MDp-5p0_ctau-0p8.root
+      path: dlee3/      
+    2mu2e_500GeV_5GeV_8p0mm:
+      files:
+      - SIDM_BsTo2DpTo2Mu2e_MBs-500_MDp-5p0_ctau-8p0.root
+      path: dlee3/      
+    2mu2e_500GeV_5GeV_40p0mm:
+      files:
+      - SIDM_BsTo2DpTo2Mu2e_MBs-500_MDp-5p0_ctau-40p0.root
+      path: dlee3/      
+    2mu2e_500GeV_5GeV_80p0mm:
+      files:
+      - SIDM_BsTo2DpTo2Mu2e_MBs-500_MDp-5p0_ctau-80p0.root
+      path: dlee3/    
+    4mu_500GeV_5GeV_0p08mm:
+      files:
+      - SIDM_BsTo2DpTo4Mu_MBs-500_MDp-5p0_ctau-0p08.root
+      path: dlee3/      
+    4mu_500GeV_5GeV_0p8mm:
+      files:
+      - SIDM_BsTo2DpTo4Mu_MBs-500_MDp-5p0_ctau-0p8.root
+      path: dlee3/      
+    4mu_500GeV_5GeV_8p0mm:
+      files:
+      - SIDM_BsTo2DpTo4Mu_MBs-500_MDp-5p0_ctau-8p0.root
+      path: dlee3/      
+    4mu_500GeV_5GeV_40p0mm:
+      files:
+      - SIDM_BsTo2DpTo4Mu_MBs-500_MDp-5p0_ctau-40p0.root
+      path: dlee3/      
+    4mu_500GeV_5GeV_80p0mm:
+      files:
+      - SIDM_BsTo2DpTo4Mu_MBs-500_MDp-5p0_ctau-80p0.root
+      path: dlee3/
+
 llpNanoAOD_v1:
   path: root://xcache//store/group/lpcmetx/SIDM/ULSignalSamples/2018_v6/LLPNanoAOD/
   samples:
