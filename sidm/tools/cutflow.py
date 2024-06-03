@@ -6,7 +6,7 @@ from tabulate import tabulate
 from coffea import processor
 from coffea.analysis_tools import PackedSelection
 import awkward as ak
-
+import numpy as np
 
 class Cutflow(processor.AccumulatorABC):
     """Class to represent the number of events that pass each cut in a selection
@@ -50,6 +50,25 @@ class Cutflow(processor.AccumulatorABC):
             self.flow[i] = self.flow[i] + other.flow[i]
             self.unweighted_flow[i] = self.unweighted_flow[i] + other.unweighted_flow[i]
 
+            
+    def efficiency(self):
+        """Outputs the fraction of events passing the cutflow as a fraction of 1"""
+        return float(list(enumerate(self.flow))[-1][1].n_all / list(enumerate(self.flow))[-1][1].n_evts)
+    
+    def cut_breakdown(self, fraction=False, unweighted=False, giveCuts=False):
+        """Outputs a list of the number of events passing each cut. Effectively isolates the cumulative column of the cut table"""
+        """The giveCuts argument decides whether the function returns the column of cut names, useful for plotting / making a table"""
+        flow = self.unweighted_flow if unweighted else self.flow
+        data = []
+        if giveCuts:
+            data = [e.cut for e in flow]
+        else:
+            for i in range(len(list(enumerate(flow)))):
+                data.append(list(enumerate(flow))[i][1].n_all)
+            if fraction == True:
+                data = [100.0 * x / list(enumerate(flow))[-1][1].n_evts for x in data]
+        return data
+            
     def print_table(self, fraction=False, unweighted=False):
         """Print simple cutflow table to stdout"""
         flow = self.unweighted_flow if unweighted else self.flow
@@ -73,12 +92,35 @@ class Cutflow(processor.AccumulatorABC):
                 "all cut N",
             ]
         print(tabulate(data, headers, floatfmt=".1f"))
+        
 
+ 
+    def print_multi_table(self, cutflows, headers, fraction=False, unweighted=False, title=""):
+        """Prints a table with multiple cutflows listed, one in each column. Total number of cuts on each sample are listed. 
+        It would be better to make this its own function independent of the cutflow class. That would allow a complete list of cutflows to be passed
+        rather than just removing one and calling the function from it."""
+        data = np.array([self.cut_breakdown(fraction, unweighted, giveCuts=True), self.cut_breakdown(fraction, unweighted)])
+        for cutflow in cutflows:
+            data = np.append(data, [cutflow.cut_breakdown(fraction, unweighted)], axis=0)
+        data = data.transpose()
+        headerline = ["cut name",]
+        for header in headers:
+            if fraction == False:
+                headerline.append("Total cuts: \n" + header)
+            else:
+                headerline.append("% cuts: \n" + header)
+        if title != "":
+            print(title)
+            for header in headerline:
+                for i in range(len(header)):
+                    print("-", end='')
+                print("----", end='')
+        print('\n' + tabulate(data, headerline, floatfmt=".2f") + '\n')
+        
     def n_input_evts(self, unweighted=False):
         """Return number of events in sample before applying any cuts"""
         flow = self.unweighted_flow if unweighted else self.flow
         return flow[0].n_evts
-
 
 class CutflowElement(processor.AccumulatorABC):
     """Class to represent individual rows of a cutflow table"""
