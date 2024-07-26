@@ -176,9 +176,15 @@ genA_base: &genA_base
   - "genMu0_pt_dR(mu0,mu1)"
   - "genMu0_pt_dR(mu0,mu1)_XLowRange"
   - "genMu0_pt_dR(mu0,mu1)_XXLowRange"
+  - "genMu0_ptHighRange_dR(mu0,mu1)"
+  - "genMu0_ptHighRange_dR(mu0,mu1)_XLowRange"
+  - "genMu0_ptHighRange_dR(mu0,mu1)_XXLowRange"
   - "genMu1_pt_dR(mu0,mu1)"
   - "genMu1_pt_dR(mu0,mu1)_XLowRange"
   - "genMu1_pt_dR(mu0,mu1)_XXLowRange"
+  - "genMu1_ptHighRange_dR(mu0,mu1)"
+  - "genMu1_ptHighRange_dR(mu0,mu1)_XLowRange"
+  - "genMu1_ptHighRange_dR(mu0,mu1)_XXLowRange"
   - "genAs_toMu_pt_MuMudR_lowRange"
   - "genAs_toMu_pt_MuMudR_XLowRange"
   - "genAs_toMu_pt_MuMudR_XXLowRange"
@@ -234,6 +240,7 @@ genA_ratio: &genA_ratio
   - "genA_muLj_lxyRatio"
 
 lepton_genA_base: &lepton_genA_base
+  - "dsamuon_absd0_genAs_tomu_lxy"
   - "electron_nearGenA_n"
   - "electron_nearGenA_n_genA_lxy"
   - "photon_nearGenA_n"
@@ -244,6 +251,15 @@ lepton_genA_base: &lepton_genA_base
   - "dsaMuon_nearGenA_n_genA_lxy"
   
 lepton_genLepton_base: &lepton_genLepton_base
+  - "dsaMuon_absD0_genMus_dR"
+  - "leadingDsaMuon_absD0_genMus_dR"
+  - "subLeadingDsaMuon_absD0_genMus_dR"
+  - "dsaMuon_absD0_genMus_dR_XLowRange"
+  - "leadingDsaMuon_absD0_genMus_dR_XLowRange"
+  - "subLeadingDsaMuon_absD0_genMus_dR_XLowRange"
+  - "dsaMuon_absD0_genMus_dR_XXLowRange"
+  - "leadingDsaMuon_absD0_genMus_dR_XXLowRange"
+  - "subLeadingDsaMuon_absD0_genMus_dR_XXLowRange"
   - "dsaMuon_genMu_ptRatio"
   - "dsaMuon0_genMu_ptRatio"
   - "dsaMuon1_genMu_ptRatio"
@@ -252,7 +268,7 @@ lepton_genLepton_base: &lepton_genLepton_base
   - "pfMuon1_genMu_ptRatio"
   - "dsaMuon0_genMu0_ptRatio_vs_truept"
   - "muon0_genMu0_ptRatio_vs_truept"
-  - "egmLj_ptRatio_vs_egm_truept"
+  #- "egmLj_ptRatio_vs_egm_truept"
 
 lepton_genLepton_genA_base: &lepton_genLepton_genA_base
   - "genA_dsaMuonLj_ptRatio"
