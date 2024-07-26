@@ -2,6 +2,54 @@
 # Automatically generated using sidm/scripts/add_ntuples.py
 
 # 2018 UL LLPNanoAOD signal
+official:
+  path: root://xcache//store/group/lpcmetx/SIDM/ULSignalSamples/2018_v6/
+  samples:
+    4mu_500GeV_5GeV_0p08mm:
+      files:
+      - SIDM_XXTo2ATo4Mu_mXX-500_mA-5_ctau-0p08_off.root
+      path: ffNuple/official/      
+    4mu_500GeV_5GeV_0p8mm:
+      files:
+      - SIDM_XXTo2ATo4Mu_mXX-500_mA-5_ctau-0p80_off.root
+      path: ffNuple/official/      
+    4mu_500GeV_5GeV_8p0mm:
+      files:
+      - SIDM_XXTo2ATo4Mu_mXX-500_mA-5_ctau-8p00_off.root
+      path: ffNuple/official/      
+    4mu_500GeV_5GeV_40p0mm:
+      files:
+      - SIDM_XXTo2ATo4Mu_mXX-500_mA-5_ctau-40p0_off.root
+      path: ffNuple/official/      
+    4mu_500GeV_5GeV_80p0mm:
+      files:
+      - SIDM_XXTo2ATo4Mu_mXX-500_mA-5_ctau-80p0_off.root
+      path: ffNuple/official/
+      
+private:
+  path: root://xcache//store/group/lpcmetx/SIDM/ULSignalSamples/2018_v6/
+  samples:
+    4mu_500GeV_5GeV_0p08mm:
+      files:
+      - ffNtuple_SIDM_BsTo2DpTo4Mu_MBs-500_MDp-5p0_ctau-0p08_v6.root
+      path: ffNuple/Private/      
+    4mu_500GeV_5GeV_0p8mm:
+      files:
+      - ffNtuple_SIDM_BsTo2DpTo4Mu_MBs-500_MDp-5p0_ctau-0p8_v6.root
+      path: ffNuple/Private/      
+    4mu_500GeV_5GeV_8p0mm:
+      files:
+      - ffNtuple_SIDM_BsTo2DpTo4Mu_MBs-500_MDp-5p0_ctau-8p0_v6.root
+      path: ffNuple/Private/      
+    4mu_500GeV_5GeV_40p0mm:
+      files:
+      - ffNtuple_SIDM_BsTo2DpTo4Mu_MBs-500_MDp-5p0_ctau-40p0_v6.root
+      path: ffNuple/Private/      
+    4mu_500GeV_5GeV_80p0mm:
+      files:
+      - ffNtuple_SIDM_BsTo2DpTo4Mu_MBs-500_MDp-5p0_ctau-80p0_v6.root
+      path: ffNuple/Private/
+
 llpNanoAOD_v2_merged:
   path: root://xcache//store/user/
   samples:
