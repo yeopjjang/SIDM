@@ -687,15 +687,33 @@ hist_defs = {
     # lj-lj
     "lj_lj_absdphi": h.Histogram(
         [
-            h.Axis(hist.axis.Regular(50, 0, 2*math.pi, name="ljlj_absdphi"),
+            h.Axis(hist.axis.Regular(100, 0, 2*math.pi, name="|$\Delta\phi$| ($LJ_{0}$, $LJ_{1}$)"),
                    lambda objs, mask: abs(objs["ljs"][mask, 1].phi
                                           - objs["ljs"][mask, 0].phi)),
         ],
         evt_mask=lambda objs: ak.num(objs["ljs"]) > 1,
     ),
+    
+    "lj_lj_absdR": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(100, 0, 6, name="|$\Delta$R| ($LJ_{0}$, $LJ_{1}$)"),
+                   lambda objs, mask: objs["ljs"][mask, 1].delta_r(objs["ljs"][mask, 0])),
+        ],
+        evt_mask=lambda objs: ak.num(objs["ljs"]) > 1,
+    ),
+    
+    "lj_lj_absdeta": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(100, 0, 6, name="|$\Delta\eta$| ($LJ_{0}$, $LJ_{1}$)"),
+                   lambda objs, mask: abs(objs["ljs"][mask, 1].eta
+                                          - objs["ljs"][mask, 0].eta)),
+        ],
+        evt_mask=lambda objs: ak.num(objs["ljs"]) > 1,
+    ),
+    
     "lj_lj_invmass": h.Histogram(
         [
-            h.Axis(hist.axis.Regular(100, 0, 2000, name="ljlj_mass", label=r"InvMass($LJ_{0}$, $LJ_{1}$)"),
+            h.Axis(hist.axis.Regular(100, 0, 1200, name="ljlj_mass", label=r"Invariant Mass ($LJ_{0}$, $LJ_{1}$)"),
                    lambda objs, mask: objs["ljs"][mask, :2].sum().mass),
         ],
         evt_mask=lambda objs: ak.num(objs["ljs"]) > 1,
@@ -707,7 +725,88 @@ hist_defs = {
         ],
         evt_mask=lambda objs: ak.num(objs["ljs"]) > 1,
     ),
+    
     # ABCD plane
+    "lj_lj_absdphi_invmass": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(100, 0, 2*math.pi, name="|$\Delta\phi$| ($LJ_{0}$, $LJ_{1}$)"),
+                   lambda objs, mask: abs(objs["ljs"][mask, 1].phi
+                                          - objs["ljs"][mask, 0].phi)),
+            
+            h.Axis(hist.axis.Regular(100, 0, 1200, name="ljlj_mass", label=r"Invariant Mass ($LJ_{0}$, $LJ_{1}$)"),
+                   lambda objs, mask: objs["ljs"][mask, :2].sum().mass),
+            
+        ],
+        evt_mask=lambda objs: ak.num(objs["ljs"]) > 1,
+    ),
+    
+    "lj_lj_absdphi_absdR": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(100, 0, 2*math.pi, name="|$\Delta\phi$| ($LJ_{0}$, $LJ_{1}$)"),
+                   lambda objs, mask: abs(objs["ljs"][mask, 1].phi
+                                          - objs["ljs"][mask, 0].phi)),
+            
+            h.Axis(hist.axis.Regular(100, 0, 6, name="|$\Delta$R| ($LJ_{0}$, $LJ_{1}$)"),
+                   lambda objs, mask: objs["ljs"][mask, 1].delta_r(objs["ljs"][mask, 0])),
+            
+        ],
+        evt_mask=lambda objs: ak.num(objs["ljs"]) > 1,
+    ),
+    
+    "lj_lj_absdphi_absdeta": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(100, 0, 2*math.pi, name="|$\Delta\phi$| ($LJ_{0}$, $LJ_{1}$)"),
+                   lambda objs, mask: abs(objs["ljs"][mask, 1].phi
+                                          - objs["ljs"][mask, 0].phi)),
+            
+            h.Axis(hist.axis.Regular(100, 0, 6, name="|$\Delta\eta$| ($LJ_{0}$, $LJ_{1}$)"),
+                   lambda objs, mask: abs(objs["ljs"][mask, 1].eta
+                                          - objs["ljs"][mask, 0].eta)),
+            
+        ],
+        evt_mask=lambda objs: ak.num(objs["ljs"]) > 1,
+    ),
+    
+    "lj_lj_absdR_absdeta": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(100, 0, 6, name="|$\Delta$R| ($LJ_{0}$, $LJ_{1}$)"),
+                   lambda objs, mask: objs["ljs"][mask, 1].delta_r(objs["ljs"][mask, 0])),
+            
+            h.Axis(hist.axis.Regular(100, 0, 6, name="|$\Delta\eta$| ($LJ_{0}$, $LJ_{1}$)"),
+                   lambda objs, mask: abs(objs["ljs"][mask, 1].eta
+                                          - objs["ljs"][mask, 0].eta)),
+            
+        ],
+        evt_mask=lambda objs: ak.num(objs["ljs"]) > 1,
+    ),
+    
+    "lj_lj_absdR_invmass": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(100, 0, 6, name="|$\Delta$R| ($LJ_{0}$, $LJ_{1}$)"),
+                   lambda objs, mask: objs["ljs"][mask, 1].delta_r(objs["ljs"][mask, 0])),
+            
+            h.Axis(hist.axis.Regular(100, 0, 1200, name="ljlj_mass", label=r"Invariant Mass ($LJ_{0}$, $LJ_{1}$)"),
+                   lambda objs, mask: objs["ljs"][mask, :2].sum().mass),
+            
+        ],
+        evt_mask=lambda objs: ak.num(objs["ljs"]) > 1,
+    ),
+    
+    "lj_lj_absdeta_invmass": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(100, 0, 6, name="|$\Delta\eta$| ($LJ_{0}$, $LJ_{1}$)"),
+                   lambda objs, mask: abs(objs["ljs"][mask, 1].eta
+                                          - objs["ljs"][mask, 0].eta)),
+            
+            h.Axis(hist.axis.Regular(100, 0, 1200, name="ljlj_mass", label=r"Invariant Mass ($LJ_{0}$, $LJ_{1}$)"),
+                   lambda objs, mask: objs["ljs"][mask, :2].sum().mass),
+            
+        ],
+        evt_mask=lambda objs: ak.num(objs["ljs"]) > 1,
+    ),
+    
+    
+    
     "abcd_lj_lj_dphi_vs_lj0_pfIsolationPt05": h.Histogram( # not in v2 ntuples
         [
             h.Axis(hist.axis.Regular(200, 0, 2*math.pi, name="ljlj_absdphi",
