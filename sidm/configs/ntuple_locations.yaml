@@ -384,7 +384,7 @@ llpNanoAOD_v2:
 #      - SIDM_BsTo2DpTo2Mu2e_MBs-500_MDp-5p0_ctau-0p8_part-3.root # OSError: XRootD error: [ERROR] Operation expired
 #      - SIDM_BsTo2DpTo2Mu2e_MBs-500_MDp-5p0_ctau-0p8_part-4.root # OSError: XRootD error: [ERROR] Operation expired
       - SIDM_BsTo2DpTo2Mu2e_MBs-500_MDp-5p0_ctau-0p8_part-5.root
-      - SIDM_BsTo2DpTo2Mu2e_MBs-500_MDp-5p0_ctau-0p8_part-6.root
+#      - SIDM_BsTo2DpTo2Mu2e_MBs-500_MDp-5p0_ctau-0p8_part-6.root # OSError: XRootD error: [ERROR] Operation expired
       - SIDM_BsTo2DpTo2Mu2e_MBs-500_MDp-5p0_ctau-0p8_part-7.root
 #      - SIDM_BsTo2DpTo2Mu2e_MBs-500_MDp-5p0_ctau-0p8_part-8.root # OSError: XRootD error: [ERROR] Operation expired
 #      - SIDM_BsTo2DpTo2Mu2e_MBs-500_MDp-5p0_ctau-0p8_part-9.root # OSError: XRootD error: [ERROR] Operation expired
