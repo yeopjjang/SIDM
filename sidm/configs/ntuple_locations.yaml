@@ -5736,7 +5736,8 @@ ffntuple_v2:
       - ffNtuple_7.root
       - ffNtuple_8.root
       - ffNtuple_9.root
-      path: SIDM_XXTo2ATo4Mu_mXX-500_mA-0p25_ctau-0p004_TuneCP5_13TeV-madgraph-pythia8/RunIIAutumn18DRPremix-102X_upgrade2018_realistic_v15-v1/200322_041347/0000/
+#      path: SIDM_XXTo2ATo4Mu_mXX-500_mA-0p25_ctau-0p004_TuneCP5_13TeV-madgraph-pythia8/RunIIAutumn18DRPremix-102X_upgrade2018_realistic_v15-v1/200322_041347/0000/
+      path: SIDM_XXTo2ATo4Mu_mXX-500_mA-0p25_ctau-0p004_TuneCP5_13TeV-madgraph-pythia8/RunIIAutumn18DRPremix-102X_upgrade2018_realistic_v15-v1/200618_181947/0000/
     4Mu_500GeV_0p25GeV_0p04mm:
       files:
       - ffNtuple_1.root
