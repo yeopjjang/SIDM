@@ -37,6 +37,11 @@ llpNanoAod_objs = {
     "genAs_toMu": lambda evts: evts.GenPart[(abs(evts.GenPart.pdgId)== 32) & ak.all(abs(evts.GenPart.children.pdgId) == 13, axis=-1)],
     "genAs_toE": lambda evts: evts.GenPart[(abs(evts.GenPart.pdgId)== 32) & ak.all(abs(evts.GenPart.children.pdgId) == 11, axis=-1)],
     "weight" : lambda evts: evts.genWeight,
+    
+    "jets": lambda evts: evts.Jet,
+    "fatjets": lambda evts: evts.FatJet,
+    "subjets": lambda evts: evts.SubJet,
+    "genjets": lambda evts: evts.GenJet,
 }
 
 # define objects whose definitions depend on analysis choices

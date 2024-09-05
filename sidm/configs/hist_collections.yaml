@@ -105,7 +105,44 @@ lj_lj_base: &lj_lj_base
   - "lj_lj_invmass_lowRange"
   - "lj_lj_absdR"
   - "lj_lj_absdeta"
+  - "lj1_lj_absdR"
+  - "lj2_lj_absdR"
 
+jet_base: &jet_base
+  - "jet_n"
+  - "jet_pt"
+  - "jet_eta"
+  - "jet_phi"
+  - "jet1_pt"
+  - "jet2_pt"
+  
+  - "lj1_jet1_absdR"
+  - "lj1_jet2_absdR"
+  - "lj2_jet1_absdR"
+  - "lj2_jet2_absdR"
+  - "lj1_jet_absdR"
+  - "lj2_jet_absdR"
+  - "lj1_genjet_absdR"
+  - "lj2_genjet_absdR"
+  
+  - "fatjet_n"
+  - "fatjet_pt"
+  - "fatjet_eta"
+  - "fatjet_phi"
+  - "lj1_fatjet1_absdR"
+  - "lj1_fatjet2_absdR"
+  - "lj2_fatjet1_absdR"
+  - "lj2_fatjet2_absdR"
+  
+  - "subjet_n"
+  - "subjet_pt"
+  - "subjet_eta"
+  - "subjet_phi" 
+  - "lj1_subjet1_absdR"
+  - "lj1_subjet2_absdR"
+  - "lj2_subjet1_absdR"
+  - "lj2_subjet2_absdR"
+  
 abcd_base: &abcd_base
   - "lj_lj_absdphi_lj0_pfIsolationPt05" # not in v2 ntuples
   - "lj_lj_absdphi_invmass"
@@ -297,6 +334,7 @@ base: &base
   - *lj_lj_base
   - *lj_isolation
   - *abcd_base
+  - *jet_base
 
 base_plus_gen: &base_plus_gen
   - *base
