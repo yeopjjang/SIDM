@@ -57,5 +57,7 @@ derived_objs = {
     "genAs_toMu_matched_muLj": lambda objs, r: matched(objs["genAs_toMu"], objs["ljs"][(objs["ljs"].muon_n >= 2)], r),
     "genAs_matched_egmLj": lambda objs, r: matched(objs["genAs"], objs["ljs"][(objs["ljs"].muon_n == 0)], r),
     "genAs_toE_matched_egmLj": lambda objs, r: matched(objs["genAs_toE"], objs["ljs"][(objs["ljs"].muon_n == 0)], r),
+    
+    "jet_LJcand": lambda objs, r: matched(objs["jets"], objs["ljs"], r),
 }
 
