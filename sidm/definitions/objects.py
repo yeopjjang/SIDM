@@ -42,6 +42,12 @@ llpNanoAod_objs = {
     "fatjets": lambda evts: evts.FatJet,
     "subjets": lambda evts: evts.SubJet,
     "genjets": lambda evts: evts.GenJet,
+    
+    "jetID_0": lambda evts: evts.Jet[(evts.Jet.jetId) == 0],
+    "jetID_2": lambda evts: evts.Jet[(evts.Jet.jetId) == 2],
+    "jetID_6": lambda evts: evts.Jet[(evts.Jet.jetId) == 6],
+    "jetID_02": lambda evts: evts.Jet[(evts.Jet.jetId) != 6],
+    "jetID_26": lambda evts: evts.Jet[(evts.Jet.jetId) != 0],
 }
 
 # define objects whose definitions depend on analysis choices
@@ -59,5 +65,10 @@ derived_objs = {
     "genAs_toE_matched_egmLj": lambda objs, r: matched(objs["genAs_toE"], objs["ljs"][(objs["ljs"].muon_n == 0)], r),
     
     "jet_LJcand": lambda objs, r: matched(objs["jets"], objs["ljs"], r),
+    "LJ_near_jet": lambda objs, r: matched(objs["ljs"], objs["jets"], r),
+    
+    "jet02_LJcand": lambda objs, r: matched(objs["jetID_02"], objs["ljs"], r),
+    "LJ_near_jet_02": lambda objs, r: matched(objs["ljs"], objs["jetID_02"], r),
+    
 }
 

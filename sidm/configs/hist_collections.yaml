@@ -123,9 +123,15 @@ jet_base: &jet_base
   - "jet_neHEF"
   - "jet_ID"
   
-  - "matched_jet_n"
-  - "matched_jet_pt"
-  - "matched_jet_ID"
+  - "matched_jet_n_0.4"
+  - "matched_jet_pt_0.4"
+  - "matched_jet_ID_0.4"
+  - "super_matched_jet_pt_0.4"
+  
+  - "matched_jet_n_0.1"
+  - "matched_jet_ID_0.1"
+  - "matched_jet_pt_0.1"
+  - "super_matched_jet_pt_0.1"
   
   - "lj_chEmEF"
   - "lj_chFPV0EF"
@@ -133,34 +139,79 @@ jet_base: &jet_base
   - "lj_muEF"
   - "lj_neEmEF"
   - "lj_neHEF"
-  
+
   - "lj1_jet1_absdR"
   - "lj1_jet2_absdR"
   - "lj2_jet1_absdR"
   - "lj2_jet2_absdR"
-  
   - "lj1_jet_absdR"
   - "lj2_jet_absdR"
-  - "lj1_genjet_absdR"
-  - "lj2_genjet_absdR"
   
-  - "fatjet_n"
-  - "fatjet_pt"
-  - "fatjet_eta"
-  - "fatjet_phi"
-  - "lj1_fatjet1_absdR"
-  - "lj1_fatjet2_absdR"
-  - "lj2_fatjet1_absdR"
-  - "lj2_fatjet2_absdR"
+  - "lj1_lj_absdphi"
+  - "lj2_lj_absdphi"
+  - "lj1_jet_absdphi"
+  - "lj2_jet_absdphi"
   
-  - "subjet_n"
-  - "subjet_pt"
-  - "subjet_eta"
-  - "subjet_phi" 
-  - "lj1_subjet1_absdR"
-  - "lj1_subjet2_absdR"
-  - "lj2_subjet1_absdR"
-  - "lj2_subjet2_absdR"
+  - "LJ_near_jet_n_0.4"
+  - "LJ_near_jet_n_0.1"
+  - "LJ_near_jet_pt_0.4"
+  - "LJ_near_jet_pt_0.1"
+  - "LJ_near_jet02_pt_0.4"
+  - "LJ_near_jet02_pt_0.1"
+  
+  - "leading_LJ_pt_Jet_pt"
+  - "subleading_LJ_pt_Jet_pt"
+  - "leading_LJ_E_Jet_E"
+  - "subleading_LJ_E_Jet_E"
+  
+  - "jet1_genjet1_absdR"
+  - "jet1_genjet1_absdphi"
+  - "jet2_genjet2_absdR"
+  - "jet2_genjet2_absdphi"
+  - "jet3_genjet3_absdR"
+  - "jet3_genjet3_absdphi"
+  - "lj1_genjet1_absdR"
+  - "lj1_genjet1_absdphi"
+  - "lj2_genjet2_absdR"
+  - "lj2_genjet2_absdphi"
+  - "lj3_genjet3_absdR"
+  - "lj3_genjet3_absdphi"
+  
+#  - "genmu1_genjet1_absdR"
+#  - "genmu2_genjet2_absdR"
+#  - "genmu1_genjet1_absdphi"
+#  - "genmu2_genjet2_absdphi"
+#  - "genAs1_genjet1_absdR"
+#  - "genAs2_genjet2_absdR"
+#  - "genAs1_genjet1_absdphi"
+#  - "genAs2_genjet2_absdphi"
+  
+  - "jet_jet_invmass"
+  - "genjet_genjet_invmass"
+  
+  - "jet_jet_ptRatio"
+  
+  - "jetID0_n"
+  - "jetID2_n"
+  - "jetID6_n"
+  
+  - "jetID0_pt"
+  - "jetID0_leading_pt"
+  - "jetID0_subleading_pt"
+  - "jetID2_pt"
+  - "jetID2_leading_pt"
+  - "jetID2_subleading_pt"
+  - "jetID6_pt"
+  - "jetID6_leading_pt"
+  - "jetID6_subleading_pt"
+  - "jetID02_pt"
+  
+  - "LJ_matchedjet_PT"
+  - "LJ_matchedjet_PT02"
+  - "LJ_matchedjet_PT26"
+  
+  - "lj_nearestjet_ptRatio"
+ 
   
 abcd_base: &abcd_base
   - "lj_lj_absdphi_lj0_pfIsolationPt05" # not in v2 ntuples
@@ -208,6 +259,7 @@ genMu_base: &genMu_base
   - "genMu_genMu_pt"
   - "muon_genMu_dR"
   - "dsaMuon_genMu_dR"
+  - "genMu_genMu_dphi"
 
 genA_base: &genA_base
   - "genA_eta"
@@ -354,6 +406,7 @@ base: &base
   - *lj_isolation
   - *abcd_base
   - *jet_base
+  - *genMu_base
 
 base_plus_gen: &base_plus_gen
   - *base

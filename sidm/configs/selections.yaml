@@ -62,6 +62,30 @@ base: &base
   evt_cuts: &evt_base
     - *evt_baseNoLj
     - ">=2 LJs"
+
+matched_small: &matched_small
+  <<: *base
+  evt_cuts: &evt_base_matched_small
+    - *evt_base
+    - ">=2 LJs_near_Jets 0.1"
+    
+matched_large: &matched_large
+  <<: *base
+  evt_cuts: &evt_base_matched_large
+    - *evt_base
+    - ">=2 LJs_near_Jets 0.4"
+    
+matched_small_IDcut: &matched_small_IDcut
+  <<: *base
+  evt_cuts: &evt_base_matched_small_IDcut
+    - *evt_base
+    - ">=2 LJs_near_Jets02 0.1"
+    
+matched_large_IDcut: &matched_large_IDcut
+  <<: *base
+  evt_cuts: &evt_base_matched_large_IDcut
+    - *evt_base
+    - ">=2 LJs_near_Jets02 0.4"
     
 4mu: &4mu
   <<: *base
