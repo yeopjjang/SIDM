@@ -64,11 +64,21 @@ derived_objs = {
     "genAs_matched_egmLj": lambda objs, r: matched(objs["genAs"], objs["ljs"][(objs["ljs"].muon_n == 0)], r),
     "genAs_toE_matched_egmLj": lambda objs, r: matched(objs["genAs_toE"], objs["ljs"][(objs["ljs"].muon_n == 0)], r),
     
-    "jet_LJcand": lambda objs, r: matched(objs["jets"], objs["ljs"], r),
-    "LJ_near_jet": lambda objs, r: matched(objs["ljs"], objs["jets"], r),
+    "matched_jets": lambda objs, r: matched(objs["jets"], objs["ljs"][:,0:2], r),
+    "matched_leading_jets": lambda objs, r: matched(objs["jets"], objs["ljs"][:,0:1], r),
+    "matched_subleading_jets": lambda objs, r: matched(objs["jets"], objs["ljs"][:,1:2], r),
     
-    "jet02_LJcand": lambda objs, r: matched(objs["jetID_02"], objs["ljs"], r),
-    "LJ_near_jet_02": lambda objs, r: matched(objs["ljs"], objs["jetID_02"], r),
+    "matched_jets0": lambda objs, r: matched(objs["jetID_0"], objs["ljs"][:,0:2], r),
+    "matched_leading_jets0": lambda objs, r: matched(objs["jetID_0"], objs["ljs"][:,0:1], r),
+    "matched_subleading_jets0": lambda objs, r: matched(objs["jetID_0"], objs["ljs"][:,1:2], r),
+    
+    "matched_jets2": lambda objs, r: matched(objs["jetID_2"], objs["ljs"][:,0:2], r),
+    "matched_leading_jets2": lambda objs, r: matched(objs["jetID_2"], objs["ljs"][:,0:1], r),
+    "matched_subleading_jets2": lambda objs, r: matched(objs["jetID_2"], objs["ljs"][:,1:2], r),   
+    
+    "matched_jets6": lambda objs, r: matched(objs["jetID_6"], objs["ljs"][:,0:2], r),
+    "matched_leading_jets6": lambda objs, r: matched(objs["jetID_6"], objs["ljs"][:,0:1], r),
+    "matched_subleading_jets6": lambda objs, r: matched(objs["jetID_6"], objs["ljs"][:,1:2], r),
     
 }
 

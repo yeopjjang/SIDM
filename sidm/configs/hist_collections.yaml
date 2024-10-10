@@ -115,6 +115,9 @@ jet_base: &jet_base
   - "jet_phi"
   - "jet1_pt"
   - "jet2_pt"
+  - "jet3_pt"
+  - "jet4_pt"
+  - "jet5_pt"
   - "jet_chEmEF"
   - "jet_chFPV0EF"
   - "jet_chHEF"
@@ -123,23 +126,6 @@ jet_base: &jet_base
   - "jet_neHEF"
   - "jet_ID"
   
-  - "matched_jet_n_0.4"
-  - "matched_jet_pt_0.4"
-  - "matched_jet_ID_0.4"
-  - "super_matched_jet_pt_0.4"
-  
-  - "matched_jet_n_0.1"
-  - "matched_jet_ID_0.1"
-  - "matched_jet_pt_0.1"
-  - "super_matched_jet_pt_0.1"
-  
-  - "lj_chEmEF"
-  - "lj_chFPV0EF"
-  - "lj_chHEF"
-  - "lj_muEF"
-  - "lj_neEmEF"
-  - "lj_neHEF"
-
   - "lj1_jet1_absdR"
   - "lj1_jet2_absdR"
   - "lj2_jet1_absdR"
@@ -151,13 +137,6 @@ jet_base: &jet_base
   - "lj2_lj_absdphi"
   - "lj1_jet_absdphi"
   - "lj2_jet_absdphi"
-  
-  - "LJ_near_jet_n_0.4"
-  - "LJ_near_jet_n_0.1"
-  - "LJ_near_jet_pt_0.4"
-  - "LJ_near_jet_pt_0.1"
-  - "LJ_near_jet02_pt_0.4"
-  - "LJ_near_jet02_pt_0.1"
   
   - "leading_LJ_pt_Jet_pt"
   - "subleading_LJ_pt_Jet_pt"
@@ -187,6 +166,7 @@ jet_base: &jet_base
 #  - "genAs2_genjet2_absdphi"
   
   - "jet_jet_invmass"
+  - "matchedjet_matchedjet_invmass"
   - "genjet_genjet_invmass"
   
   - "jet_jet_ptRatio"
@@ -195,22 +175,38 @@ jet_base: &jet_base
   - "jetID2_n"
   - "jetID6_n"
   
+  - "matchedjet_pt"
   - "jetID0_pt"
+  - "matchedjetID0_pt"
   - "jetID0_leading_pt"
   - "jetID0_subleading_pt"
   - "jetID2_pt"
+  - "matchedjetID2_pt"
   - "jetID2_leading_pt"
   - "jetID2_subleading_pt"
   - "jetID6_pt"
+  - "matchedjetID6_pt"
   - "jetID6_leading_pt"
   - "jetID6_subleading_pt"
   - "jetID02_pt"
   
   - "LJ_matchedjet_PT"
+  - "LJ_matchedjet_PT0"
+  - "LJ_matchedjet_PT2"
+  - "LJ_matchedjet_PT6"
   - "LJ_matchedjet_PT02"
   - "LJ_matchedjet_PT26"
   
   - "lj_nearestjet_ptRatio"
+  - "lj_nearestjet0_ptRatio"
+  - "lj_nearestjet2_ptRatio"
+  - "lj_nearestjet6_ptRatio"
+
+### matched jet
+  - "matched_jets_pt"
+  - "matched_leading_jets_pt"
+  - "matched_subleading_jets_pt"
+#  - "matchedjet_matchedjet_ptRatio"
  
   
 abcd_base: &abcd_base
@@ -334,6 +330,8 @@ genA_base: &genA_base
   - "genA_matched_lj_n"
   - "genAs_toE_pt"
   - "genAs_toMu_pt"
+  
+  - "genA_genA_invmass"
 
 genA_ratio: &genA_ratio
   - "genA_lj_ptRatio"
@@ -407,6 +405,7 @@ base: &base
   - *abcd_base
   - *jet_base
   - *genMu_base
+#  - *genA_base
 
 base_plus_gen: &base_plus_gen
   - *base
