@@ -134,7 +134,7 @@ def load_yaml(cfg):
     with open(cfg, encoding="utf8") as yaml_cfg:
         return yaml.safe_load(yaml_cfg)
 
-def make_fileset(samples, ntuple_version, max_files=-1, location_cfg="signal_v8.yaml", fileset=None):
+def make_fileset(samples, ntuple_version, max_files=-1, location_cfg="signal_v6.yaml", fileset=None):
     """Make fileset to pass to processor.runner"""
     # assume location_cfg is stored in sidm/configs/ntuples/
     location_cfg = f"{BASE_DIR}/configs/ntuples/" + location_cfg
