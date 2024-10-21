@@ -52,6 +52,8 @@ preLj_objs["genAs"]      = lambda evts: pid(preLj_objs["gens"](evts), 32)
 preLj_objs["genAs_toMu"] = lambda evts: toPid(preLj_objs["genAs"](evts), 13)
 preLj_objs["genAs_toE"]  = lambda evts: toPid(preLj_objs["genAs"](evts), 11)
 
+preLj_objs["jets"]       = lambda evts: evts.Jet
+
 # define objects whose that will be added to objs by the sidm_processor after LJs are clustered
 # and LJ cuts are applied. postLj_obj cuts can be applied to these
 postLj_objs = {}
@@ -73,3 +75,12 @@ derived_objs["genAs_matched_muLj"]      = lambda objs, r: matched(objs["genAs"],
 derived_objs["genAs_toMu_matched_muLj"] = lambda objs, r: matched(objs["genAs_toMu"], objs["mu_ljs"], r)
 derived_objs["genAs_matched_egmLj"]     = lambda objs, r: matched(objs["genAs"], objs["egm_ljs"], r)
 derived_objs["genAs_toE_matched_egmLj"] = lambda objs, r: matched(objs["genAs_toE"], objs["egm_ljs"], r)
+
+# Matched Jet Study
+derived_objs["matched_jets"]               = lambda objs, r: matched(objs["jets"], objs["ljs"][:,0:2], r)
+derived_objs["leading_matched_jets"]       = lambda objs, r: matched(objs["jets"], objs["ljs"][:,0:1], r)
+derived_objs["subleading_matched_jets"]    = lambda objs, r: matched(objs["jets"], objs["ljs"][:,1:2], r)
+    
+derived_objs["leading_mu_matched_jets"]    = lambda objs, r: matched(objs["jets"], objs["mu_ljs"][:,0:1], r)
+derived_objs["subleading_mu_matched_jets"] = lambda objs, r: matched(objs["jets"], objs["mu_ljs"][:,1:2], r)
+derived_objs["egm_matched_jets"]           = lambda objs, r: matched(objs["jets"], objs["egm_ljs"][:,0:1], r)

@@ -53,6 +53,62 @@ dsaMuon_base: &dsaMuon_base
   - "dsaMuon_absD0"
   - "dsaMuon_absD0_lowRange"
 
+jet_base: &jet_base
+  - "matched_jets_pt"
+  - "leading_matched_jets_pt"
+  - "subleading_matched_jets_pt"
+  - "leadingLJ_matchedjet_absdR"
+  - "subleadingLJ_matchedjet_absdR"
+  - "matchedjet_matchedjet_absdR"
+  - "leading_mu_matched_jets_pt"
+  - "subleading_mu_matched_jets_pt"
+  - "egm_matched_jets_pt"
+  - "mu_matchedjet_egm_matchedjet_absdR"
+  - "mu_matchedjet_mu_matchedjet_absdR"
+  - "matched_jets_n"
+  - "leading_matched_jets_n"
+  - "subleading_matched_jets_n"
+  - "leading_mu_matched_jets_n"
+  - "subleading_mu_matched_jets_n"
+  - "egm_matched_jets_n"
+  - "mu_matchedjet_egm_matchedjet_invmass"
+  - "mu_matchedjet_mu_matchedjet_invmass"
+  - "leading_matchedjet_lj_ptRatio"
+  - "subleading_matchedjet_lj_ptRatio"
+  - "leading_mu_matchedjet_lj_ptRatio"
+  - "subleading_mu_matchedjet_lj_ptRatio"
+  - "egm_matchedjet_lj_ptRatio"
+  - "leading_matchedjet_lj_ERatio"
+  - "subleading_matchedjet_lj_ERatio"
+  - "leading_mu_matchedjet_lj_ERatio"
+  - "subleading_mu_matchedjet_lj_ERatio"
+  - "egm_matchedjet_lj_ERatio"
+  
+  - "leading_matchedjet_lep_fraction"
+  - "subleading_matchedjet_lep_fraction"
+  - "leading_mu_matchedjet_lep_fraction"
+  - "subleading_mu_matchedjet_lep_fraction"
+  - "egm_matchedjet_lep_fraction"
+  - "leading_matchedjet_isolation"
+  - "subleading_matchedjet_isolation"
+  - "leading_mu_matchedjet_isolation"
+  - "subleading_mu_matchedjet_isolation"
+  - "egm_matchedjet_isolation"
+  
+  - "leading_matchedjet_isolation2"
+  - "subleading_matchedjet_isolation2"
+  - "leading_mu_matchedjet_isolation2"
+  - "subleading_mu_matchedjet_isolation2"
+  - "egm_matchedjet_isolation2"
+  - "matchedjet_matchedjet_invmass"
+  
+  - "jet_lep_fraction"
+  - "jet1_lep_fraction"
+  - "jet2_lep_fraction"
+  - "jet3_lep_fraction"
+  - "jet4_lep_fraction"
+  - "jet5_lep_fraction"
+
 lj_base: &lj_base
   - "lj_n"
   - "egm_lj_n"
@@ -100,6 +156,8 @@ lj_lj_base: &lj_lj_base
   - "lj_lj_invmass_lowRange"
   - "lj_lj_absdR"
   - "lj_lj_absdeta"
+  - "mu_lj_egm_lj_invmass"
+  - "mu_lj_mu_lj_invmass"
 
 abcd_base: &abcd_base
   - "lj_lj_absdphi_invmass"
@@ -165,6 +223,7 @@ genA_base: &genA_base
   - "genAs_n"
   - "genAs_pt"
   - "genAs_pt_highRange"
+  - "genAs_eta"
   - "genAs_eta_phi"
   - "genAs_x_y"
   - "genAs_children_x_y"
@@ -318,6 +377,7 @@ base: &base
   - *dsaMuon_lj_base
   - *lj_lj_base
   - *abcd_base
+  - *jet_base
 
 base_plus_gen: &base_plus_gen
   - *base
