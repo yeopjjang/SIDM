@@ -108,6 +108,26 @@ jet_base: &jet_base
   - "jet3_lep_fraction"
   - "jet4_lep_fraction"
   - "jet5_lep_fraction"
+  
+  - "jet_nmuon"
+  - "jet1_nmuon"
+  - "jet2_nmuon"
+  - "jet3_nmuon"
+  - "jet4_nmuon"
+  - "jet5_nmuon"
+  - "jet_nelectron"
+  - "jet1_nelectron"
+  - "jet2_nelectron"
+  - "jet3_nelectron"
+  - "jet4_nelectron"
+  - "jet5_nelectron"
+  
+  - "leading_mu_matchedjet_nmuon"
+  - "subleading_mu_matchedjet_nmuon"
+  - "egm_matchedjet_nmuon"
+  - "leading_mu_matchedjet_nelectron"
+  - "subleading_mu_matchedjet_nelectron"
+  - "egm_matchedjet_nelectron"
 
 lj_base: &lj_base
   - "lj_n"
@@ -365,18 +385,18 @@ gen_base: &gen_base
   - "gen_abspid"
 
 base: &base
-  - *pv_base
-  - *electron_base
-  - *photon_base
-  - *muon_base
-  - *dsaMuon_base
+#   - *pv_base
+#   - *electron_base
+#   - *photon_base
+#   - *muon_base
+#   - *dsaMuon_base
   - *lj_base
   - *electron_lj_base
   - *photon_lj_base
   - *muon_lj_base
   - *dsaMuon_lj_base
   - *lj_lj_base
-  - *abcd_base
+  # - *abcd_base
   - *jet_base
 
 base_plus_gen: &base_plus_gen
