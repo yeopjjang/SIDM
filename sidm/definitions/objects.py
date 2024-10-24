@@ -28,10 +28,10 @@ def noE(lj):
 def noPhoton(lj):
     return lj[lj.photon_n == 0]
 
-def nE(lj):
+def nE(lj, n):
     return lj[lj.electron_n == n]
 
-def nPhoton(lj):
+def nPhoton(lj, n):
     return lj[lj.photon_n == n]
 
 
@@ -40,6 +40,7 @@ preLj_objs = {}
 preLj_objs["pvs"]        = lambda evts: evts.PV
 preLj_objs["bs"]         = lambda evts: evts.BS
 preLj_objs["met"]        = lambda evts: evts.MET
+preLj_objs["hlt"]        = lambda evts: evts.HLT
 preLj_objs["electrons"]  = lambda evts: evts.Electron
 preLj_objs["photons"]    = lambda evts: evts.Photon
 preLj_objs["muons"]      = lambda evts: evts.Muon
