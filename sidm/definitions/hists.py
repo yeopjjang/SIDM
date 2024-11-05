@@ -21,19 +21,21 @@ importlib.reload(h)
 
 # define counters
 counter_defs = {
-    "Total LJs": lambda objs: ak.count(objs["ljs"].pt),
     "Gen As to muons": lambda objs: ak.count(objs["genAs_toMu"].pt),
     "Gen As to electrons": lambda objs: ak.count(objs["genAs_toE"].pt),
     "Matched gen As to muons": lambda objs: ak.count(derived_objs["genAs_toMu_matched_lj"](objs, 0.4).pt),
     "Matched gen As to electrons": lambda objs: ak.count(derived_objs["genAs_toE_matched_lj"](objs, 0.4).pt),
     
-    "Total Mu-LJs": lambda objs: ak.count(objs["mu_ljs"].pt),
-    "Total EGM-LJs": lambda objs: ak.count(objs["egm_ljs"].pt),
+    "Total LJs": lambda objs: ak.count(objs["ljs"].pt),
+    "Mu-LJs": lambda objs: ak.count(objs["mu_ljs"].pt),
+    "EGM-LJs": lambda objs: ak.count(objs["egm_ljs"].pt),
     
     "Total Matched-Jets": lambda objs: ak.count(derived_objs["matched_jets"](objs,0.4).pt),
-    "Total Leading-Mu-Matched-Jets": lambda objs: ak.count(derived_objs["leading_mu_matched_jets"](objs,0.4).pt),
-    "Total Subleading-Mu-Matched-Jets": lambda objs: ak.count(derived_objs["subleading_mu_matched_jets"](objs,0.4).pt),
-    "Total EGM-Matched-Jets": lambda objs: ak.count(derived_objs["egm_matched_jets"](objs,0.4).pt),
+    "Leading-Mu-Matched-Jets": lambda objs: ak.count(derived_objs["leading_mu_matched_jets"](objs,0.4).pt),
+    "Subleading-Mu-Matched-Jets": lambda objs: ak.count(derived_objs["subleading_mu_matched_jets"](objs,0.4).pt),
+    "EGM-Matched-Jets": lambda objs: ak.count(derived_objs["egm_matched_jets"](objs,0.4).pt),
+    
+    "LJs (have matched Jet)": lambda objs: ak.count(derived_objs["ljs_with_matched_jets"](objs,0.4).pt),
 }
 
 
@@ -97,6 +99,31 @@ def obj_eta_phi(obj, nbins_x=None, xmin=None, xmax=None, nbins_y=None, ymin=None
 
 # define histograms
 hist_defs = {
+    # LJ-matched jet
+    "lj_pt_with_matched_jet": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 500, name="lj_pt_with_matched_jet", label="LJ PT"),
+                   lambda objs, mask: derived_objs["ljs_with_matched_jets"](objs,0.4)[mask].pt),
+        ],
+        evt_mask=lambda objs: ak.num(derived_objs["ljs_with_matched_jets"](objs,0.4)) > 0,
+    ),   
+    
+    "lj_eta_with_matched_jet": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, -3, 3, name="lj_eta_with_matched_jet", label="LJ $\eta$"),
+                   lambda objs, mask: derived_objs["ljs_with_matched_jets"](objs,0.4)[mask].eta),
+        ],
+        evt_mask=lambda objs: ak.num(derived_objs["ljs_with_matched_jets"](objs,0.4)) > 0,
+    ),       
+    
+    "lj_phi_with_matched_jet": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, -1*math.pi, math.pi, name="lj_phi_with_matched_jet", label="LJ $\phi$"),
+                   lambda objs, mask: derived_objs["ljs_with_matched_jets"](objs,0.4)[mask].phi),
+        ],
+        evt_mask=lambda objs: ak.num(derived_objs["ljs_with_matched_jets"](objs,0.4)) > 0,
+    ),     
+    
     # Matched Jet
     "matched_jets_pt": h.Histogram(
         [
@@ -1040,6 +1067,8 @@ hist_defs = {
         evt_mask=lambda objs: ak.num(objs["ljs"]) > 1,
     ),
     "lj_eta_phi": obj_eta_phi("ljs"),
+    "lj_eta": obj_attr("ljs", "eta", xmax=3),
+    "lj_phi": obj_attr("ljs", "phi", xmax=math.pi),
     "egm_lj_pt": obj_attr("egm_ljs", "pt", xmax=500),
     "mu_lj_pt": obj_attr("mu_ljs", "pt", xmax=500),
     "lj_electronN": h.Histogram(

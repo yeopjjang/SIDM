@@ -128,12 +128,18 @@ jet_base: &jet_base
   - "leading_mu_matchedjet_nelectron"
   - "subleading_mu_matchedjet_nelectron"
   - "egm_matchedjet_nelectron"
+  
+  - "lj_pt_with_matched_jet"
+  - "lj_eta_with_matched_jet"
+  - "lj_phi_with_matched_jet"
 
 lj_base: &lj_base
   - "lj_n"
   - "egm_lj_n"
   - "mu_lj_n"
   - "lj_pt"
+  - "lj_eta"
+  - "lj_phi"
   - "egm_lj_pt"
   - "mu_lj_pt"
   - "lj_eta_phi"
