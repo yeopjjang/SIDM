@@ -132,6 +132,8 @@ jet_base: &jet_base
   - "lj_pt_with_matched_jet"
   - "lj_eta_with_matched_jet"
   - "lj_phi_with_matched_jet"
+  
+  - "matchedjet_matchedjet_absdphi"
 
 lj_base: &lj_base
   - "lj_n"
@@ -158,6 +160,13 @@ lj_base: &lj_base
   - "lj_muonN"
   - "lj_dsaMuN"
   - "lj_pfMuN"
+  
+  - "leading_mu_lj_n"
+  - "subleading_mu_lj_n"
+  - "leading_egm_lj_n"
+  - "leading_mu_lj_pt"
+  - "subleading_mu_lj_pt"
+  - "leading_egm_lj_pt"
 
 electron_lj_base: &electron_lj_base
   - "electron_lj_dR"
