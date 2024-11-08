@@ -122,7 +122,19 @@ hist_defs = {
                    lambda objs, mask: derived_objs["ljs_with_matched_jets"](objs,0.4)[mask].phi),
         ],
         evt_mask=lambda objs: ak.num(derived_objs["ljs_with_matched_jets"](objs,0.4)) > 0,
-    ),     
+    ),
+    
+    "lj_matchedjet_pt": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 500, name="LJ_PT", label=r"LJ PT (have matched jet)"),
+                   lambda objs, mask: derived_objs["ljs_with_matched_jets"](objs,0.4)[mask].pt),
+            
+            h.Axis(hist.axis.Regular(50, 0, 500, name="matched_jets_pt",
+                                     label=r"Matched Jet PT"),
+                   lambda objs, mask: derived_objs["matched_jets"](objs,0.4)[mask].pt),
+        ],
+        evt_mask=lambda objs: (ak.num(derived_objs["matched_jets"](objs,0.4)) > 0) & (ak.num(derived_objs["ljs_with_matched_jets"](objs,0.4)) > 0),
+    ),
     
     # Matched Jet
     "matched_jets_pt": h.Histogram(
@@ -1046,7 +1058,7 @@ hist_defs = {
     "lj_pt": obj_attr("ljs", "pt", xmax=500),
     "lj0_pt": h.Histogram(
         [
-            h.Axis(hist.axis.Regular(100, 0, 400, name="lj0_pt",
+            h.Axis(hist.axis.Regular(50, 0, 500, name="lj0_pt",
                                      label="Leading lepton jet pT [GeV]"),
                    lambda objs, mask: objs["ljs"][mask, 0].pt),
         ],
@@ -1054,7 +1066,7 @@ hist_defs = {
     ),
     "lj1_pt": h.Histogram(
         [
-            h.Axis(hist.axis.Regular(100, 0, 400, name="lj1_pt",
+            h.Axis(hist.axis.Regular(50, 0, 500, name="lj1_pt",
                                      label="Subleading lepton jet pT [GeV]"),
                    lambda objs, mask: objs["ljs"][mask, 1].pt),
         ],

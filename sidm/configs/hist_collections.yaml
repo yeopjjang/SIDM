@@ -134,6 +134,8 @@ jet_base: &jet_base
   - "lj_phi_with_matched_jet"
   
   - "matchedjet_matchedjet_absdphi"
+  
+  - "lj_matchedjet_pt"
 
 lj_base: &lj_base
   - "lj_n"
