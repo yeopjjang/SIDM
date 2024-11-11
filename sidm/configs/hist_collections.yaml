@@ -128,12 +128,22 @@ jet_base: &jet_base
   - "leading_mu_matchedjet_nelectron"
   - "subleading_mu_matchedjet_nelectron"
   - "egm_matchedjet_nelectron"
+  
+  - "lj_pt_with_matched_jet"
+  - "lj_eta_with_matched_jet"
+  - "lj_phi_with_matched_jet"
+  
+  - "matchedjet_matchedjet_absdphi"
+  
+  - "lj_matchedjet_pt"
 
 lj_base: &lj_base
   - "lj_n"
   - "egm_lj_n"
   - "mu_lj_n"
   - "lj_pt"
+  - "lj_eta"
+  - "lj_phi"
   - "egm_lj_pt"
   - "mu_lj_pt"
   - "lj_eta_phi"
@@ -152,6 +162,13 @@ lj_base: &lj_base
   - "lj_muonN"
   - "lj_dsaMuN"
   - "lj_pfMuN"
+  
+  - "leading_mu_lj_n"
+  - "subleading_mu_lj_n"
+  - "leading_egm_lj_n"
+  - "leading_mu_lj_pt"
+  - "subleading_mu_lj_pt"
+  - "leading_egm_lj_pt"
 
 electron_lj_base: &electron_lj_base
   - "electron_lj_dR"
