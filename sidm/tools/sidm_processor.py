@@ -63,7 +63,7 @@ class SidmProcessor(processor.ProcessorABC):
 
             # use nanoevents.Muon behaviors for dsa muons
             if obj_name == "dsaMuons":
-                forms = {f : objs[obj_name][f] for f in objs[obj_name].fields}
+                forms = {f: objs[obj_name][f] for f in objs[obj_name].fields}
                 objs[obj_name] = ak.zip(forms, with_name="Muon", behavior=nanoaod.behavior)
 
             # add lxy attribute to particles with children
@@ -162,18 +162,14 @@ class SidmProcessor(processor.ProcessorABC):
 
         return {events.metadata["dataset"]: out}
 
-    def make_vector(self, objs, collection, type_id=None, mass=None, charge=None):
+    def make_vector(self, objs, collection, fields,  type_id=None, mass=None, charge=None,):
         shape = ak.ones_like(objs[collection].pt)
-        return vector.zip(
-            {
-                "part_type": objs[collection]["type"] if type_id is None else type_id*shape,
-                "charge": objs[collection].charge if charge is None else charge*shape,
-                "pt": objs[collection].pt,
-                "eta": objs[collection].eta,
-                "phi": objs[collection].phi,
-                "mass": objs[collection].mass if mass is None else mass*shape,
-            }
-        )
+        #to pass nan to the fields not available for a collection
+        nan = ak.full_like(shape, None)
+        forms = {f: objs[collection][f] if f in objs[collection].fields else nan for f in fields}
+        forms["part_type"] = objs[collection]["type"] if type_id is None else type_id*shape
+        forms["mass"] = objs[collection]["mass"] if mass is None else mass*shape
+        return vector.zip(forms)
 
     def build_lepton_jets(self, objs, lj_reco):
         """Reconstruct lepton jets according to defintion given by lj_reco"""
@@ -189,16 +185,16 @@ class SidmProcessor(processor.ProcessorABC):
                 lj_inputs = self.make_vector(objs, "ljsources")
 
             else: #Use electron/muon/photon/dsamuon collections with a custom distance parameter
-                muon_inputs = self.make_vector(objs, "muons", type_id=3)
-                dsa_inputs = self.make_vector(objs, "dsaMuons", type_id=8, mass=0.106)
-                ele_inputs = self.make_vector(objs, "electrons", type_id=2)
-                photon_inputs = self.make_vector(objs, "photons", type_id=4, charge=0)
-                lj_inputs = ak.concatenate([muon_inputs, dsa_inputs, ele_inputs, photon_inputs],
-                                           axis=-1)
+                collections = ["muons","dsaMuons", "electrons", "photons"]
+                fields = list(set().union(*[objs[c].fields for c in collections]))
+                muon_inputs = self.make_vector(objs, "muons", fields,  type_id=3)
+                dsa_inputs = self.make_vector(objs, "dsaMuons", fields, type_id=8, mass=0.106)
+                ele_inputs = self.make_vector(objs, "electrons", fields, type_id=2)
+                photon_inputs = self.make_vector(objs, "photons", fields, type_id=4)
+                lj_inputs = ak.concatenate([muon_inputs, dsa_inputs, ele_inputs, photon_inputs], axis=-1)
 
             distance_param = abs(lj_reco)
             jet_def = fastjet.JetDefinition(fastjet.antikt_algorithm, distance_param)
-
             cluster = fastjet.ClusterSequence(lj_inputs, jet_def)
             jets = cluster.inclusive_jets()
 
@@ -211,18 +207,16 @@ class SidmProcessor(processor.ProcessorABC):
                 with_name="LorentzVector",
                 behavior=cvec.behavior
             )
-
-            # add jet constituent info
-            const_vec = ak.zip(
-                {"x": cluster.constituents().x,
-                 "y": cluster.constituents().y,
-                 "z": cluster.constituents().z,
-                 "t": cluster.constituents().t,
-                 "charge": cluster.constituents().charge,
-                  "part_type":cluster.constituents().part_type},
-                 with_name="LorentzVector",
-                 behavior=cvec.behavior)
-
+            
+            # add fields to access LJ constituents
+            consts = cluster.constituents()
+            forms = {f: consts[f] for f in consts.fields}
+            # add x, y, z and t separately to avoid error (unclear why this is necessary)
+            forms["x"] = consts.x
+            forms["y"] = consts.y
+            forms["z"] = consts.z
+            forms["t"] = consts.t
+            const_vec = ak.zip(forms, with_name="LorentzVector", behavior=cvec.behavior)
             ljs["constituents"] = const_vec
             ljs["pfMuons"] = ljs.constituents[ljs.constituents.part_type == 3]
             ljs["dsaMuons"] = ljs.constituents[ljs.constituents.part_type == 8]
@@ -231,20 +225,27 @@ class SidmProcessor(processor.ProcessorABC):
             ljs["electrons"] = ljs.constituents[ljs.constituents.part_type == 2]
             ljs["photons"] = ljs.constituents[ljs.constituents.part_type == 4]
 
-            #Confusing to read, but to calculate dRSpread (the maximum dR betwen any pair of constituents in each lepton jet):
-            #a) for each constituent, find the dR between it and all other constituents in the same LJ
-            #b) flatten that into a list of dRs per LJ
-            #c) and then take the maximum dR per LJ, leaving us with a single value per LJ
-            ljs["dRSpread"]= ak.max( ak.flatten(const_vec.metric_table(const_vec, axis = 2) , axis = -1) ,  axis = -1)
-
+            # define LJ-level quantities
+            
+            # number of constituents
             ljs["pfMu_n"] = ak.num(ljs.constituents[ljs.constituents.part_type == 3], axis=-1)
             ljs["dsaMu_n"] = ak.num(ljs.constituents[ljs.constituents.part_type == 8], axis=-1)
             ljs["muon_n"] = ak.num(ljs.constituents[(ljs.constituents["part_type"] == 3)
-                                                    | (ljs.constituents["part_type"] == 8)],axis=-1)
-            ljs["electron_n"] = ak.num(ljs.constituents[ljs.constituents["part_type"] == 2],axis=-1)
-            ljs["photon_n"] = ak.num(ljs.constituents[ljs.constituents["part_type"] == 4],axis=-1)
+                                                    | (ljs.constituents["part_type"] == 8)], axis=-1)
+            ljs["electron_n"] = ak.num(ljs.constituents[ljs.constituents["part_type"] == 2], axis=-1)
+            ljs["photon_n"] = ak.num(ljs.constituents[ljs.constituents["part_type"] == 4], axis=-1)
             ljs["pfMu_n"] = ak.num(ljs.constituents[ljs.constituents.part_type == 3], axis=-1)
             ljs["dsaMu_n"] = ak.num(ljs.constituents[ljs.constituents.part_type == 8], axis=-1)
+
+            # dRSpread (the maximum dR betwen any pair of constituents in each lepton jet)
+            # a) for each constituent, find the dR between it and all other constituents in the same LJ
+            # b) flatten that into a list of dRs per LJ
+            # c) and then take the maximum dR per LJ, leaving us with a single value per LJ
+            ljs["dRSpread"]= ak.max(ak.flatten(const_vec.metric_table(const_vec, axis=2), axis=-1), axis=-1)
+            
+            # todo: add LJ isolation
+            
+            # todo: add LJ displacement
 
             # pt order the new LJs
             ljs = self.order(ljs)
