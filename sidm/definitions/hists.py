@@ -126,14 +126,74 @@ hist_defs = {
     
     "lj_matchedjet_pt": h.Histogram(
         [
-            h.Axis(hist.axis.Regular(50, 0, 500, name="LJ_PT", label=r"LJ PT (have matched jet)"),
-                   lambda objs, mask: derived_objs["ljs_with_matched_jets"](objs,0.4)[mask].pt),
+            h.Axis(hist.axis.Regular(50, 0, 500, name="LJ_PT", label=r"LJ PT"),
+                   lambda objs, mask: objs["ljs"][mask].pt),
             
             h.Axis(hist.axis.Regular(50, 0, 500, name="matched_jets_pt",
                                      label=r"Matched Jet PT"),
                    lambda objs, mask: derived_objs["matched_jets"](objs,0.4)[mask].pt),
         ],
-        evt_mask=lambda objs: (ak.num(derived_objs["matched_jets"](objs,0.4)) > 0) & (ak.num(derived_objs["ljs_with_matched_jets"](objs,0.4)) > 0),
+        evt_mask=lambda objs: (ak.num(derived_objs["matched_jets"](objs,0.4)) == ak.num(objs["ljs"])),
+    ),
+    
+    "leading_lj_matchedjet_pt": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 500, name="LJ_PT", label=r"Leading LJ PT"),
+                   lambda objs, mask: objs["ljs"][:,0:1][mask].pt),
+            
+            h.Axis(hist.axis.Regular(50, 0, 500, name="matched_jets_pt",
+                                     label=r"Leading-Matched Jet PT"),
+                   lambda objs, mask: derived_objs["leading_matched_jets"](objs,0.4)[mask].pt),
+        ],
+        evt_mask=lambda objs: (ak.num(derived_objs["leading_matched_jets"](objs,0.4)) == ak.num(objs["ljs"][:,0:1])),
+    ),
+    
+    "subleading_lj_matchedjet_pt": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 500, name="LJ_PT", label=r"Subleading LJ PT"),
+                   lambda objs, mask: objs["ljs"][:,1:2][mask].pt),
+            
+            h.Axis(hist.axis.Regular(50, 0, 500, name="matched_jets_pt",
+                                     label=r"Subleading-Matched Jet PT"),
+                   lambda objs, mask: derived_objs["subleading_matched_jets"](objs,0.4)[mask].pt),
+        ],
+        evt_mask=lambda objs: (ak.num(derived_objs["subleading_matched_jets"](objs,0.4)) == ak.num(objs["ljs"][:,1:2])),
+    ),
+    
+    "leading_mu_lj_matchedjet_pt": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 500, name="LJ_PT", label=r"Leading Mu-LJ PT"),
+                   lambda objs, mask: objs["mu_ljs"][:,0:1][mask].pt),
+            
+            h.Axis(hist.axis.Regular(50, 0, 500, name="matched_jets_pt",
+                                     label=r"Leading-Mu-Matched Jet PT"),
+                   lambda objs, mask: derived_objs["leading_mu_matched_jets"](objs,0.4)[mask].pt),
+        ],
+        evt_mask=lambda objs: (ak.num(derived_objs["leading_mu_matched_jets"](objs,0.4)) == ak.num(objs["mu_ljs"][:,0:1]))
+    ),
+    
+    "subleading_mu_lj_matchedjet_pt": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 500, name="LJ_PT", label=r"Subleading Mu-LJ PT"),
+                   lambda objs, mask: objs["mu_ljs"][:,1:2][mask].pt),
+            
+            h.Axis(hist.axis.Regular(50, 0, 500, name="matched_jets_pt",
+                                     label=r"Subleading Mu-Matched Jet PT"),
+                   lambda objs, mask: derived_objs["subleading_mu_matched_jets"](objs,0.4)[mask].pt),
+        ],
+        evt_mask=lambda objs: (ak.num(derived_objs["subleading_mu_matched_jets"](objs,0.4)) == ak.num(objs["mu_ljs"][:,1:2]))
+    ),
+    
+    "egm_lj_matchedjet_pt": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 500, name="LJ_PT", label=r"EGM-LJ PT"),
+                   lambda objs, mask: objs["egm_ljs"][:,0:1][mask].pt),
+            
+            h.Axis(hist.axis.Regular(50, 0, 500, name="matched_jets_pt",
+                                     label=r"EGM-Matched Jet PT"),
+                   lambda objs, mask: derived_objs["egm_matched_jets"](objs,0.4)[mask].pt),
+        ],
+        evt_mask=lambda objs: (ak.num(derived_objs["egm_matched_jets"](objs,0.4)) == ak.num(objs["egm_ljs"][:,0:1])),
     ),
     
     # Matched Jet
