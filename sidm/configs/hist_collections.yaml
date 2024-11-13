@@ -136,7 +136,11 @@ jet_base: &jet_base
   - "matchedjet_matchedjet_absdphi"
   
   - "lj_matchedjet_pt"
-
+  - "leading_lj_matchedjet_pt"
+  - "subleading_lj_matchedjet_pt"
+  - "leading_mu_lj_matchedjet_pt"
+  - "subleading_mu_lj_matchedjet_pt"
+  - "egm_lj_matchedjet_pt"
 lj_base: &lj_base
   - "lj_n"
   - "egm_lj_n"
