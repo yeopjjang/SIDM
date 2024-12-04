@@ -402,9 +402,9 @@ gen_base: &gen_base
 
 base: &base
 #   - *pv_base
-#   - *electron_base
-#   - *photon_base
-#   - *muon_base
+  - *electron_base
+  - *photon_base
+  - *muon_base
 #   - *dsaMuon_base
   - *lj_base
 #  - *electron_lj_base

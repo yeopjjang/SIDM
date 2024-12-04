@@ -1354,7 +1354,7 @@ hist_defs = {
     # ABCD plane
     "lj_lj_absdphi_iso1": h.Histogram(
         [
-            h.Axis(hist.axis.Regular(20, 0, 2*math.pi, name="|$\Delta\phi$| ($LJ_{0}$, $LJ_{1}$)"),
+            h.Axis(hist.axis.Regular(20, 0, math.pi, name="|$\Delta\phi$| ($LJ_{0}$, $LJ_{1}$)"),
                    lambda objs, mask: abs(objs["ljs"][mask, 1].phi - objs["ljs"][mask, 0].phi)),
             h.Axis(hist.axis.Regular(20, 0, 1, name="leading_mu_matchedjet_isolation",
                                      label=r"Leading-Mu-LJ Matched Jet Isolation"),
@@ -1368,7 +1368,7 @@ hist_defs = {
 
     "lj_lj_absdphi_iso2": h.Histogram(
         [
-            h.Axis(hist.axis.Regular(20, 0, 2*math.pi, name="|$\Delta\phi$| ($LJ_{0}$, $LJ_{1}$)"),
+            h.Axis(hist.axis.Regular(20, 0, math.pi, name="|$\Delta\phi$| ($LJ_{0}$, $LJ_{1}$)"),
                    lambda objs, mask: abs(objs["ljs"][mask, 1].phi - objs["ljs"][mask, 0].phi)),
             h.Axis(hist.axis.Regular(20, 0, 1, name="leading_mu_matchedjet_isolation2",
                                      label=r"Leading-Mu-LJ Matched Jet Isolation2"),
