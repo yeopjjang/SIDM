@@ -256,7 +256,6 @@ cutdecay_false_dll0:
       - CutDecayFalse_dll0_SIDM_BsTo2DpTo4Mu_MBs-500_MDp-5p0_ctau-0p08_v3_part-39.root
       path: CutDecayFalse_dll0_SIDM_BsTo2DpTo4Mu_MBs-500_MDp-5p0_ctau-0p08_v3/LLPnanoAODv2/
 
-
 cutdecay_true_dll0:
   path: root://xcache//store/user/dlee3/v10_cutdecay/
   samples:
@@ -393,4 +392,3 @@ cutdecay_true_dll0:
       - CutDecayTrue_dll0_SIDM_BsTo2DpTo4Mu_MBs-500_MDp-5p0_ctau-0p08_v3_part-40.root
       - CutDecayTrue_dll0_SIDM_BsTo2DpTo4Mu_MBs-500_MDp-5p0_ctau-0p08_v3_part-41.root
       path: CutDecayTrue_dll0_SIDM_BsTo2DpTo4Mu_MBs-500_MDp-5p0_ctau-0p08_v3/LLPnanoAODv2/
-      path: CutDecayTrue_SIDM_BsTo2DpTo4Mu_MBs-500_MDp-5p0_ctau-0p08_v3/LLPnanoAODv2/
