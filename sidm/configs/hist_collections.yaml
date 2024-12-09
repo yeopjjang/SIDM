@@ -195,17 +195,17 @@ lj_lj_base: &lj_lj_base
 
 abcd_base: &abcd_base
   - "lj_lj_absdphi_invmass"
-  - "lj_lj_absdphi_absdR"
-  - "lj_lj_absdphi_absdeta"
-  - "lj_lj_absdR_absdeta"
-  - "lj_lj_absdR_invmass"
-  - "lj_lj_absdeta_invmass"
-  - "lj_lj_ptRatio"
-  - "lj_lj_absdphi_ptRatio"
-  - "lj_lj_absdR_ptRatio"
-  - "lj_lj_absdeta_ptRatio"
-  - "lj_lj_absdphi_iso1"
-  - "lj_lj_absdphi_iso2"
+  # - "lj_lj_absdphi_absdR"
+  # - "lj_lj_absdphi_absdeta"
+  # - "lj_lj_absdR_absdeta"
+  # - "lj_lj_absdR_invmass"
+  # - "lj_lj_absdeta_invmass"
+  # - "lj_lj_ptRatio"
+  # - "lj_lj_absdphi_ptRatio"
+  # - "lj_lj_absdR_ptRatio"
+  # - "lj_lj_absdeta_ptRatio"
+  # - "lj_lj_absdphi_iso1"
+  # - "lj_lj_absdphi_iso2"
 
 genE_base: &genE_base
   - "genE_n"
