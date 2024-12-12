@@ -1,6 +1,21 @@
 # python3 add_ntuples.py -o signal_v6.yaml -n llpNanoAOD_v2 -c "Signal samples with non-zero but still not correct lifetime -- all 4mu and a few 2mu2e" -d "root://cmseos.fnal.gov//store/group/lpcmetx/SIDM/ULSignalSamples/2018_v6/LLPNanoAOD_V2/"
 # Signal samples with non-zero but still not correct lifetime -- all 4mu and a few 2mu2e
-
+cutdecay_false_merge:
+  path: root://xcache//store/group/lpcmetx/SIDM/ULSignalSamples/2018_v10/
+  samples:
+    4Mu_1000GeV_0p25GeV_0p002mm:
+      files:
+      - CutDecayFalse_SIDM_BsTo2DpTo4Mu_MBs-1000_MDp-0p25_ctau-0p002_v3.root
+      path: CutDecayFalse_SIDM_BsTo2DpTo4Mu_MBs-1000_MDp-0p25_ctau-0p002_v3/LLPnanoAODv2/
+    4Mu_1000GeV_0p25GeV_0p02mm:
+      files:
+      - CutDecayFalse_SIDM_BsTo2DpTo4Mu_MBs-1000_MDp-0p25_ctau-0p02_v3.root
+      path: CutDecayFalse_SIDM_BsTo2DpTo4Mu_MBs-1000_MDp-0p25_ctau-0p02_v3/LLPnanoAODv2/
+    4Mu_1000GeV_0p25GeV_0p2mm:
+      files:
+      - CutDecayFalse_SIDM_BsTo2DpTo4Mu_MBs-1000_MDp-0p25_ctau-0p2_v3.root
+      path: CutDecayFalse_SIDM_BsTo2DpTo4Mu_MBs-1000_MDp-0p25_ctau-0p2_v3/LLPnanoAODv2/
+    
 cutdecay_false:
   path: root://xcache//store/user/dlee3/Signal_Storage/CutDecayFalse_Dec_04_2024/
   samples:
