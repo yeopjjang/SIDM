@@ -229,6 +229,14 @@ hist_defs = {
         ],
         evt_mask=lambda objs: (ak.num(derived_objs["leading_matched_jets"](objs,0.4)) > 0) & (ak.num(derived_objs["subleading_matched_jets"](objs,0.4)) > 0),
     ), 
+    
+    "mu_matched_jets_pt": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 500, name="mu_matched_jets_pt", label="Mu-LJ Matched Jet PT (|$\Delta$R| 0.4) [GeV]"),
+                   lambda objs, mask: derived_objs["mu_matched_jets"](objs,0.4)[mask].pt),
+        ],
+        evt_mask=lambda objs: ak.num(derived_objs["mu_matched_jets"](objs,0.4)) > 0,
+    ),
 
     "leading_mu_matched_jets_pt": h.Histogram(
         [
@@ -252,6 +260,14 @@ hist_defs = {
                    lambda objs, mask: derived_objs["egm_matched_jets"](objs,0.4)[mask].pt),
         ],
         evt_mask=lambda objs: ak.num(derived_objs["egm_matched_jets"](objs,0.4)) > 0,
+    ),   
+    
+    "all_egm_matched_jets_pt": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 500, name="egm_matched_jets_pt", label="EGM-LJ Matched Jet PT (|$\Delta$R| 0.4) [GeV]"),
+                   lambda objs, mask: derived_objs["all_egm_matched_jets"](objs,0.4)[mask].pt),
+        ],
+        evt_mask=lambda objs: ak.num(derived_objs["all_egm_matched_jets"](objs,0.4)) > 0,
     ),   
     
     "mu_matchedjet_mu_matchedjet_absdR": h.Histogram(
@@ -1109,6 +1125,25 @@ hist_defs = {
         ],
         evt_mask=lambda objs: ak.num(objs["ljs"]) > 1,
     ),
+    
+    "lj2_pt": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 500, name="lj2_pt",
+                                     label="Third lepton jet pT [GeV]"),
+                   lambda objs, mask: objs["ljs"][mask, 2].pt),
+        ],
+        evt_mask=lambda objs: ak.num(objs["ljs"]) > 2,
+    ),
+
+    "lj3_pt": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 500, name="lj3_pt",
+                                     label="Fourth lepton jet pT [GeV]"),
+                   lambda objs, mask: objs["ljs"][mask, 3].pt),
+        ],
+        evt_mask=lambda objs: ak.num(objs["ljs"]) > 3,
+    ),
+    
     "lj0_e": h.Histogram(
         [
             h.Axis(hist.axis.Regular(350, 0, 700, name="lj_e",
