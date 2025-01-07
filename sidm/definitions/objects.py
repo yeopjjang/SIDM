@@ -82,11 +82,10 @@ derived_objs["matched_jets"]               = lambda objs, r: matched(objs["jets"
 derived_objs["leading_matched_jets"]       = lambda objs, r: matched(objs["jets"], objs["ljs"][:,0:1], r)
 derived_objs["subleading_matched_jets"]    = lambda objs, r: matched(objs["jets"], objs["ljs"][:,1:2], r)
 
-derived_objs["mu_matched_jets"]            = lambda objs, r: matched(objs["jets"], objs["mu_ljs"][:,0:2], r)
+derived_objs["mu_matched_jets"]    = lambda objs, r: matched(objs["jets"], objs["mu_ljs"][:,0:2], r)
 derived_objs["leading_mu_matched_jets"]    = lambda objs, r: matched(objs["jets"], objs["mu_ljs"][:,0:1], r)
 derived_objs["subleading_mu_matched_jets"] = lambda objs, r: matched(objs["jets"], objs["mu_ljs"][:,1:2], r)
 derived_objs["egm_matched_jets"]           = lambda objs, r: matched(objs["jets"], objs["egm_ljs"][:,0:1], r)
-derived_objs["all_egm_matched_jets"]       = lambda objs, r: matched(objs["jets"], objs["egm_ljs"][:,0:2], r)
 
 # LJ (have matched jet) Study
 derived_objs["ljs_with_matched_jets"]      = lambda objs, r: matched(objs["ljs"][:,0:2], objs["jets"], r)
