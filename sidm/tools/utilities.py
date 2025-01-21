@@ -7,6 +7,24 @@ import matplotlib.pyplot as plt
 import mplhep as hep
 import hist.intervals
 from sidm import BASE_DIR
+from numpy import inf
+
+def get_eff_hist(num_hist, denom_hist):
+    """Returns the histogram of num_hist/denom_hist and a 2D numpy array of the up/down errors on the efficiency. Plot the errors using yerr=errors when plotting. """
+    denom_vals  = denom_hist.values()
+    num_vals   = num_hist.values()
+
+#    errors = hist.intervals.ratio_uncertainty(num_vals,denom_vals,'efficiency')
+    errors = 0
+    
+    eff_values = num_vals/denom_vals
+    eff_values[eff_values == inf] = 0 # remove infinite value
+    eff_values[eff_values > 1] = 1    # replace values which exceed 1
+    
+    eff_hist = hist.Hist(*num_hist.axes)
+    eff_hist.values()[:] = eff_values
+    
+    return eff_hist, errors
 
 def print_list(l):
     """Print one list element per line"""
@@ -133,24 +151,12 @@ def plot(hists, skip_label=False, **kwargs):
         hep.cms.label()
     return h
 
-def get_eff_hist(num_hist, denom_hist):
-    """Returns the histogram of num_hist/denom_hist and a 2D numpy array of the up/down errors on the efficiency. Plot the errors using yerr=errors when plotting. """
-    denom_vals  = denom_hist.values()
-    num_vals   = num_hist.values()
-
-    errors = hist.intervals.ratio_uncertainty(num_vals,denom_vals,'efficiency')
-    eff_values = num_vals/denom_vals
-
-    eff_hist = hist.Hist(*num_hist.axes)
-    eff_hist.values()[:] = eff_values
-    return eff_hist, errors
-
 def load_yaml(cfg):
     """Load yaml files and return corresponding dict"""
     with open(cfg, encoding="utf8") as yaml_cfg:
         return yaml.safe_load(yaml_cfg)
 
-def make_fileset(samples, ntuple_version, max_files=-1, location_cfg="signal_v8.yaml", fileset=None):
+def make_fileset(samples, ntuple_version, max_files=-1, location_cfg="signal_v6.yaml", fileset=None):
     """Make fileset to pass to processor.runner"""
     # assume location_cfg is stored in sidm/configs/ntuples/
     location_cfg = f"{BASE_DIR}/configs/ntuples/" + location_cfg

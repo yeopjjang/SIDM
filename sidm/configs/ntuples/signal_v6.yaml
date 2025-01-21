@@ -463,7 +463,7 @@ llpNanoAOD_v2:
       - SIDM_BsTo2DpTo4Mu_MBs-100_MDp-5p0_ctau-4p0_part-1.root
       - SIDM_BsTo2DpTo4Mu_MBs-100_MDp-5p0_ctau-4p0_part-2.root
       - SIDM_BsTo2DpTo4Mu_MBs-100_MDp-5p0_ctau-4p0_part-3.root
-      - SIDM_BsTo2DpTo4Mu_MBs-100_MDp-5p0_ctau-4p0_part-4.root
+      # - SIDM_BsTo2DpTo4Mu_MBs-100_MDp-5p0_ctau-4p0_part-4.root # LZMAError: Corrupt input data
       - SIDM_BsTo2DpTo4Mu_MBs-100_MDp-5p0_ctau-4p0_part-5.root
       - SIDM_BsTo2DpTo4Mu_MBs-100_MDp-5p0_ctau-4p0_part-6.root
       - SIDM_BsTo2DpTo4Mu_MBs-100_MDp-5p0_ctau-4p0_part-7.root

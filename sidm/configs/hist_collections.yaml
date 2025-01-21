@@ -53,11 +53,95 @@ dsaMuon_base: &dsaMuon_base
   - "dsaMuon_absD0"
   - "dsaMuon_absD0_lowRange"
 
+jet_base: &jet_base
+  - "matched_jets_pt"
+  - "leading_matched_jets_pt"
+  - "subleading_matched_jets_pt"
+  - "leading_mu_matched_jets_pt"
+  - "subleading_mu_matched_jets_pt"
+  - "egm_matched_jets_pt"
+  - "matched_jets_n"
+  - "leading_matched_jets_n"
+  - "subleading_matched_jets_n"
+  - "leading_mu_matched_jets_n"
+  - "subleading_mu_matched_jets_n"
+  - "egm_matched_jets_n"
+  - "leading_matchedjet_lep_fraction"
+  - "subleading_matchedjet_lep_fraction"
+  - "leading_mu_matchedjet_lep_fraction"
+  - "subleading_mu_matchedjet_lep_fraction"
+  - "egm_matchedjet_lep_fraction"  
+  - "jet_lep_fraction"
+  - "jet1_lep_fraction"
+  - "jet2_lep_fraction"
+  - "jet3_lep_fraction"
+  - "jet4_lep_fraction"
+  - "jet5_lep_fraction"
+  - "jet_nmuon"
+  - "jet1_nmuon"
+  - "jet2_nmuon"
+  - "jet3_nmuon"
+  - "jet4_nmuon"
+  - "jet5_nmuon"
+  - "jet_nelectron"
+  - "jet1_nelectron"
+  - "jet2_nelectron"
+  - "jet3_nelectron"
+  - "jet4_nelectron"
+  - "jet5_nelectron"
+  - "leading_mu_matchedjet_nmuon"
+  - "subleading_mu_matchedjet_nmuon"
+  - "egm_matchedjet_nmuon"
+  - "leading_mu_matchedjet_nelectron"
+  - "subleading_mu_matchedjet_nelectron"
+  - "egm_matchedjet_nelectron"
+  
+jet_jet_base: &jet_jet_base
+  - "matchedjet_matchedjet_absdR"
+  - "mu_matchedjet_egm_matchedjet_invmass"
+  - "mu_matchedjet_mu_matchedjet_invmass"
+  - "matchedjet_matchedjet_invmass"
+  - "matchedjet_matchedjet_absdphi"
+  
+lj_jet_base: &lj_jet_base
+  - "leadingLJ_matchedjet_absdR"
+  - "subleadingLJ_matchedjet_absdR"
+  - "mu_matchedjet_egm_matchedjet_absdR"
+  - "mu_matchedjet_mu_matchedjet_absdR"
+  - "leading_matchedjet_lj_ptRatio"
+  - "subleading_matchedjet_lj_ptRatio"
+  - "leading_mu_matchedjet_lj_ptRatio"
+  - "subleading_mu_matchedjet_lj_ptRatio"
+  - "egm_matchedjet_lj_ptRatio"
+  - "leading_matchedjet_lj_ERatio"
+  - "subleading_matchedjet_lj_ERatio"
+  - "leading_mu_matchedjet_lj_ERatio"
+  - "subleading_mu_matchedjet_lj_ERatio"
+  - "egm_matchedjet_lj_ERatio"
+  - "leading_lj_isolation"
+  - "subleading_lj_isolation"
+  - "leading_mu_lj_isolation"
+  - "subleading_mu_lj_isolation"
+  - "egm_lj_isolation"
+  - "leading_lj_isolation2"
+  - "subleading_lj_isolation2"
+  - "leading_mu_lj_isolation2"
+  - "subleading_mu_lj_isolation2"
+  - "egm_lj_isolation2"
+  - "lj_matchedjet_pt"
+  - "leading_lj_matchedjet_pt"
+  - "subleading_lj_matchedjet_pt"
+  - "leading_mu_lj_matchedjet_pt"
+  - "subleading_mu_lj_matchedjet_pt"
+  - "egm_lj_matchedjet_pt"
+  
 lj_base: &lj_base
   - "lj_n"
   - "egm_lj_n"
   - "mu_lj_n"
   - "lj_pt"
+  - "lj_eta"
+  - "lj_phi"
   - "egm_lj_pt"
   - "mu_lj_pt"
   - "lj_eta_phi"
@@ -76,6 +160,12 @@ lj_base: &lj_base
   - "lj_muonN"
   - "lj_dsaMuN"
   - "lj_pfMuN"
+  - "leading_mu_lj_n"
+  - "subleading_mu_lj_n"
+  - "leading_egm_lj_n"
+  - "leading_mu_lj_pt"
+  - "subleading_mu_lj_pt"
+  - "leading_egm_lj_pt"
 
 electron_lj_base: &electron_lj_base
   - "electron_lj_dR"
@@ -100,18 +190,22 @@ lj_lj_base: &lj_lj_base
   - "lj_lj_invmass_lowRange"
   - "lj_lj_absdR"
   - "lj_lj_absdeta"
+  - "mu_lj_egm_lj_invmass"
+  - "mu_lj_mu_lj_invmass"
 
 abcd_base: &abcd_base
   - "lj_lj_absdphi_invmass"
-  - "lj_lj_absdphi_absdR"
-  - "lj_lj_absdphi_absdeta"
-  - "lj_lj_absdR_absdeta"
-  - "lj_lj_absdR_invmass"
-  - "lj_lj_absdeta_invmass"
-  - "lj_lj_ptRatio"
-  - "lj_lj_absdphi_ptRatio"
-  - "lj_lj_absdR_ptRatio"
-  - "lj_lj_absdeta_ptRatio"
+  # - "lj_lj_absdphi_absdR"
+  # - "lj_lj_absdphi_absdeta"
+  # - "lj_lj_absdR_absdeta"
+  # - "lj_lj_absdR_invmass"
+  # - "lj_lj_absdeta_invmass"
+  # - "lj_lj_ptRatio"
+  # - "lj_lj_absdphi_ptRatio"
+  # - "lj_lj_absdR_ptRatio"
+  # - "lj_lj_absdeta_ptRatio"
+  # - "lj_lj_absdphi_iso1"
+  # - "lj_lj_absdphi_iso2"
 
 genE_base: &genE_base
   - "genE_n"
@@ -167,6 +261,7 @@ genA_base: &genA_base
   - "genAs_n"
   - "genAs_pt"
   - "genAs_pt_highRange"
+  - "genAs_eta"
   - "genAs_eta_phi"
   - "genAs_x_y"
   - "genAs_children_x_y"
@@ -192,12 +287,12 @@ genA_toMu_base: &genA_toMu_base
   - "genAs_toMu_pt_highRange"
   - "genAs_toMu_eta"
   - "genAs_toMu_lxy"
-  - "genAs_toMu_pt_MuMudR_lowRange"
-  - "genAs_toMu_pt_MuMudR_XLowRange"
-  - "genAs_toMu_pt_MuMudR_XXLowRange"
-  - "genAs_toMu_lxy_MuMudR"
-  - "genAs_toMu_lxy_MuMudR_XLowRange"
-  - "genAs_toMu_lxy_MuMudR_XXLowRange"
+  # - "genAs_toMu_pt_MuMudR_lowRange"
+  # - "genAs_toMu_pt_MuMudR_XLowRange"
+  # - "genAs_toMu_pt_MuMudR_XXLowRange"
+  # - "genAs_toMu_lxy_MuMudR"
+  # - "genAs_toMu_lxy_MuMudR_XLowRange"
+  # - "genAs_toMu_lxy_MuMudR_XXLowRange"
   - "genAs_toMu_lxy_pt_lowRange"
   - "genAs_toMu_matched_lj_lxy"
   - "genAs_toMu_matched_muLj_lxy"
@@ -207,8 +302,8 @@ genA_toMu_base: &genA_toMu_base
   - "genAs_toMu_matched_muLj_n"
   - "genAs_toMu_pt_lxy"
   - "genAs_toMu_matched_muLj_pt_lxy"
-  - "genAs_toMu_pt_MuMudR_highRange"
-  - "genAs_toMu_pt_highRange_MuMudR_lowRange"
+  # - "genAs_toMu_pt_MuMudR_highRange"
+  # - "genAs_toMu_pt_highRange_MuMudR_lowRange"
 
 genA_toE_base: &genA_toE_base
   - "genAs_toE_n"
@@ -219,12 +314,12 @@ genA_toE_base: &genA_toE_base
   - "genAs_toE_lxy_ecal"
   - "genAs_toE_pt_highRange"
   - "genAs_toE_eta"
-  - "genAs_toE_pt_EEdR_lowRange"
-  - "genAs_toE_pt_EEdR_XLowRange"
-  - "genAs_toE_pt_EEdR_XXLowRange"
-  - "genAs_toE_lxy_EEdR"
-  - "genAs_toE_lxy_EEdR_XLowRange"
-  - "genAs_toE_lxy_EEdR_XXLowRange"
+  # - "genAs_toE_pt_EEdR_lowRange"
+  # - "genAs_toE_pt_EEdR_XLowRange"
+  # - "genAs_toE_pt_EEdR_XXLowRange"
+  # - "genAs_toE_lxy_EEdR"
+  # - "genAs_toE_lxy_EEdR_XLowRange"
+  # - "genAs_toE_lxy_EEdR_XXLowRange"
   - "genAs_toE_lxy_pt_lowRange"
   - "genAs_toE_pt_lxy"
   - "genAs_toE_matched_egmLj_pt_lxy"
@@ -318,8 +413,11 @@ base: &base
   - *photon_lj_base
   - *muon_lj_base
   - *dsaMuon_lj_base
-  - *lj_lj_base
+  - *lj_lj_base #
   - *abcd_base
+  - *jet_base
+  - *jet_jet_base #
+  - *lj_jet_base #
 
 base_plus_gen: &base_plus_gen
   - *base
@@ -332,3 +430,10 @@ base_plus_gen_resolution: &base_plus_gen_resolution
   - *genA_lj_2d
   - *lepton_genLepton_base
   - *lepton_genLepton_genA_base
+
+lj_iso_base: &lj_iso_base
+  - *lj_base
+  - *lj_lj_base 
+  - *jet_base
+  - *jet_jet_base 
+  - *lj_jet_base 
