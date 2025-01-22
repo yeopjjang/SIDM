@@ -95,6 +95,12 @@ jet_base: &jet_base
   - "leading_mu_matchedjet_nelectron"
   - "subleading_mu_matchedjet_nelectron"
   - "egm_matchedjet_nelectron"
+  - "leading_mu_matchedjet_chEmEF"
+  - "leading_mu_matchedjet_neEmEF"
+  - "leading_mu_matchedjet_muEF"
+  - "egm_matchedjet_chEmEF"
+  - "egm_matchedjet_neEmEF"
+  - "egm_matchedjet_muEF"
   
 jet_jet_base: &jet_jet_base
   - "matchedjet_matchedjet_absdR"
