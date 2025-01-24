@@ -141,10 +141,20 @@ lj_jet_base: &lj_jet_base
   - "subleading_mu_lj_matchedjet_pt"
   - "egm_lj_matchedjet_pt"
   
+  - "leading_mu_lj_matchedjet_nmuon"
+  - "subleading_mu_lj_matchedjet_nmuon"
+  - "egm_lj_matchedjet_nelectron"
+  - "lj_matchedjet_nmuon"
+  - "lj_matchedjet_nelectron"
+  
 lj_base: &lj_base
   - "lj_n"
   - "egm_lj_n"
+  - "electron_lj_n"
+  - "photon_lj_n"
   - "mu_lj_n"
+  - "pfmu_lj_n"
+  - "dsamu_lj_n"
   - "lj_pt"
   - "lj_eta"
   - "lj_phi"
