@@ -327,7 +327,7 @@ hist_defs = {
     ),
     # pfmuon
     "muon_n": obj_attr("muons", "n"),
-    "muon_pt":obj_attr("muons", "pt"),
+    "muon_pt":obj_attr("muons", "pt", xmax=500),
     "muon_dxy":obj_attr("muons", "dxy"),
     "muon_eta_phi": obj_eta_phi("muons"),
     "muon_absD0": obj_attr("muons", "dxy", absval=True, xmax=500),
@@ -361,7 +361,7 @@ hist_defs = {
     ),
     # dsamuon
     "dsaMuon_n": obj_attr("dsaMuons", "n"),
-    "dsaMuon_pt":obj_attr("dsaMuons", "pt"),
+    "dsaMuon_pt":obj_attr("dsaMuons", "pt", xmax=500),
     "dsaMuon_dxy":obj_attr("dsaMuons", "dxy"),
     "dsaMuon_eta_phi": obj_eta_phi("dsaMuons"),
     "dsaMuon_absD0": obj_attr("dsaMuons", "dxy", absval=True, xmax=500),
