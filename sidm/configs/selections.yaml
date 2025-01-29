@@ -29,6 +29,7 @@ ljsource_cuts: &ljsource_cuts
       - "ptErrorOverPT < 1"
       - "no PF match"
 
+# require final-state gen e and mu
 gen_level_cuts: &gen_level_cuts
   obj_cuts: &obj_gen_level_cuts
     genMus:
@@ -36,6 +37,7 @@ gen_level_cuts: &gen_level_cuts
     genEs:
       - "status 1"
 
+# apply trigger
 trigger: &trigger
   evt_cuts:
     - "pass triggers"
@@ -50,15 +52,158 @@ pv_cuts: &pv_cuts
   evt_cuts: &evt_pv_cuts
     - "PV filter"
 
-baseNoLj: &baseNoLj
-  obj_cuts: &obj_baseNoLj
-    <<: *obj_ljsource_cuts
+# apply trigger, gen cuts, and pv filter
+baseNoLjNoLjsource: &baseNoLjNoLjsource
+  obj_cuts: &obj_baseNoLjNoLjsource
     <<: *obj_pv_cuts
     <<: *obj_gen_level_cuts
-  evt_cuts: &evt_baseNoLj
+  evt_cuts: &evt_baseNoLjNoljsource
     - *trigger
     - *evt_pv_cuts
 
+# apply trigger, gen cuts, pv filter, and lj-source cuts
+baseNoLj: &baseNoLj
+  obj_cuts: &obj_baseNoLj
+    <<: *obj_baseNoLjNoLjsource
+    <<: *obj_ljsource_cuts
+  evt_cuts: &evt_baseNoLj
+    - *evt_baseNoLjNoljsource
+
+baseNoLj_egLj: &baseNoLj_egLj
+  obj_cuts:
+    <<: *obj_ljsource_cuts
+    <<: *obj_pv_cuts
+    <<: *obj_gen_level_cuts
+  postLj_obj_cuts:
+    egm_ljs:
+      - "egLj"
+  evt_cuts:
+    - *evt_baseNoLj
+
+# add obj-level LJ cuts
+base_ljObjCut: &base_ljObjCut
+  obj_cuts:
+    <<: *obj_baseNoLj
+  postLj_obj_cuts: &base_postLj_obj_cuts
+    ljs: &lj_base
+      - "pT > 30 GeV"
+      - "|eta| < 2.4"
+      - "mu_charge == 0"
+  evt_cuts:
+    - *evt_baseNoLj
+ 
+# add >=2 LJ requirement
+base: &base
+  obj_cuts: &obj_base
+    <<: *obj_baseNoLj
+  postLj_obj_cuts:
+    <<: *base_postLj_obj_cuts
+  evt_cuts: &evt_base
+    - *evt_baseNoLj
+    - ">=2 LJs"
+
+4mu: &4mu
+  <<: *base
+  evt_cuts: &evt_4mu
+    - *evt_base
+    - "4mu"
+
+2mu2e: &2mu2e
+  <<: *base
+  evt_cuts: &evt_2mu2e
+    - *evt_base
+    - "2mu2e"
+
+# basic analysis selections with LJ-A dR matching
+matchedLj: &matchedLj
+  obj_cuts: &obj_matchedLj
+    <<: *obj_base
+  postLj_obj_cuts:
+    ljs:
+      - *lj_base
+      - "dR(LJ, A) < 0.2"
+  evt_cuts: &evt_matchedLj
+    - *evt_base
+    - ">=2 matched As"
+
+4mu_matchedLj: &4mu_matchedLj
+  <<: *matchedLj
+  evt_cuts: &evt_4mu_matchedLj
+    - *evt_matchedLj
+    - "4mu"
+
+2mu2e_matchedLj: &2mu2e_matchedLj
+  <<: *matchedLj
+  evt_cuts: &evt_2mu2e_matchedLj
+    - *evt_matchedLj
+    - "2mu2e"
+
+#Selections over base
+base_egmLj_eLj: &base_egmLj_eLj
+  obj_cuts:
+    <<: *obj_base
+  postLj_obj_cuts:
+    <<: *base_postLj_obj_cuts
+    egm_ljs:
+      - "eLj"
+  evt_cuts:
+    - *evt_base
+
+base_egmLj_gLj: &base_egmLj_gLj
+  obj_cuts:
+    <<: *obj_base
+  postLj_obj_cuts:
+    <<: *base_postLj_obj_cuts
+    egm_ljs:
+      - "gLj"
+  evt_cuts:
+    - *evt_base
+
+base_egmLj_egLj: &base_egmLj_egLj
+  obj_cuts:
+    <<: *obj_base
+  postLj_obj_cuts:
+    <<: *base_postLj_obj_cuts
+    egm_ljs:
+      - "egLj"
+  evt_cuts:
+    - *evt_base
+
+# basic selections with cuts on A properties and no LJ cuts
+baseNoLj_promptA: &baseNoLj_promptA
+  <<: *baseNoLj
+  obj_cuts:
+    <<: *obj_baseNoLj
+    genAs:
+      - "lxy < 10 cm"
+    genAs_toE:
+      - "lxy < 10 cm"
+    genAs_toMu:
+      - "lxy < 10 cm"
+
+baseNoLj_displacedA: &baseNoLj_displacedA
+  <<: *baseNoLj
+  obj_cuts:
+    <<: *obj_baseNoLj
+    genAs:
+      - "10 cm <= lxy < 100 cm"
+    genAs_toE:
+      - "10 cm <= lxy < 100 cm"
+    genAs_toMu:
+      - "10 cm <= lxy < 100 cm"
+
+baseNoLj_veryDisplacedA: &baseNoLj_veryDisplacedA
+  <<: *baseNoLj
+  obj_cuts:
+    <<: *obj_baseNoLj
+    genAs:
+      - "lxy >= 100 cm"
+    genAs_toE:
+      - "lxy >= 100 cm"
+    genAs_toMu:
+      - "lxy >= 100 cm"
+
+#Selections for studying the Electron ID 
 baseNoLj_noLoose: &baseNoLj_noLoose
   obj_cuts:
     <<: *obj_baseNoLj
@@ -84,18 +229,6 @@ baseNoLj_noLoose_barrel: &baseNoLj_noLoose_barrel
   evt_cuts:
     - *evt_baseNoLj
 
-baseNoLj_egLj: &baseNoLj_egLj
-  obj_cuts:
-    <<: *obj_ljsource_cuts
-    <<: *obj_pv_cuts
-    <<: *obj_gen_level_cuts
-  postLj_obj_cuts:
-    egm_ljs:
-      - "egLj"
-  evt_cuts:
-    - *evt_baseNoLj
-
-#Selections for studying the Electron ID 
 baseNoLj_barrel: &baseNoLj_barrel
   obj_cuts: 
     <<: *obj_baseNoLj
@@ -247,127 +380,7 @@ baseNoLj_endcap_convVeto: &baseNoLj_endcap_convVeto
       - "convVeto"
   evt_cuts:
     - *evt_baseNoLj
-    
-base: &base
-  obj_cuts: &obj_base
-    <<: *obj_baseNoLj
-  postLj_obj_cuts: &base_postLj_obj_cuts
-    ljs: &lj_base
-      - "pT > 30 GeV"
-      - "|eta| < 2.4"
-      - "mu_charge == 0"
-  evt_cuts: &evt_base
-    - *evt_baseNoLj
-    - ">=2 LJs"
 
-base_ljObjCut: &base_ljObjCut
-  obj_cuts:
-    <<: *obj_baseNoLj
-  postLj_obj_cuts:
-    <<: *base_postLj_obj_cuts
-  evt_cuts:
-    - *evt_baseNoLj
-    
-4mu: &4mu
-  <<: *base
-  evt_cuts: &evt_4mu
-    - *evt_base
-    - "4mu"
-
-2mu2e: &2mu2e
-  <<: *base
-  evt_cuts: &evt_2mu2e
-    - *evt_base
-    - "2mu2e"
-
-# basic analysis selections with LJ-A dR matching
-matchedLj: &matchedLj
-  obj_cuts: &obj_matchedLj
-    <<: *obj_base
-  postLj_obj_cuts:
-    ljs:
-      - *lj_base
-      - "dR(LJ, A) < 0.2"
-  evt_cuts: &evt_matchedLj
-    - *evt_base
-    - ">=2 matched As"
-
-4mu_matchedLj: &4mu_matchedLj
-  <<: *matchedLj
-  evt_cuts: &evt_4mu_matchedLj
-    - *evt_matchedLj
-    - "4mu"
-
-2mu2e_matchedLj: &2mu2e_matchedLj
-  <<: *matchedLj
-  evt_cuts: &evt_2mu2e_matchedLj
-    - *evt_matchedLj
-    - "2mu2e"
-
-#Selections over base
-base_egmLj_eLj: &base_egmLj_eLj
-  obj_cuts:
-    <<: *obj_base
-  postLj_obj_cuts:
-    <<: *base_postLj_obj_cuts
-    egm_ljs:
-      - "eLj"
-  evt_cuts:
-    - *evt_base
-
-base_egmLj_gLj: &base_egmLj_gLj
-  obj_cuts:
-    <<: *obj_base
-  postLj_obj_cuts:
-    <<: *base_postLj_obj_cuts
-    egm_ljs:
-      - "gLj"
-  evt_cuts:
-    - *evt_base
-
-base_egmLj_egLj: &base_egmLj_egLj
-  obj_cuts:
-    <<: *obj_base
-  postLj_obj_cuts:
-    <<: *base_postLj_obj_cuts
-    egm_ljs:
-      - "egLj"
-  evt_cuts:
-    - *evt_base
-
-# basic selections with cuts on A properties and no LJ cuts
-baseNoLj_promptA: &baseNoLj_promptA
-  <<: *baseNoLj
-  obj_cuts:
-    <<: *obj_baseNoLj
-    genAs:
-      - "lxy < 10 cm"
-    genAs_toE:
-      - "lxy < 10 cm"
-    genAs_toMu:
-      - "lxy < 10 cm"
-
-baseNoLj_displacedA: &baseNoLj_displacedA
-  <<: *baseNoLj
-  obj_cuts:
-    <<: *obj_baseNoLj
-    genAs:
-      - "10 cm <= lxy < 100 cm"
-    genAs_toE:
-      - "10 cm <= lxy < 100 cm"
-    genAs_toMu:
-      - "10 cm <= lxy < 100 cm"
-
-baseNoLj_veryDisplacedA: &baseNoLj_veryDisplacedA
-  <<: *baseNoLj
-  obj_cuts:
-    <<: *obj_baseNoLj
-    genAs:
-      - "lxy >= 100 cm"
-    genAs_toE:
-      - "lxy >= 100 cm"
-    genAs_toMu:
-      - "lxy >= 100 cm"
 # Selections for electrons only
 # All reco electrons in the barrel
 barrelE: &barrelE
