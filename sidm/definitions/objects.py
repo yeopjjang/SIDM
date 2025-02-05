@@ -91,3 +91,17 @@ derived_objs["egm_matched_jets"]           = lambda objs, r: matched(objs["jets"
 derived_objs["ljs_with_matched_jets"]      = lambda objs, r: matched(objs["ljs"][:,0:2], objs["jets"], r)
 derived_objs["mu_ljs_with_matched_jets"]      = lambda objs, r: matched(objs["mu_ljs"][:,0:2], objs["jets"], r)
 derived_objs["egm_ljs_with_matched_jets"]      = lambda objs, r: matched(objs["egm_ljs"][:,0:1], objs["jets"], r)
+
+# Test
+derived_objs["new_matched_jets"]               = lambda objs, r: objs["ljs"].nearest(objs["jets"], threshold=r)
+derived_objs["new_leading_matched_jets"]       = lambda objs, r: objs["ljs"][:,0:1].nearest(objs["jets"], threshold=r)
+derived_objs["new_subleading_matched_jets"]    = lambda objs, r: objs["ljs"][:,1:2].nearest(objs["jets"], threshold=r)
+# derived_objs["new_mu_matched_jets"]            = lambda objs, r: drop_none(objs["mu_ljs"].nearest(objs["jets"], threshold=r))
+# derived_objs["new_leading_mu_matched_jets"]    = lambda objs, r: drop_none(objs["mu_ljs"][:,0:1].nearest(objs["jets"], threshold=r))
+# derived_objs["new_subleading_mu_matched_jets"] = lambda objs, r: drop_none(objs["mu_ljs"][:,1:2].nearest(objs["jets"], threshold=r))
+# derived_objs["new_leading_egm_matched_jets"]   = lambda objs, r: drop_none(objs["egm_ljs"][:,0:1].nearest(objs["jets"], threshold=r))
+
+derived_objs["new_mu_matched_jets"]            = lambda objs, r: objs["mu_ljs"].nearest(objs["jets"], threshold=r)
+derived_objs["new_leading_mu_matched_jets"]    = lambda objs, r: objs["mu_ljs"][:,0:1].nearest(objs["jets"], threshold=r)
+derived_objs["new_subleading_mu_matched_jets"] = lambda objs, r: objs["mu_ljs"][:,1:2].nearest(objs["jets"], threshold=r)
+derived_objs["new_leading_egm_matched_jets"]   = lambda objs, r: objs["egm_ljs"][:,0:1].nearest(objs["jets"], threshold=r)
