@@ -46,7 +46,6 @@ class SidmProcessor(processor.ProcessorABC):
 
     def process(self, events):
         """Apply selections, make histograms and cutflow"""
-
         # create object collections
         # fixme: only include objs used in cuts or hists
         objs = {}
@@ -141,7 +140,8 @@ class SidmProcessor(processor.ProcessorABC):
                 # make cutflow
                 if lj_reco not in cutflows:
                     cutflows[str(lj_reco)] = {}
-                cutflows[str(lj_reco)][channel] = cutflow.Cutflow(evt_selection.all_evt_cuts, evt_selection.evt_cuts, self.obj_defs["weight"](events))
+                dataset = events.metadata["dataset"]
+                cutflows[str(lj_reco)][channel] = cutflow.Cutflow(dataset, evt_selection.all_evt_cuts, evt_selection.evt_cuts, self.obj_defs["weight"](events))
 
                 # Fill counters
                 if lj_reco not in counters:
@@ -161,7 +161,10 @@ class SidmProcessor(processor.ProcessorABC):
         out = {
             "cutflow": cutflows,
             "hists": {n: h.hist for n, h in hists.items()}, # output hist.Hists, not Histograms
-            "counters": counters
+            "counters": counters,
+            "metadata": {
+                "nEvts": events.metadata["entrystop"] - events.metadata["entrystart"],
+            },
         }
 
         return {events.metadata["dataset"]: out}

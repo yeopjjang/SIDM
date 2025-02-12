@@ -7,6 +7,8 @@ from coffea import processor
 from coffea.analysis_tools import PackedSelection
 import awkward as ak
 import numpy as np
+# local
+from sidm.tools import utilities
 
 class Cutflow(processor.AccumulatorABC):
     """Class to represent the number of events that pass each cut in a selection
@@ -19,8 +21,9 @@ class Cutflow(processor.AccumulatorABC):
     - f_all: fraction of events that pass the logical AND of the current and all preceding cuts
     """
 
-    def __init__(self, all_cuts, selection, weights):
+    def __init__(self, dataset, all_cuts, selection, weights):
         """Make Cutflow, starting with 'No selection' row"""
+        self.dataset = dataset
         self.selection = selection # list of cut names to apply
         # make behavior-free array with weights set to zero for making additive identity Cutflows
         self.zero_weights = ak.without_parameters(ak.zeros_like(weights), behavior={})
@@ -42,7 +45,7 @@ class Cutflow(processor.AccumulatorABC):
         all_cuts = PackedSelection()
         for cut in self.selection:
             all_cuts.add(cut, ak.values_astype(self.zero_weights, bool))
-        return Cutflow(all_cuts, self.selection, self.zero_weights)
+        return Cutflow(self.dataset, all_cuts, self.selection, self.zero_weights)
 
     def add(self, other):
         """Add two cutflows"""
@@ -85,7 +88,14 @@ class Cutflow(processor.AccumulatorABC):
                 "cumulative %",
             ]
         else:
-            data = [[e.cut, e.n_ind, e.n_all] for e in flow]
+            # add lumi*xs weights
+            if unweighted:
+                xs_weight = 1
+            else:
+                xs = utilities.get_xs(self.dataset)
+                lumi = 59 #/fb
+                xs_weight = lumi*1000*xs / flow[0].n_ind
+            data = [[e.cut, xs_weight*e.n_ind, xs_weight*e.n_all] for e in flow]
             headers = [
                 "cut name",
                 "individual cut N",
