@@ -48,6 +48,7 @@ class SidmProcessor(processor.ProcessorABC):
         """Apply selections, make histograms and cutflow"""
 
         # create object collections
+        # fixme: only include objs used in cuts or hists
         objs = {}
         for obj_name, obj_def in self.obj_defs.items():
             try:

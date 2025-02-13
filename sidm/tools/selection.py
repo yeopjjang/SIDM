@@ -99,18 +99,21 @@ class JaggedSelection:
     def apply_obj_masks(self, objs, obj_masks):
         """Filter object collections based on object masks """
         sel_objs = {}
-        for name, obj in objs.items():
+        # create list such that cuts are applied in order specified in selection cfg
+        obj_names = list(obj_masks.keys()) + [name for name in objs if name not in obj_masks]
+        for name in obj_names:
+            obj = objs[name]
             # filter objects if mask exists, return collection unfiltered if mask does not exist
-            sel_objs[name] = obj[obj_masks[name]] if name in obj_masks else obj
-
+            sel_objs[name] = obj[obj_masks[name]] if name in obj_masks else obj 
             if self.verbose:
                 if name in obj_masks:
                     print(f"Applying mask to collection: {name}")
                 else:
                     print(f"No mask available for collection; returning unfiltered: {name}")
+
         for collection_to_cut in obj_masks:
             if collection_to_cut not in objs.keys():
-                print(f"WARNING! Trying to apply a cut to {collection_to_cut} but that's not a valid object")
+                print(f"Warning: Trying to apply a cut to {collection_to_cut} but that's not a valid object")
         return sel_objs
 
     def make_and_apply_obj_masks(self, objs, channel_cut_list):
