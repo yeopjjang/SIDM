@@ -163,7 +163,7 @@ class SidmProcessor(processor.ProcessorABC):
             "hists": {n: h.hist for n, h in hists.items()}, # output hist.Hists, not Histograms
             "counters": counters,
             "metadata": {
-                "nEvts": events.metadata["entrystop"] - events.metadata["entrystart"],
+                "n_evts": events.metadata["entrystop"] - events.metadata["entrystart"],
             },
         }
 
@@ -312,4 +312,15 @@ class SidmProcessor(processor.ProcessorABC):
         return obj
 
     def postprocess(self, accumulator):
-        pass
+        if self.unweighted_hist:
+            print("unweighted hists")
+            return
+        # scale hists according to lumi*xs
+        print("weighted hists")
+        for sample, output in accumulator.items():
+            n_evts = output["metadata"]["n_evts"]
+            xs = utilities.get_xs(sample)
+            lumi = 59.0 # fixme: fetch automatically
+            xs_weight = lumi*1000*xs / n_evts
+            for name, h in output["hists"].items():
+                accumulator[sample]["hists"][name] = h*xs_weight

@@ -93,7 +93,7 @@ class Cutflow(processor.AccumulatorABC):
                 xs_weight = 1
             else:
                 xs = utilities.get_xs(self.dataset)
-                lumi = 59 #/fb
+                lumi = 59 #/fb # fixme: fetch automatically
                 xs_weight = lumi*1000*xs / flow[0].n_ind
             data = [[e.cut, xs_weight*e.n_ind, xs_weight*e.n_all] for e in flow]
             headers = [
