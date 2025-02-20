@@ -7,8 +7,6 @@ from coffea import processor
 from coffea.analysis_tools import PackedSelection
 import awkward as ak
 import numpy as np
-# local
-from sidm.tools import utilities
 
 class Cutflow(processor.AccumulatorABC):
     """Class to represent the number of events that pass each cut in a selection
