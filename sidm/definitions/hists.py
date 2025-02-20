@@ -425,7 +425,7 @@ hist_defs = {
     "lj_n": obj_attr("ljs", "n"),
     "egm_lj_n": obj_attr("egm_ljs", "n"),
     "mu_lj_n": obj_attr("mu_ljs", "n"),
-    "lj_pt": obj_attr("ljs", "pt", xmax=600),
+    "lj_pt": obj_attr("ljs", "pt", xmax=700),
     "lj0_pt": h.Histogram(
         [
             h.Axis(hist.axis.Regular(100, 0, 400, name="lj0_pt",
@@ -480,7 +480,7 @@ hist_defs = {
     "lj_muonN": obj_attr("ljs", "muon_n", xmax=10, nbins=10),
     "lj_dsaMuN": obj_attr("ljs", "dsaMu_n", xmax=10, nbins=10),
     "lj_pfMuN": obj_attr("ljs", "pfMu_n", xmax=10, nbins=10),
-    "mu_lj_pt": obj_attr("mu_ljs", "pt", xmax=500),
+    "mu_lj_pt": obj_attr("mu_ljs", "pt", xmax=700),
     "mu_lj_muonN": obj_attr("mu_ljs", "muon_n", xmax=10, nbins=10),
     "mu_lj_pfMu_n": obj_attr("mu_ljs", "pfMu_n", xmax=10, nbins=10),
     "mu_lj_dsaMu_n": obj_attr("mu_ljs", "dsaMu_n", xmax=10, nbins=10),
