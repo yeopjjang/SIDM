@@ -227,3 +227,29 @@ def lab_ctau(bs, zd, proper_ct, grid_cfg=f"{BASE_DIR}/configs/signal_grid.yaml")
     else:
         lab_ct = proper_ct*grid[bs][zd]["labframe_factor"]
     return round_sigfig(lab_ct, digits=2)
+
+def get_xs(dataset, cfg="cross_sections.yaml"):
+    """Fetch dataset xs from cfg"""
+    # assume location_cfg is stored in sidm/configs/
+    xs_menu = load_yaml(f"{BASE_DIR}/configs/" + cfg)
+    try:
+        return xs_menu[dataset]
+    except KeyError:
+        if dataset.startswith(("2Mu2E", "4Mu")):
+            print("Signal not in xs cfg, assuming 1fb")
+            return 0.001
+        else:
+            raise
+
+def get_lumi(year, cfg="run_periods.yaml"):
+    """Fetch run period lumi from cfg"""
+    # assume location_cfg is stored in sidm/configs/
+    lumi_menu = load_yaml(f"{BASE_DIR}/configs/" + cfg)
+    return lumi_menu[year]["lumi"]
+
+def get_lumixs_weight(dataset, year, n_evts):
+    """Get weights to scale n_evts to lumi*xs"""
+    lumi = get_lumi(year)
+    xs = get_xs(dataset)
+    return lumi*xs/n_evts
+    

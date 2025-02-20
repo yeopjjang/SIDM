@@ -49,6 +49,11 @@ class Cutflow(processor.AccumulatorABC):
         for i, _ in enumerate(self.flow):
             self.flow[i] = self.flow[i] + other.flow[i]
             self.unweighted_flow[i] = self.unweighted_flow[i] + other.unweighted_flow[i]
+    
+    def scale(self, weight):
+        """Apply overall scale factor to weighted Cutflow"""
+        for i, _ in enumerate(self.flow):
+            self.flow[i].scale(weight)
 
     def efficiency(self):
         """Outputs the fraction of events passing the cutflow as a fraction of 1"""
@@ -151,6 +156,12 @@ class CutflowElement(processor.AccumulatorABC):
         self.n_evts = self.n_evts + other.n_evts
         self.n_ind = self.n_ind + other.n_ind
         self.n_all = self.n_all + other.n_all
+
+    def scale(self, weight):
+        """Apply overall scale factor to CutflowElement"""
+        self.n_evts *= weight
+        self.n_ind *= weight
+        self.n_all *= weight
 
     def calculate_fractions(self, previous_element):
         """Calculate individual, cumulative, and marginal fractional cutflow values"""

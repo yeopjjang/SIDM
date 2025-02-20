@@ -43,10 +43,10 @@ class SidmProcessor(processor.ProcessorABC):
         self.unweighted_hist = unweighted_hist
         self.obj_defs = preLj_objs
         self.verbose = verbose
+        self.year = "2018" # fixme: may be better to store as event metadata
 
     def process(self, events):
         """Apply selections, make histograms and cutflow"""
-
         # create object collections
         # fixme: only include objs used in cuts or hists
         objs = {}
@@ -161,7 +161,10 @@ class SidmProcessor(processor.ProcessorABC):
         out = {
             "cutflow": cutflows,
             "hists": {n: h.hist for n, h in hists.items()}, # output hist.Hists, not Histograms
-            "counters": counters
+            "counters": counters,
+            "metadata": {
+                "n_evts": events.metadata["entrystop"] - events.metadata["entrystart"],
+            },
         }
 
         return {events.metadata["dataset"]: out}
@@ -309,4 +312,13 @@ class SidmProcessor(processor.ProcessorABC):
         return obj
 
     def postprocess(self, accumulator):
-        pass
+        """Modify accumulator after process has run on all chunks"""
+        # scale cutflow and hists according to lumi*xs
+        for sample, output in accumulator.items():
+            n_evts = output["metadata"]["n_evts"]
+            lumixs_weight = utilities.get_lumixs_weight(sample, self.year, n_evts)
+            for name in output["cutflow"]:
+                accumulator[sample]["cutflow"][name].scale(lumixs_weight)
+            if not self.unweighted_hist:
+                for name in output["hists"]:
+                    accumulator[sample]["hists"][name] *= lumixs_weight
