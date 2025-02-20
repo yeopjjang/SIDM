@@ -43,6 +43,7 @@ class SidmProcessor(processor.ProcessorABC):
         self.unweighted_hist = unweighted_hist
         self.obj_defs = preLj_objs
         self.verbose = verbose
+        self.year = "2018"
 
     def process(self, events):
         """Apply selections, make histograms and cutflow"""
@@ -313,14 +314,12 @@ class SidmProcessor(processor.ProcessorABC):
 
     def postprocess(self, accumulator):
         if self.unweighted_hist:
-            print("unweighted hists")
             return
         # scale hists according to lumi*xs
-        print("weighted hists")
         for sample, output in accumulator.items():
             n_evts = output["metadata"]["n_evts"]
             xs = utilities.get_xs(sample)
-            lumi = 59.0 # fixme: fetch automatically
+            lumi = utilities.get_lumi(self.year)
             xs_weight = lumi*1000*xs / n_evts
             for name, h in output["hists"].items():
                 accumulator[sample]["hists"][name] = h*xs_weight

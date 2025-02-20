@@ -240,3 +240,10 @@ def get_xs(dataset, cfg="cross_sections.yaml"):
             return 0.001
         else:
             raise
+
+def get_lumi(year, cfg="run_periods.yaml"):
+    """Fetch run period lumi from cfg"""
+    # assume location_cfg is stored in sidm/configs/
+    lumi_menu = load_yaml(f"{BASE_DIR}/configs/" + cfg)
+    print(lumi_menu)
+    return lumi_menu[year]["lumi"]
