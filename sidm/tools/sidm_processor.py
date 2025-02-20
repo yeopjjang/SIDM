@@ -141,8 +141,7 @@ class SidmProcessor(processor.ProcessorABC):
                 # make cutflow
                 if lj_reco not in cutflows:
                     cutflows[str(lj_reco)] = {}
-                dataset = events.metadata["dataset"]
-                cutflows[str(lj_reco)][channel] = cutflow.Cutflow(dataset, evt_selection.all_evt_cuts, evt_selection.evt_cuts, self.obj_defs["weight"](events))
+                cutflows[str(lj_reco)][channel] = cutflow.Cutflow(evt_selection.all_evt_cuts, evt_selection.evt_cuts, self.obj_defs["weight"](events))
 
                 # Fill counters
                 if lj_reco not in counters:

@@ -21,9 +21,8 @@ class Cutflow(processor.AccumulatorABC):
     - f_all: fraction of events that pass the logical AND of the current and all preceding cuts
     """
 
-    def __init__(self, dataset, all_cuts, selection, weights):
+    def __init__(self, all_cuts, selection, weights):
         """Make Cutflow, starting with 'No selection' row"""
-        self.dataset = dataset
         self.selection = selection # list of cut names to apply
         # make behavior-free array with weights set to zero for making additive identity Cutflows
         self.zero_weights = ak.without_parameters(ak.zeros_like(weights), behavior={})
@@ -45,7 +44,7 @@ class Cutflow(processor.AccumulatorABC):
         all_cuts = PackedSelection()
         for cut in self.selection:
             all_cuts.add(cut, ak.values_astype(self.zero_weights, bool))
-        return Cutflow(self.dataset, all_cuts, self.selection, self.zero_weights)
+        return Cutflow(all_cuts, self.selection, self.zero_weights)
 
     def add(self, other):
         """Add two cutflows"""
