@@ -87,41 +87,36 @@ class SidmProcessor(processor.ProcessorABC):
         hists = self.build_histograms()
 
         ### Make list of all object-level cuts; define object-level, post-lj-level, and event-level cuts per channel
-        all_obj_cuts, ch_cuts = self.build_cuts()
-
-        # evaluate all object-level cuts
-        obj_selection = selection.JaggedSelection(all_obj_cuts, self.verbose)
-        obj_selection.evaluate_obj_cuts(objs)
+        ch_cuts = self.build_cuts()
 
         # loop through lj reco choices and channels, treating each lj+channel pair as a unique Selection
-        for channel in self.channel_names:
+        for channel, cuts in ch_cuts.items():
+            obj_selection = selection.JaggedSelection(cuts["obj"], self.verbose)
 
-            # apply object selection
-            channel_objs = obj_selection.make_and_apply_obj_masks(objs, ch_cuts[channel]["obj"])
+            # apply pre-LJ object selection
+            channel_objs = obj_selection.apply_obj_cuts(objs)
 
             for lj_reco in self.lj_reco_choices:
-
+                
                 sel_objs = channel_objs
 
                 # reconstruct lepton jets
                 sel_objs["ljs"] = self.build_lepton_jets(channel_objs, float(lj_reco))
 
                 # apply obj selection to ljs
-                lj_selection = selection.JaggedSelection(ch_cuts[channel]["lj"], self.verbose)
-                lj_selection.evaluate_obj_cuts(sel_objs)
-                sel_objs = lj_selection.make_and_apply_obj_masks(sel_objs, ch_cuts[channel]["lj"])
+                lj_selection = selection.JaggedSelection(cuts["lj"], self.verbose)
+                lj_selection.apply_obj_cuts(sel_objs)
 
                 # add post-lj objects to sel_objs
                 for obj in postLj_objs:
                     sel_objs[obj] = postLj_objs[obj](sel_objs)
 
                 # apply post-lj obj selection
-                postLj_selection = selection.JaggedSelection(ch_cuts[channel]["postLj_obj"], self.verbose)
-                postLj_selection.evaluate_obj_cuts(sel_objs)
-                sel_objs = postLj_selection.make_and_apply_obj_masks(sel_objs, ch_cuts[channel]["postLj_obj"])
+                postLj_selection = selection.JaggedSelection(cuts["postLj_obj"], self.verbose)
+                postLj_selection.apply_obj_cuts(sel_objs)
 
                 # build Selection objects and apply event selection
-                evt_selection = selection.Selection(ch_cuts[channel]["evt"], self.verbose)
+                evt_selection = selection.Selection(cuts["evt"], self.verbose)
                 sel_objs = evt_selection.apply_evt_cuts(sel_objs)
 
                 # fill all hists
@@ -256,7 +251,6 @@ class SidmProcessor(processor.ProcessorABC):
 
         selection_menu = utilities.load_yaml(f"{BASE_DIR}/{self.selections_cfg}")
 
-        all_obj_cuts = {}
         ch_cuts = {}
 
         for channel in self.channel_names:
@@ -266,13 +260,8 @@ class SidmProcessor(processor.ProcessorABC):
             ch_cuts[channel]["postLj_obj"] = {}
             ch_cuts[channel]["evt"] = {}
 
-            #Merge all object level cuts into a single list to be evaluated once
             cuts = selection_menu[channel]
             for obj, obj_cuts in cuts["obj_cuts"].items():
-                if obj not in all_obj_cuts:
-                    all_obj_cuts[obj] = []
-                all_obj_cuts[obj] = utilities.add_unique_and_flatten(all_obj_cuts[obj],obj_cuts)
-
                 if obj not in ch_cuts[channel]["obj"]:
                     ch_cuts[channel]["obj"][obj] = []
                 ch_cuts[channel]["obj"][obj] = utilities.flatten(obj_cuts)
@@ -287,7 +276,7 @@ class SidmProcessor(processor.ProcessorABC):
             if "evt_cuts" in cuts:
                 ch_cuts[channel]["evt"] = utilities.flatten(cuts["evt_cuts"])
 
-        return all_obj_cuts, ch_cuts
+        return ch_cuts
 
     def build_histograms(self):
         """Create dictionary of Histogram objects"""
