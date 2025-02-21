@@ -175,7 +175,7 @@ evt_cut_defs = {
         | objs["hlt"].DoubleL2Mu25NoVtx_2Cha_CosmicSeed_Eta2p4
     ),
     ">=1 muon": lambda objs: ak.num(objs["muons"]) >= 1,
-    "PV filter": lambda objs: ak.num(objs["pvs"]) >= 1,
+    "PV filter": lambda objs: ak.flatten(objs["pvs"].npvsGood) >= 1,
     #"Cosmic veto": lambda objs: objs["cosmicveto"].result,
     ">=2 LJs": lambda objs: ak.num(objs["ljs"]) >= 2,
     ">=2 matched As": lambda objs: ak.num(derived_objs["genAs_matched_lj"](objs, 0.2)) >= 2,

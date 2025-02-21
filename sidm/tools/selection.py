@@ -54,7 +54,7 @@ class JaggedSelection:
     """
 
     def __init__(self, cuts, verbose=False):
-        self.obj_cuts = cuts # dict of names of cuts to be applied
+        self.obj_cuts = cuts # dict of cuts to be applied
         self.verbose = verbose
     
     def apply_obj_cuts(self, objs):

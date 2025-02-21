@@ -41,18 +41,12 @@ trigger: &trigger
 
 # PV filter
 pv_cuts: &pv_cuts
-  obj_cuts: &obj_pv_cuts
-    pvs:
-      - "ndof > 4"
-      - "|z| < 24 cm"
-      - "|rho| < 0.02 cm"
   evt_cuts: &evt_pv_cuts
     - "PV filter"
 
 # apply trigger, gen cuts, and pv filter
 baseNoLjNoLjsource: &baseNoLjNoLjsource
   obj_cuts: &obj_baseNoLjNoLjsource
-    <<: *obj_pv_cuts
     <<: *obj_gen_level_cuts
   evt_cuts: &evt_baseNoLjNoljsource
     - *trigger
@@ -69,7 +63,6 @@ baseNoLj: &baseNoLj
 baseNoLj_egLj: &baseNoLj_egLj
   obj_cuts:
     <<: *obj_ljsource_cuts
-    <<: *obj_pv_cuts
     <<: *obj_gen_level_cuts
   postLj_obj_cuts:
     egm_ljs:
