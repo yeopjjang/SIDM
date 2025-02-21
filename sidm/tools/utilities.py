@@ -3,6 +3,7 @@
 import yaml
 import numpy as np
 import awkward as ak
+import numpy as np
 import matplotlib.pyplot as plt
 import mplhep as hep
 import hist.intervals
@@ -62,8 +63,9 @@ def as_int(array):
     return ak.values_astype(array, "int64")
 
 def dR(obj1, obj2):
-    """Return dR between obj1 and the nearest obj2; returns None if no obj2 is found"""
-    return obj1.nearest(obj2, return_metric=True)[1]
+    """Return dR between obj1 and the nearest obj2; returns inf if no obj2 is found"""
+    dr = obj1.nearest(obj2, return_metric=True)[1]
+    return ak.fill_none(dr, np.inf)
 
 def dR_outer(obj1, obj2):
     """Return dR between outer tracks of obj1 and obj2"""
