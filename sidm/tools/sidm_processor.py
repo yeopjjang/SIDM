@@ -86,7 +86,7 @@ class SidmProcessor(processor.ProcessorABC):
         # define histograms
         hists = self.build_histograms()
 
-        ### Make list of all object-level cuts; define object-level, post-lj-level, and event-level cuts per channel
+        ### define pre- and post-lj object-level and event-level cuts per channel
         ch_cuts = self.build_cuts()
 
         # loop through lj reco choices and channels, treating each lj+channel pair as a unique Selection
@@ -97,11 +97,10 @@ class SidmProcessor(processor.ProcessorABC):
             channel_objs = obj_selection.apply_obj_cuts(objs)
 
             for lj_reco in self.lj_reco_choices:
-                
                 sel_objs = channel_objs
 
                 # reconstruct lepton jets
-                sel_objs["ljs"] = self.build_lepton_jets(channel_objs, float(lj_reco))
+                sel_objs["ljs"] = self.build_lepton_jets(sel_objs, float(lj_reco))
 
                 # apply obj selection to ljs
                 lj_selection = selection.JaggedSelection(cuts["lj"], self.verbose)
