@@ -147,7 +147,7 @@ lj_jet_base: &lj_jet_base
   - "lj_matchedjet_nmuon"
   - "lj_matchedjet_nelectron"
   
-isolation_base: &iso_base  
+isolation_base: &isolation_base  
   - "leading_lj_isolation"
   - "new_leading_lj_isolation"
   - "subleading_lj_isolation"
@@ -157,7 +157,7 @@ isolation_base: &iso_base
   - "subleading_mu_lj_isolation"
   - "new_subleading_mu_lj_isolation"
   - "egm_lj_isolation"
-  - "new_egm_lj_isolation"
+  - "new_leading_egm_lj_isolation"
   
 lj_base: &lj_base
   - "lj_n"
