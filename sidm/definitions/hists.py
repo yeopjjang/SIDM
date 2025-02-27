@@ -692,16 +692,28 @@ hist_defs = {
         evt_mask=lambda objs: ak.num(derived_objs["egm_matched_jets"](objs,0.4)) > 0,
     ),
     
+    # "new_leading_egm_lj_isolation": h.Histogram(
+    #     [
+    #         h.Axis(hist.axis.Regular(50, 0, 2, name="test",
+    #                label="New Leading EGM-LJ Isolation"),
+    #                lambda objs, mask:  (derived_objs["new_egm_matched_jets"](objs,0.4)[ak.num(objs["egm_ljs"]) > 0][mask][:,0:1].energy
+    #                    / objs["egm_ljs"][ak.num(objs["egm_ljs"]) > 0][mask][:,0:1].energy) * (1 - (derived_objs["new_egm_matched_jets"](objs,0.4)[ak.num(objs["egm_ljs"]) > 0][mask][:,0:1].chEmEF + 
+    #                                                               derived_objs["new_egm_matched_jets"](objs,0.4)[ak.num(objs["egm_ljs"]) > 0][mask][:,0:1].neEmEF + 
+    #                                                               derived_objs["new_egm_matched_jets"](objs,0.4)[ak.num(objs["egm_ljs"]) > 0][mask][:,0:1].muEF))),
+    #     ],
+    #     evt_mask=lambda objs: ~ak.is_none(derived_objs["new_egm_matched_jets"](objs,0.4)[ak.num(objs["egm_ljs"]) > 0][:,0]),
+    # ),
+    
     "new_leading_egm_lj_isolation": h.Histogram(
         [
             h.Axis(hist.axis.Regular(50, 0, 2, name="test",
-                   label="New Leading EGM-LJ Isolation"),
-                   lambda objs, mask:  (derived_objs["new_egm_matched_jets"](objs,0.4)[ak.num(objs["egm_ljs"]) > 0][mask][:,0:1].energy
-                       / objs["egm_ljs"][ak.num(objs["egm_ljs"]) > 0][mask][:,0:1].energy) * (1 - (derived_objs["new_egm_matched_jets"](objs,0.4)[ak.num(objs["egm_ljs"]) > 0][mask][:,0:1].chEmEF + 
-                                                                  derived_objs["new_egm_matched_jets"](objs,0.4)[ak.num(objs["egm_ljs"]) > 0][mask][:,0:1].neEmEF + 
-                                                                  derived_objs["new_egm_matched_jets"](objs,0.4)[ak.num(objs["egm_ljs"]) > 0][mask][:,0:1].muEF))),
+                   label="New Leading Mu-LJ Isolation"),
+                   lambda objs, mask:  (derived_objs["new_egm_matched_jets"](objs,0.4)[mask][:,0:1].energy
+                       / objs["egm_ljs"][mask][:,0:1].energy) * (1 - (derived_objs["new_egm_matched_jets"](objs,0.4)[mask][:,0:1].chEmEF + 
+                                                                  derived_objs["new_egm_matched_jets"](objs,0.4)[mask][:,0:1].neEmEF + 
+                                                                  derived_objs["new_egm_matched_jets"](objs,0.4)[mask][:,0:1].muEF))),
         ],
-        evt_mask=lambda objs: ~ak.is_none(derived_objs["new_egm_matched_jets"](objs,0.4)[ak.num(objs["egm_ljs"]) > 0][:,0]),
+        evt_mask=lambda objs: (ak.num(objs["egm_ljs"]) > 0) & (~ak.is_none(derived_objs["new_egm_matched_jets"](objs,0.4)[:,0])),
     ),
     
     "leading_lj_isolation2": h.Histogram(
