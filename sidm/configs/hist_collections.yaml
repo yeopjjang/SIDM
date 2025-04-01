@@ -70,6 +70,13 @@ dsaMuon_base: &dsaMuon_base
   - "dsaMuon_eta_phi"
   - "dsaMuon_absD0"
   - "dsaMuon_absD0_lowRange"
+  
+isolation_base: &isolation_base  
+  - "leading_lj_isolation"
+  - "subleading_lj_isolation"
+  - "leading_mu_lj_isolation"
+  - "subleading_mu_lj_isolation"
+  - "leading_egm_lj_isolation"
 
 lj_base: &lj_base
   - "lj_n"
