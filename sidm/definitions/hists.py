@@ -89,6 +89,63 @@ def obj_eta_phi(obj, nbins_x=None, xmin=None, xmax=None, nbins_y=None, ymin=None
 
 # define histograms
 hist_defs = {
+    # LJ Isolation
+    "leading_lj_isolation": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 10, name="test",
+                   label="Leading LJ Isolation"),
+                   lambda objs, mask:  (objs["leading_matched_jets"][mask][:,0:1].energy
+                       / objs["ljs"][mask][:,0:1].energy) * (1 - (objs["leading_matched_jets"][mask][:,0:1].chEmEF + 
+                                                                  objs["leading_matched_jets"][mask][:,0:1].neEmEF + 
+                                                                  objs["leading_matched_jets"][mask][:,0:1].muEF))),
+        ],
+        evt_mask=lambda objs: ak.num(objs["ljs"]) > 0,
+    ),  
+    "subleading_lj_isolation": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 10, name="test",
+                   label="Subleading LJ Isolation"),
+                   lambda objs, mask:  (objs["subleading_matched_jets"][mask][:,0:1].energy
+                       / objs["ljs"][mask][:,1:2].energy) * (1 - (objs["subleading_matched_jets"][mask][:,0:1].chEmEF + 
+                                                                  objs["subleading_matched_jets"][mask][:,0:1].neEmEF + 
+                                                                  objs["subleading_matched_jets"][mask][:,0:1].muEF))),
+        ],
+        evt_mask=lambda objs: ak.num(objs["ljs"]) > 1,
+    ),
+    "leading_mu_lj_isolation": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 10, name="test",
+                   label="Leading Mu-LJ Isolation"),
+                   lambda objs, mask:  (objs["mu_matched_jets"][mask][:,0:1].energy
+                       / objs["mu_ljs"][mask][:,0:1].energy) * (1 - (objs["mu_matched_jets"][mask][:,0:1].chEmEF + 
+                                                                     objs["mu_matched_jets"][mask][:,0:1].neEmEF + 
+                                                                     objs["mu_matched_jets"][mask][:,0:1].muEF))),
+        ],
+        evt_mask=lambda objs: (ak.num(objs["mu_ljs"]) > 0),
+    ),
+    "subleading_mu_lj_isolation": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 10, name="test",
+                   label="Subleading Mu-LJ Isolation"),
+                   lambda objs, mask:  (objs["mu_matched_jets"][mask][:,1:2].energy
+                       / objs["mu_ljs"][mask][:,1:2].energy) * (1 - (objs["mu_matched_jets"][mask][:,1:2].chEmEF + 
+                                                                                                 objs["mu_matched_jets"][mask][:,1:2].neEmEF + 
+                                                                                                 objs["mu_matched_jets"][mask][:,1:2].muEF))),
+        ],
+        evt_mask=lambda objs: (ak.num(objs["mu_ljs"]) > 1),
+    ),
+    "leading_egm_lj_isolation": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 10, name="test",
+                   label="Leading EGM-LJ Isolation"),
+                   lambda objs, mask:  (objs["egm_matched_jets"][mask][:,0:1].energy
+                       / objs["egm_ljs"][mask][:,0:1].energy) * (1 - (objs["egm_matched_jets"][mask][:,0:1].chEmEF + 
+                                                                      objs["egm_matched_jets"][mask][:,0:1].neEmEF + 
+                                                                      objs["egm_matched_jets"][mask][:,0:1].muEF))),
+        ],
+        evt_mask=lambda objs: (ak.num(objs["egm_ljs"]) > 0),
+    ),
+    
     # pv
     "pv_n": obj_attr("pvs", "npvs", nbins=50, label="Number of PVs"),
     "pv_ndof": obj_attr("pvs", "ndof", nbins=25, xmax=100),
