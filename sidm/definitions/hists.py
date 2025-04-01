@@ -21,6 +21,8 @@ importlib.reload(h)
 
 # define counters
 counter_defs = {
+    "Gen As": lambda objs: ak.count(objs["genAs"].pt),
+    
     "Gen As to muons": lambda objs: ak.count(objs["genAs_toMu"].pt),
     "Gen As to electrons": lambda objs: ak.count(objs["genAs_toE"].pt),
     "Matched gen As to muons": lambda objs: ak.count(derived_objs["genAs_toMu_matched_lj"](objs, 0.4).pt),
@@ -101,7 +103,53 @@ def obj_eta_phi(obj, nbins_x=None, xmin=None, xmax=None, nbins_y=None, ymin=None
 
 
 # define histograms
-hist_defs = {
+hist_defs = { 
+    # Test Area
+    "leading_mu_matched_jet_pt": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 500, name="leading_mu_matched_jet_pt",
+                   label="Leading Mu Matched-Jet PT"),
+                   lambda objs, mask:  (derived_objs["leading_mu_matched_jets"](objs,0.4)[mask,0].pt)),
+        ],
+        evt_mask=lambda objs: ak.num(derived_objs["leading_mu_matched_jets"](objs,0.4)) > 0,
+    ),
+    
+    "new_leading_mu_matched_jet_pt": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 500, name="new_leading_mu_matched_jet_pt",
+                   label="New Leading Mu Matched-Jet PT"),
+                   lambda objs, mask:  (derived_objs["new_mu_matched_jets"](objs,0.4)[mask][:,0:1].pt)),
+        ],
+        evt_mask=lambda objs: ak.num(derived_objs["new_mu_matched_jets"](objs,0.4)[:,0:1]) > 0,
+    ),
+    
+    "post_leading_mu_matched_jet_pt": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 500, name="post_leading_mu_matched_jet_pt",
+                   label="Post Leading Mu Matched-Jet PT"),
+                   lambda objs, mask:  (objs["mu_matched_jets"][mask][:,0:1].pt)),
+        ],
+        evt_mask=lambda objs: (ak.num(objs["mu_matched_jets"][:,0:1]) > 0),
+    ),
+    
+    "test_post_leading_mu_matched_jet_pt": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 500, name="post_leading_mu_matched_jet_pt",
+                   label="Post Leading Mu Matched-Jet PT"),
+                   lambda objs, mask:  (objs["mu_matched_jets"][mask][:,0:1].pt)),
+        ],
+        evt_mask=lambda objs: (ak.num(objs["mu_ljs"]) > 0),
+    ),
+        
+    "nonetest_post_leading_mu_matched_jet_pt": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 500, name="post_leading_mu_matched_jet_pt",
+                   label="Post Leading Mu Matched-Jet PT"),
+                   lambda objs, mask:  (objs["mu_matched_jets"][mask][:,0:1].pt)),
+        ],
+        evt_mask=lambda objs: ((ak.num(objs["mu_ljs"]) > 0) & (~ak.is_none(derived_objs["new_mu_matched_jets"](objs,0.4)[:,0]))),
+    ),
+    
     # LJ-matched jet
     "lj_matchedjet_pt": h.Histogram(
         [
@@ -536,63 +584,99 @@ hist_defs = {
         evt_mask=lambda objs: ak.num(derived_objs["egm_matched_jets"](objs,0.4)) > 0,
     ),
     
-    "leading_mu_matchedjet_chEmEF": h.Histogram(
+    "mu_matchedjet_chEmEF": h.Histogram(
         [
-            h.Axis(hist.axis.Regular(50, 0, 1, name="leading_mu_matchedjet_chEmEF",
-                   label="Leading-Mu-LJ Matched Jet chEmEF"),
-                   lambda objs, mask: (derived_objs["leading_mu_matched_jets"](objs,0.4)[mask].chEmEF)),
+            h.Axis(hist.axis.Regular(50, 0, 1, name="mu_matchedjet_chEmEF",
+                   label="Mu Matched Jet chEmEF"),
+                   lambda objs, mask: (objs["mu_matched_jets"][mask].chEmEF)),
         ],
-        evt_mask=lambda objs: ak.num(derived_objs["leading_mu_matched_jets"](objs,0.4)) > 0,
+        evt_mask=lambda objs: ak.num(objs["mu_matched_jets"]) > 0,
     ),
     
-    "leading_mu_matchedjet_neEmEF": h.Histogram(
+    "mu_matchedjet_neEmEF": h.Histogram(
         [
-            h.Axis(hist.axis.Regular(50, 0, 1, name="leading_mu_matchedjet_neEmEF",
-                   label="Leading-Mu-LJ Matched Jet neEmEF"),
-                   lambda objs, mask: (derived_objs["leading_mu_matched_jets"](objs,0.4)[mask].neEmEF)),
+            h.Axis(hist.axis.Regular(50, 0, 1, name="mu_matchedjet_chEmEF",
+                   label="Mu Matched Jet neEmEF"),
+                   lambda objs, mask: (objs["mu_matched_jets"][mask].neEmEF)),
         ],
-        evt_mask=lambda objs: ak.num(derived_objs["leading_mu_matched_jets"](objs,0.4)) > 0,
+        evt_mask=lambda objs: ak.num(objs["mu_matched_jets"]) > 0,
     ),
     
-    "leading_mu_matchedjet_muEF": h.Histogram(
+    "mu_matchedjet_muEF": h.Histogram(
         [
-            h.Axis(hist.axis.Regular(50, 0, 1, name="leading_mu_matchedjet_muEF",
-                   label="Leading-Mu-LJ Matched Jet muEF"),
-                   lambda objs, mask: (derived_objs["leading_mu_matched_jets"](objs,0.4)[mask].muEF)),
+            h.Axis(hist.axis.Regular(50, 0, 1, name="mu_matchedjet_muEF",
+                   label="Mu Matched Jet muEF"),
+                   lambda objs, mask: (objs["mu_matched_jets"][mask].muEF)),
         ],
-        evt_mask=lambda objs: ak.num(derived_objs["leading_mu_matched_jets"](objs,0.4)) > 0,
+        evt_mask=lambda objs: ak.num(objs["mu_matched_jets"]) > 0,
+    ),
+    
+    "mu_matchedjet_chHEF": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 1, name="mu_matchedjet_chHEF",
+                   label="Mu Matched Jet chHEF"),
+                   lambda objs, mask: (objs["mu_matched_jets"][mask].chHEF)),
+        ],
+        evt_mask=lambda objs: ak.num(objs["mu_matched_jets"]) > 0,
+    ),
+    
+    "mu_matchedjet_neHEF": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 1, name="mu_matchedjet_neHEF",
+                   label="Mu Matched Jet neHEF"),
+                   lambda objs, mask: (objs["mu_matched_jets"][mask].neHEF)),
+        ],
+        evt_mask=lambda objs: ak.num(objs["mu_matched_jets"]) > 0,
     ),
     
     "egm_matchedjet_chEmEF": h.Histogram(
         [
             h.Axis(hist.axis.Regular(50, 0, 1, name="egm_matchedjet_chEmEF",
-                   label="EGM-LJ Matched Jet chEmEF"),
-                   lambda objs, mask: (derived_objs["egm_matched_jets"](objs,0.4)[mask].chEmEF)),
+                   label="EGM Matched Jet chEmEF"),
+                   lambda objs, mask: (objs["egm_matched_jets"][mask].chEmEF)),
         ],
-        evt_mask=lambda objs: ak.num(derived_objs["egm_matched_jets"](objs,0.4)) > 0,
+        evt_mask=lambda objs: ak.num(objs["egm_matched_jets"]) > 0,
     ),
-
+    
     "egm_matchedjet_neEmEF": h.Histogram(
         [
             h.Axis(hist.axis.Regular(50, 0, 1, name="egm_matchedjet_neEmEF",
-                   label="EGM-LJ Matched Jet neEmEF"),
-                   lambda objs, mask: (derived_objs["egm_matched_jets"](objs,0.4)[mask].neEmEF)),
+                   label="EGM Matched Jet neEmEF"),
+                   lambda objs, mask: (objs["egm_matched_jets"][mask].neEmEF)),
         ],
-        evt_mask=lambda objs: ak.num(derived_objs["egm_matched_jets"](objs,0.4)) > 0,
+        evt_mask=lambda objs: ak.num(objs["egm_matched_jets"]) > 0,
     ),
     
     "egm_matchedjet_muEF": h.Histogram(
         [
             h.Axis(hist.axis.Regular(50, 0, 1, name="egm_matchedjet_muEF",
-                   label="EGM-LJ Matched Jet muEF"),
-                   lambda objs, mask: (derived_objs["egm_matched_jets"](objs,0.4)[mask].muEF)),
+                   label="EGM Matched Jet muEF"),
+                   lambda objs, mask: (objs["egm_matched_jets"][mask].muEF)),
         ],
-        evt_mask=lambda objs: ak.num(derived_objs["egm_matched_jets"](objs,0.4)) > 0,
+        evt_mask=lambda objs: ak.num(objs["egm_matched_jets"]) > 0,
+    ),
+    
+    "egm_matchedjet_chHEF": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 1, name="egm_matchedjet_chHEF",
+                   label="EGM Matched Jet chHEF"),
+                   lambda objs, mask: (objs["egm_matched_jets"][mask].chHEF)),
+        ],
+        evt_mask=lambda objs: ak.num(objs["egm_matched_jets"]) > 0,
+    ),
+    
+    "egm_matchedjet_neHEF": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 1, name="egm_matchedjet_neHEF",
+                   label="egm Matched Jet neHEF"),
+                   lambda objs, mask: (objs["egm_matched_jets"][mask].neHEF)),
+        ],
+        evt_mask=lambda objs: ak.num(objs["egm_matched_jets"]) > 0,
     ),
     
     "leading_lj_isolation": h.Histogram(
         [
-            h.Axis(hist.axis.Regular(50, 0, 2, name="leading_matchedjet_isolation",
+            h.Axis(hist.axis.Regular(50, 0, 10, name="leading_matchedjet_isolation",
                    label="Leading LJ Isolation"),
                    lambda objs, mask:  (derived_objs["leading_matched_jets"](objs,0.4)[mask,0].energy
                        / objs["ljs"][:,0:1][mask].energy) * (1 - (derived_objs["leading_matched_jets"](objs,0.4)[mask,0].chEmEF + 
@@ -604,19 +688,31 @@ hist_defs = {
     
     "new_leading_lj_isolation": h.Histogram(
         [
-            h.Axis(hist.axis.Regular(50, 0, 2, name="test",
+            h.Axis(hist.axis.Regular(50, 0, 10, name="test",
                    label="New Leading LJ Isolation"),
                    lambda objs, mask:  (derived_objs["new_leading_matched_jets"](objs,0.4)[mask][:,0:1].energy
                        / objs["ljs"][mask][:,0:1].energy) * (1 - (derived_objs["new_leading_matched_jets"](objs,0.4)[mask][:,0:1].chEmEF + 
                                                                   derived_objs["new_leading_matched_jets"](objs,0.4)[mask][:,0:1].neEmEF + 
                                                                   derived_objs["new_leading_matched_jets"](objs,0.4)[mask][:,0:1].muEF))),
         ],
-        evt_mask=lambda objs: ~ak.is_none(derived_objs["new_leading_matched_jets"](objs,0.4)[:,0]),
+        evt_mask=lambda objs: ak.num(objs["ljs"]) > 0,
+    ),
+
+    "post_leading_lj_isolation": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 10, name="test",
+                   label="Leading LJ Isolation"),
+                   lambda objs, mask:  (objs["leading_matched_jets"][mask][:,0:1].energy
+                       / objs["ljs"][mask][:,0:1].energy) * (1 - (objs["leading_matched_jets"][mask][:,0:1].chEmEF + 
+                                                                  objs["leading_matched_jets"][mask][:,0:1].neEmEF + 
+                                                                  objs["leading_matched_jets"][mask][:,0:1].muEF))),
+        ],
+        evt_mask=lambda objs: ak.num(objs["ljs"]) > 0,
     ),
     
     "subleading_lj_isolation": h.Histogram(
         [
-            h.Axis(hist.axis.Regular(50, 0, 2, name="subleading_matchedjet_isolation",
+            h.Axis(hist.axis.Regular(50, 0, 10, name="subleading_matchedjet_isolation",
                    label="Subleading LJ Isolation"),
                    lambda objs, mask:  (derived_objs["subleading_matched_jets"](objs,0.4)[mask,0].energy
                        / objs["ljs"][:,1:2][mask].energy) * (1 - (derived_objs["subleading_matched_jets"](objs,0.4)[mask,0].chEmEF + derived_objs["subleading_matched_jets"](objs,0.4)[mask,0].neEmEF + derived_objs["subleading_matched_jets"](objs,0.4)[mask,0].muEF))),
@@ -626,19 +722,31 @@ hist_defs = {
     
     "new_subleading_lj_isolation": h.Histogram(
         [
-            h.Axis(hist.axis.Regular(50, 0, 2, name="test",
+            h.Axis(hist.axis.Regular(50, 0, 10, name="test",
                    label="New Subleading LJ Isolation"),
                    lambda objs, mask:  (derived_objs["new_subleading_matched_jets"](objs,0.4)[mask][:,0:1].energy
                        / objs["ljs"][mask][:,1:2].energy) * (1 - (derived_objs["new_subleading_matched_jets"](objs,0.4)[mask][:,0:1].chEmEF + 
                                                                   derived_objs["new_subleading_matched_jets"](objs,0.4)[mask][:,0:1].neEmEF + 
                                                                   derived_objs["new_subleading_matched_jets"](objs,0.4)[mask][:,0:1].muEF))),
         ],
-        evt_mask=lambda objs: ~ak.is_none(derived_objs["new_subleading_matched_jets"](objs,0.4)[:,0]),
+        evt_mask=lambda objs: ak.num(objs["ljs"]) > 1,
+    ),
+    
+    "post_subleading_lj_isolation": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 10, name="test",
+                   label="Subleading LJ Isolation"),
+                   lambda objs, mask:  (objs["subleading_matched_jets"][mask][:,0:1].energy
+                       / objs["ljs"][mask][:,1:2].energy) * (1 - (objs["subleading_matched_jets"][mask][:,0:1].chEmEF + 
+                                                                  objs["subleading_matched_jets"][mask][:,0:1].neEmEF + 
+                                                                  objs["subleading_matched_jets"][mask][:,0:1].muEF))),
+        ],
+        evt_mask=lambda objs: ak.num(objs["ljs"]) > 1,
     ),
     
     "leading_mu_lj_isolation": h.Histogram(
         [
-            h.Axis(hist.axis.Regular(50, 0, 2, name="leading_mu_matchedjet_isolation",
+            h.Axis(hist.axis.Regular(50, 0, 10, name="leading_mu_matchedjet_isolation",
                    label="Leading Mu-LJ Isolation"),
                    lambda objs, mask:  (derived_objs["leading_mu_matched_jets"](objs,0.4)[mask,0].energy
                        / objs["mu_ljs"][:,0:1][mask].energy) * (1 - (derived_objs["leading_mu_matched_jets"](objs,0.4)[mask,0].chEmEF +
@@ -650,19 +758,31 @@ hist_defs = {
     
     "new_leading_mu_lj_isolation": h.Histogram(
         [
-            h.Axis(hist.axis.Regular(50, 0, 2, name="test",
+            h.Axis(hist.axis.Regular(50, 0, 10, name="test",
                    label="New Leading Mu-LJ Isolation"),
                    lambda objs, mask:  (derived_objs["new_mu_matched_jets"](objs,0.4)[mask][:,0:1].energy
                        / objs["mu_ljs"][mask][:,0:1].energy) * (1 - (derived_objs["new_mu_matched_jets"](objs,0.4)[mask][:,0:1].chEmEF + 
                                                                   derived_objs["new_mu_matched_jets"](objs,0.4)[mask][:,0:1].neEmEF + 
                                                                   derived_objs["new_mu_matched_jets"](objs,0.4)[mask][:,0:1].muEF))),
         ],
-        evt_mask=lambda objs: (ak.num(objs["mu_ljs"]) > 0) & (~ak.is_none(derived_objs["new_mu_matched_jets"](objs,0.4)[:,0])),
+        evt_mask=lambda objs: (ak.num(objs["mu_ljs"]) > 0),
+    ),
+    
+    "post_leading_mu_lj_isolation": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 10, name="test",
+                   label="Leading Mu-LJ Isolation"),
+                   lambda objs, mask:  (objs["mu_matched_jets"][mask][:,0:1].energy
+                       / objs["mu_ljs"][mask][:,0:1].energy) * (1 - (objs["mu_matched_jets"][mask][:,0:1].chEmEF + 
+                                                                     objs["mu_matched_jets"][mask][:,0:1].neEmEF + 
+                                                                     objs["mu_matched_jets"][mask][:,0:1].muEF))),
+        ],
+        evt_mask=lambda objs: (ak.num(objs["mu_ljs"]) > 0),
     ),
     
     "subleading_mu_lj_isolation": h.Histogram(
         [
-            h.Axis(hist.axis.Regular(50, 0, 2, name="subleading_mu_matchedjet_isolation",
+            h.Axis(hist.axis.Regular(50, 0, 10, name="subleading_mu_matchedjet_isolation",
                    label="Subleading Mu-LJ Isolation"),
                    lambda objs, mask:  (derived_objs["subleading_mu_matched_jets"](objs,0.4)[mask,0].energy
                        / objs["mu_ljs"][:,1:2][mask].energy) * (1 - (derived_objs["subleading_mu_matched_jets"](objs,0.4)[mask,0].chEmEF + derived_objs["subleading_mu_matched_jets"](objs,0.4)[mask,0].neEmEF + derived_objs["subleading_mu_matched_jets"](objs,0.4)[mask,0].muEF))),
@@ -672,48 +792,62 @@ hist_defs = {
     
     "new_subleading_mu_lj_isolation": h.Histogram(
         [
-            h.Axis(hist.axis.Regular(50, 0, 2, name="test",
+            h.Axis(hist.axis.Regular(50, 0, 10, name="test",
                    label="New Subleading Mu-LJ Isolation"),
-                   lambda objs, mask:  (derived_objs["new_mu_matched_jets"](objs,0.4)[ak.num(objs["mu_ljs"]) > 1][mask][:,1:2].energy
-                       / objs["mu_ljs"][ak.num(objs["mu_ljs"]) > 1][mask][:,1:2].energy) * (1 - (derived_objs["new_mu_matched_jets"](objs,0.4)[ak.num(objs["mu_ljs"]) > 1][mask][:,1:2].chEmEF + 
-                                                                  derived_objs["new_mu_matched_jets"](objs,0.4)[ak.num(objs["mu_ljs"]) > 1][mask][:,1:2].neEmEF + 
-                                                                  derived_objs["new_mu_matched_jets"](objs,0.4)[ak.num(objs["mu_ljs"]) > 1][mask][:,1:2].muEF))),
+                   lambda objs, mask:  (derived_objs["new_mu_matched_jets"](objs,0.4)[mask][:,1:2].energy
+                       / objs["mu_ljs"][mask][:,1:2].energy) * (1 - (derived_objs["new_mu_matched_jets"](objs,0.4)[mask][:,1:2].chEmEF + 
+                                                                  derived_objs["new_mu_matched_jets"](objs,0.4)[mask][:,1:2].neEmEF + 
+                                                                  derived_objs["new_mu_matched_jets"](objs,0.4)[mask][:,1:2].muEF))),
         ],
-        evt_mask=lambda objs: ~ak.is_none(derived_objs["new_mu_matched_jets"](objs,0.4)[ak.num(objs["mu_ljs"]) > 1][:,1]),
+        evt_mask=lambda objs: (ak.num(objs["mu_ljs"]) > 1),
+    ),
+    
+    "post_subleading_mu_lj_isolation": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 10, name="test",
+                   label="Subleading Mu-LJ Isolation"),
+                   lambda objs, mask:  (objs["mu_matched_jets"][mask][:,1:2].energy
+                       / objs["mu_ljs"][mask][:,1:2].energy) * (1 - (objs["mu_matched_jets"][mask][:,1:2].chEmEF + 
+                                                                                                 objs["mu_matched_jets"][mask][:,1:2].neEmEF + 
+                                                                                                 objs["mu_matched_jets"][mask][:,1:2].muEF))),
+        ],
+        evt_mask=lambda objs: (ak.num(objs["mu_ljs"]) > 1),
     ),
     
     "egm_lj_isolation": h.Histogram(
         [
-            h.Axis(hist.axis.Regular(50, 0, 2, name="egm_matchedjet_isolation",
+            h.Axis(hist.axis.Regular(50, 0, 10, name="egm_matchedjet_isolation",
                    label="EGM-LJ Isolation"),
                    lambda objs, mask:  (derived_objs["egm_matched_jets"](objs,0.4)[mask,0].energy
-                       / objs["egm_ljs"][:,0:1][mask].energy) * (1 - (derived_objs["egm_matched_jets"](objs,0.4)[mask,0].chEmEF + derived_objs["egm_matched_jets"](objs,0.4)[mask,0].neEmEF + derived_objs["egm_matched_jets"](objs,0.4)[mask,0].muEF))),
+                       / objs["egm_ljs"][:,0:1][mask].energy) * (1 - (derived_objs["egm_matched_jets"](objs,0.4)[mask,0].chEmEF + 
+                                                                      derived_objs["egm_matched_jets"](objs,0.4)[mask,0].neEmEF + 
+                                                                      derived_objs["egm_matched_jets"](objs,0.4)[mask,0].muEF))),
         ],
         evt_mask=lambda objs: ak.num(derived_objs["egm_matched_jets"](objs,0.4)) > 0,
     ),
     
-    # "new_leading_egm_lj_isolation": h.Histogram(
-    #     [
-    #         h.Axis(hist.axis.Regular(50, 0, 2, name="test",
-    #                label="New Leading EGM-LJ Isolation"),
-    #                lambda objs, mask:  (derived_objs["new_egm_matched_jets"](objs,0.4)[ak.num(objs["egm_ljs"]) > 0][mask][:,0:1].energy
-    #                    / objs["egm_ljs"][ak.num(objs["egm_ljs"]) > 0][mask][:,0:1].energy) * (1 - (derived_objs["new_egm_matched_jets"](objs,0.4)[ak.num(objs["egm_ljs"]) > 0][mask][:,0:1].chEmEF + 
-    #                                                               derived_objs["new_egm_matched_jets"](objs,0.4)[ak.num(objs["egm_ljs"]) > 0][mask][:,0:1].neEmEF + 
-    #                                                               derived_objs["new_egm_matched_jets"](objs,0.4)[ak.num(objs["egm_ljs"]) > 0][mask][:,0:1].muEF))),
-    #     ],
-    #     evt_mask=lambda objs: ~ak.is_none(derived_objs["new_egm_matched_jets"](objs,0.4)[ak.num(objs["egm_ljs"]) > 0][:,0]),
-    # ),
-    
     "new_leading_egm_lj_isolation": h.Histogram(
         [
-            h.Axis(hist.axis.Regular(50, 0, 2, name="test",
-                   label="New Leading Mu-LJ Isolation"),
+            h.Axis(hist.axis.Regular(50, 0, 10, name="test",
+                   label="New Leading EGM-LJ Isolation"),
                    lambda objs, mask:  (derived_objs["new_egm_matched_jets"](objs,0.4)[mask][:,0:1].energy
                        / objs["egm_ljs"][mask][:,0:1].energy) * (1 - (derived_objs["new_egm_matched_jets"](objs,0.4)[mask][:,0:1].chEmEF + 
                                                                   derived_objs["new_egm_matched_jets"](objs,0.4)[mask][:,0:1].neEmEF + 
                                                                   derived_objs["new_egm_matched_jets"](objs,0.4)[mask][:,0:1].muEF))),
         ],
-        evt_mask=lambda objs: (ak.num(objs["egm_ljs"]) > 0) & (~ak.is_none(derived_objs["new_egm_matched_jets"](objs,0.4)[:,0])),
+        evt_mask=lambda objs: (ak.num(objs["egm_ljs"]) > 0),
+    ),
+    
+    "post_leading_egm_lj_isolation": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 10, name="test",
+                   label="Leading EGM-LJ Isolation"),
+                   lambda objs, mask:  (objs["egm_matched_jets"][mask][:,0:1].energy
+                       / objs["egm_ljs"][mask][:,0:1].energy) * (1 - (objs["egm_matched_jets"][mask][:,0:1].chEmEF + 
+                                                                      objs["egm_matched_jets"][mask][:,0:1].neEmEF + 
+                                                                      objs["egm_matched_jets"][mask][:,0:1].muEF))),
+        ],
+        evt_mask=lambda objs: (ak.num(objs["egm_ljs"]) > 0),
     ),
     
     "leading_lj_isolation2": h.Histogram(

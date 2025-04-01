@@ -77,12 +77,13 @@ class Cutflow(processor.AccumulatorABC):
             for i, e in enumerate(flow):
                 previous_element = flow[i - 1] if i > 0 else None
                 e.calculate_fractions(previous_element)
-                data.append([e.cut, 100*e.f_ind, 100*e.f_mar, 100*e.f_all])
+                # data.append([e.cut, 100*e.f_ind, 100*e.f_mar, 100*e.f_all])
+                data.append([e.cut, 100*e.f_ind, 100*e.f_all])
             headers = [
                 "cut name",
                 "individual %",
-                "marginal %",
-                "cumulative %",
+                # "marginal %",
+                "cut %",
             ]
         else:
             data = [[e.cut, e.n_ind, e.n_all] for e in flow]

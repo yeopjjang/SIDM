@@ -64,8 +64,12 @@ postLj_objs["pfmu_ljs"]     = lambda objs: noDsa(objs["mu_ljs"])
 postLj_objs["dsamu_ljs"]    = lambda objs: noPf(objs["mu_ljs"])
 postLj_objs["electron_ljs"] = lambda objs: noPhoton(objs["egm_ljs"])
 postLj_objs["photon_ljs"]   = lambda objs: noE(objs["egm_ljs"])
-
-# postLj_objs["matched_jet"]  = lambda objs: 
+# PostLj Object Test Area
+postLj_objs["matched_jets"]               = lambda objs: objs["ljs"].nearest(objs["jets"], threshold=0.4)
+postLj_objs["leading_matched_jets"]       = lambda objs: objs["ljs"][:,0:1].nearest(objs["jets"], threshold=0.4)
+postLj_objs["subleading_matched_jets"]    = lambda objs: objs["ljs"][:,1:2].nearest(objs["jets"], threshold=0.4)
+postLj_objs["mu_matched_jets"]            = lambda objs: objs["mu_ljs"].nearest(objs["jets"], threshold=0.4)
+postLj_objs["egm_matched_jets"]           = lambda objs: objs["egm_ljs"].nearest(objs["jets"], threshold=0.4)
 
 # define objects that depend on extra parameters determined in hist or cut definitions
 derived_objs = {}
@@ -93,7 +97,7 @@ derived_objs["ljs_with_matched_jets"]      = lambda objs, r: matched(objs["ljs"]
 derived_objs["mu_ljs_with_matched_jets"]      = lambda objs, r: matched(objs["mu_ljs"][:,0:2], objs["jets"], r)
 derived_objs["egm_ljs_with_matched_jets"]      = lambda objs, r: matched(objs["egm_ljs"][:,0:1], objs["jets"], r)
 
-# Test
+# Matched Jet Test
 derived_objs["new_matched_jets"]               = lambda objs, r: objs["ljs"].nearest(objs["jets"], threshold=r)
 derived_objs["new_leading_matched_jets"]       = lambda objs, r: objs["ljs"][:,0:1].nearest(objs["jets"], threshold=r)
 derived_objs["new_subleading_matched_jets"]    = lambda objs, r: objs["ljs"][:,1:2].nearest(objs["jets"], threshold=r)

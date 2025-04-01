@@ -123,6 +123,10 @@ def lxy(obj):
     """Return transverse distance between production and decay vertices"""
     return rho(obj, ak.firsts(obj.children, axis=2), use_v=True)
 
+def isolation(obj1, obj2):
+    """Generic Isolation definition. obj1 is matched jet, obj2 is LJ"""
+    return (obj1.energy / objs2.energy) * (1 - (obj1.chEmEF + obj1.neEmEF + obj1.muEF))
+
 def set_plot_style(style='cms', dpi=50):
     """Set plotting style using mplhep"""
     if style == 'cms':
