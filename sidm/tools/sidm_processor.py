@@ -117,19 +117,19 @@ class SidmProcessor(processor.ProcessorABC):
                 sel_objs["lj_reco"] = lj_reco
 
                 # define event weights
-                if self.unweighted_hist:
-                    evt_weights =  ak.ones_like(self.obj_defs["weight"](events)[evt_selection.all_evt_cuts.all(*evt_selection.evt_cuts)])
-                else:
-                    evt_weights = self.obj_defs["weight"](events)[evt_selection.all_evt_cuts.all(*evt_selection.evt_cuts)]
-
-                # fill histograms for this channel+lj_reco pair
-                for h in hists.values():
-                    h.fill(sel_objs, evt_weights)
+                evt_weights =  self.obj_defs["weight"](events)*events.metadata["skim_factor"]
 
                 # make cutflow
                 if lj_reco not in cutflows:
                     cutflows[str(lj_reco)] = {}
-                cutflows[str(lj_reco)][channel] = cutflow.Cutflow(evt_selection.all_evt_cuts, evt_selection.evt_cuts, self.obj_defs["weight"](events))
+                cutflows[str(lj_reco)][channel] = cutflow.Cutflow(evt_selection.all_evt_cuts, evt_selection.evt_cuts, evt_weights)
+
+                # fill histograms for this channel+lj_reco pair
+                hist_weights = evt_weights[evt_selection.all_evt_cuts.all(*evt_selection.evt_cuts)]
+                if self.unweighted_hist:
+                    hist_weights =  ak.ones_like(hist_weights)
+                for h in hists.values():
+                    h.fill(sel_objs, hist_weights)
 
                 # Fill counters
                 if lj_reco not in counters:
