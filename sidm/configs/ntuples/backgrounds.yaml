@@ -255,6 +255,7 @@ skimmed_llpNanoAOD_v2:
       - skimmed_output2_197.root
       - skimmed_output2_198.root
       path: TTJets_TuneCP5/
+      skim_factor: 0.2725757936422064
 
 llpNanoAOD_v2:
   path: root://xcache//store/group/lpcmetx/SIDM/Backgrounds/2018_v2/
@@ -1348,6 +1349,7 @@ llpNanoAOD_v2:
       - output_998.root
       - output_999.root
       path: DYJetsToMuMu_M-10to50_H2ErratumFix_TuneCP5_13TeV-powhegMiNNLO-pythia8-photos/
+      skim_factor: 1.0
     DYJetsToMuMu_M50:
       files:
       - output_1.root
@@ -7504,6 +7506,7 @@ llpNanoAOD_v2:
       - output_998.root
       - output_999.root
       path: DYJetsToMuMu_M-50_massWgtFix_TuneCP5_13TeV-powhegMiNNLO-pythia8-photos/
+      skim_factor: 1.0
     QCD_Pt1000:
       files:
       - output_1.root
@@ -11808,6 +11811,7 @@ llpNanoAOD_v2:
       - output_998.root
       - output_999.root
       path: QCD_Pt-1000_MuEnrichedPt5_TuneCP5_13TeV-pythia8/
+      skim_factor: 1.0
     QCD_Pt120To170:
       files:
       - output_1.root
@@ -16318,6 +16322,7 @@ llpNanoAOD_v2:
       - output_998.root
       - output_999.root
       path: QCD_Pt-120To170_MuEnrichedPt5_TuneCP5_13TeV-pythia8/
+      skim_factor: 1.0
     QCD_Pt15To20:
       files:
       - output_1.root
@@ -16912,6 +16917,7 @@ llpNanoAOD_v2:
       - output_98.root
       - output_99.root
       path: QCD_Pt-15To20_MuEnrichedPt5_TuneCP5_13TeV-pythia8/
+      skim_factor: 1.0
     QCD_Pt170To300:
       files:
       - output_1.root
@@ -23913,6 +23919,7 @@ llpNanoAOD_v2:
       - output_998.root
       - output_999.root
       path: QCD_Pt-170To300_MuEnrichedPt5_TuneCP5_13TeV-pythia8/
+      skim_factor: 1.0
     QCD_Pt20To30:
       files:
       - output_1.root
@@ -27674,6 +27681,7 @@ llpNanoAOD_v2:
       - output_998.root
       - output_999.root
       path: QCD_Pt-20To30_MuEnrichedPt5_TuneCP5_13TeV-pythia8/
+      skim_factor: 1.0
     QCD_Pt300To470:
       files:
       - output_1.root
@@ -34526,6 +34534,7 @@ llpNanoAOD_v2:
       - output_998.root
       - output_999.root
       path: QCD_Pt-300To470_MuEnrichedPt5_TuneCP5_13TeV-pythia8/
+      skim_factor: 1.0
     QCD_Pt30To50:
       files:
       - output_100.root
@@ -38047,6 +38056,7 @@ llpNanoAOD_v2:
       - output_998.root
       - output_999.root
       path: QCD_Pt-30To50_MuEnrichedPt5_TuneCP5_13TeV-pythia8/
+      skim_factor: 1.0
     QCD_Pt470To600:
       files:
       - output_1000.root
@@ -42832,6 +42842,7 @@ llpNanoAOD_v2:
       - output_998.root
       - output_999.root
       path: QCD_Pt-470To600_MuEnrichedPt5_TuneCP5_13TeV-pythia8/
+      skim_factor: 1.0
     QCD_Pt50To80:
       files:
       - output_1.root
@@ -45292,6 +45303,7 @@ llpNanoAOD_v2:
       - output_998.root
       - output_999.root
       path: QCD_Pt-50To80_MuEnrichedPt5_TuneCP5_13TeV-pythia8/
+      skim_factor: 1.0
     QCD_Pt600To800:
       files:
       - output_1.root
@@ -50023,6 +50035,7 @@ llpNanoAOD_v2:
       - output_998.root
       - output_999.root
       path: QCD_Pt-600To800_MuEnrichedPt5_TuneCP5_13TeV-pythia8/
+      skim_factor: 1.0
     QCD_Pt800To1000:
       files:
       - output_10.root
@@ -55048,6 +55061,7 @@ llpNanoAOD_v2:
       - output_998.root
       - output_999.root
       path: QCD_Pt-800To1000_MuEnrichedPt5_TuneCP5_13TeV-pythia8/
+      skim_factor: 1.0
     QCD_Pt80To120:
       files:
       - output_1000.root
@@ -57873,6 +57887,7 @@ llpNanoAOD_v2:
       - output_998.root
       - output_999.root
       path: QCD_Pt-80To120_MuEnrichedPt5_TuneCP5_13TeV-pythia8/
+      skim_factor: 1.0
     TTJets:
       files:
       - TTJets_TuneCP5_part1_part-0.root
@@ -58126,4 +58141,5 @@ llpNanoAOD_v2:
       - TTJets_TuneCP5_part2_part-98.root
       - TTJets_TuneCP5_part2_part-99.root
       path: TTJets_TuneCP5/LLPnanoAODv2/
+      skim_factor: 1.0
 
