@@ -255,7 +255,7 @@ skimmed_llpNanoAOD_v2:
       - skimmed_output2_197.root
       - skimmed_output2_198.root
       path: TTJets_TuneCP5/
-      skim_factor: 0.2725757936422064
+      skim_factor: 0.2746591272963762
 
 llpNanoAOD_v2:
   path: root://xcache//store/group/lpcmetx/SIDM/Backgrounds/2018_v2/
