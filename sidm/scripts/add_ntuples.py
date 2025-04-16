@@ -163,15 +163,22 @@ for sample in samples:
         skimmed_evts = 0
         original_evts = 0
         # check first 10 files for valid OriginalEventIndex and sufficient stats
-        for file in files[:10]:
+        for file in files[:20]:
             file_path = f"{redirector}//{ntuple_path}{sample_path}/{file}"
-            in_file = ROOT.TFile.Open(file_path)
+            try:
+                in_file = ROOT.TFile.Open(file_path)
+            except Exception as e:
+                print(e)
+                print(f"failed reading {file_path}")
+                print("skipping")
+                continue
             tree = in_file.Events
             for entry in tree:
                 file_skimmed_evts = tree.GetEntries()
                 file_original_evts = entry.OriginalEventIndex
                 break
             in_file.Close()
+
             # Go to next file if OriginalEventIndex is invalid
             if file_original_evts == 0:
                 print("invalid OriginalEventIndex, going to next file")
@@ -179,8 +186,8 @@ for sample in samples:
             else:
                 skimmed_evts += file_skimmed_evts
                 original_evts += file_original_evts
-                print(skimmed_evts, original_evts, skimmed_evts/original_evts)
-            if skimmed_evts > 10000:
+                print(skimmed_evts, original_evts, file_skimmed_evts/file_original_evts, skimmed_evts/original_evts)
+            if skimmed_evts > 100000:
                 break
         try:
             skim_factor = skimmed_evts / original_evts
