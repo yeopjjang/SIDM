@@ -72,12 +72,49 @@ dsaMuon_base: &dsaMuon_base
   - "dsaMuon_absD0_lowRange"
   
 isolation_base: &isolation_base  
+  - "matched_jet_pt"
+  - "matched_jet_lj_dR"
+  - "lj_isolation"
+  - "mu_matched_jet_pt"
+  - "egm_matched_jet_pt"
+  - "mu_matched_jet_lj_dR"
+  - "egm_matched_jet_lj_dR"
+  - "mu_lj_isolation"
+  - "egm_lj_isolation"
+  
   - "leading_lj_isolation"
   - "subleading_lj_isolation"
   - "leading_mu_lj_isolation"
   - "subleading_mu_lj_isolation"
-  - "leading_egm_lj_isolation"
-
+  - "electron_matched_jet_pt"
+  - "photon_matched_jet_pt"
+  - "electron_matched_jet_lj_dR"
+  - "photon_matched_jet_lj_dR"
+  - "electron_lj_isolation"
+  - "photon_lj_isolation"
+  
+  - "lj_isolation_zoom"
+  - "leading_lj_isolation_zoom"
+  - "subleading_lj_isolation_zoom"
+  - "mu_lj_isolation_zoom"
+  - "leading_mu_lj_isolation_zoom"
+  - "subleading_mu_lj_isolation_zoom"
+  - "egm_lj_isolation_zoom"
+  - "electron_lj_isolation_zoom"
+  - "photon_lj_isolation_zoom"
+  
+  - "jet_n"
+  - "jet_lj_dR_1"
+  - "jet_lj_dR_2"
+  - "jet_lj_dR_3"
+  - "jet_lj_dR_4"
+  - "jet_lj_dR_5"
+  - "jet_lj_dR_6"
+  - "jet_lj_dR_7"
+  - "jet_lj_dR_8"
+  - "jet_lj_dR_9"
+  
+  
 lj_base: &lj_base
   - "lj_n"
   - "lj_pt"

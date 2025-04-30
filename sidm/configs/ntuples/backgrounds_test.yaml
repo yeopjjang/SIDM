@@ -1,0 +1,79 @@
+# TTJets, DY-->MuMU, and QCD backgrounds
+skimmed_llpNanoAOD_v2:
+  path: root://xcache//store/group/lpcmetx/SIDM/Backgrounds/2018_v2/Skims/
+  samples:
+    TTJets:
+      files:
+      # - skimmed_output2_160.root
+      # - skimmed_output2_161.root
+      # - skimmed_output2_162.root
+      # - skimmed_output2_163.root
+      # - skimmed_output2_164.root
+      # - skimmed_output2_165.root
+      # - skimmed_output2_167.root
+      # - skimmed_output2_168.root
+      # - skimmed_output2_169.root
+      - skimmed_output2_170.root # discrepancy
+      # - skimmed_output2_171.root
+      # - skimmed_output2_172.root
+      # - skimmed_output2_173.root
+      # - skimmed_output2_174.root
+      # - skimmed_output2_178.root
+      - skimmed_output2_179.root # discrepancy
+      # - skimmed_output2_180.root
+      # - skimmed_output2_182.root
+      # - skimmed_output2_183.root
+      # - skimmed_output2_184.root
+      # - skimmed_output2_185.root
+      # - skimmed_output2_186.root
+      # - skimmed_output2_187.root
+      # - skimmed_output2_188.root
+      # - skimmed_output2_189.root
+      # - skimmed_output2_190.root
+      # - skimmed_output2_191.root
+      # - skimmed_output2_192.root
+      # - skimmed_output2_193.root
+      # - skimmed_output2_194.root
+      # - skimmed_output2_196.root
+      # - skimmed_output2_197.root
+      # - skimmed_output2_198.root
+      path: TTJets_TuneCP5/
+llpNanoAOD_v2:
+  path: root://xcache//store/group/lpcmetx/SIDM/Backgrounds/2018_v2/
+  samples:
+    TTJets:
+      files:
+      # - TTJets_TuneCP5_part2_part-160.root
+      # - TTJets_TuneCP5_part2_part-161.root
+      # - TTJets_TuneCP5_part2_part-162.root
+      # - TTJets_TuneCP5_part2_part-163.root
+      # - TTJets_TuneCP5_part2_part-164.root
+      # - TTJets_TuneCP5_part2_part-165.root
+      # - TTJets_TuneCP5_part2_part-167.root
+      # - TTJets_TuneCP5_part2_part-168.root
+      # - TTJets_TuneCP5_part2_part-169.root
+      - TTJets_TuneCP5_part2_part-170.root # discrepancy
+      # - TTJets_TuneCP5_part2_part-171.root
+      # - TTJets_TuneCP5_part2_part-172.root
+      # - TTJets_TuneCP5_part2_part-173.root
+      # - TTJets_TuneCP5_part2_part-174.root
+      # - TTJets_TuneCP5_part2_part-178.root
+      - TTJets_TuneCP5_part2_part-179.root # discrepancy
+      # - TTJets_TuneCP5_part2_part-180.root
+      # - TTJets_TuneCP5_part2_part-182.root
+      # - TTJets_TuneCP5_part2_part-183.root
+      # - TTJets_TuneCP5_part2_part-184.root
+      # - TTJets_TuneCP5_part2_part-185.root
+      # - TTJets_TuneCP5_part2_part-186.root
+      # - TTJets_TuneCP5_part2_part-187.root
+      # - TTJets_TuneCP5_part2_part-188.root
+      # - TTJets_TuneCP5_part2_part-189.root
+      # - TTJets_TuneCP5_part2_part-190.root
+      # - TTJets_TuneCP5_part2_part-191.root
+      # - TTJets_TuneCP5_part2_part-192.root
+      # - TTJets_TuneCP5_part2_part-193.root
+      # - TTJets_TuneCP5_part2_part-194.root
+      # - TTJets_TuneCP5_part2_part-196.root
+      # - TTJets_TuneCP5_part2_part-197.root
+      # - TTJets_TuneCP5_part2_part-198.root
+      path: TTJets_TuneCP5/LLPnanoAODv2/
