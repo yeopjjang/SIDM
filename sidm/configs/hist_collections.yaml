@@ -187,8 +187,39 @@ lj_lj_base: &lj_lj_base
   
 isolation_base: &isolation_base  
   - "matched_jet_pt"
+  - "mu_matched_jet_pt"
+  - "pfmu_matched_jet_pt"
+  - "dsamu_matched_jet_pt"
+  - "egm_matched_jet_pt"  
+  - "electron_matched_jet_pt"
+  - "photon_matched_jet_pt"
+  
+  - "matched_jet_lepfraction"
+  - "mu_matched_jet_lepfraction"
+  - "pfmu_matched_jet_lepfraction"
+  - "dsamu_matched_jet_lepfraction"
+  - "egm_matched_jet_lepfraction"
+  - "electron_matched_jet_lepfraction"
+  - "photon_matched_jet_lepfraction"
+  
   - "matched_jet_lj_dR"
+  - "mu_matched_jet_lj_dR"
+  - "pfmu_matched_jet_lj_dR"
+  - "dsamu_matched_jet_lj_dR"
+  - "egm_matched_jet_lj_dR"
+  - "electron_matched_jet_lj_dR"
+  - "photon_matched_jet_lj_dR"
+  
   - "lj_isolation"
+  - "mu_lj_isolation"
+  - "pfmu_lj_isolation"
+  - "dsamu_lj_isolation"
+  - "egm_lj_isolation"
+  - "electron_lj_isolation"
+  - "photon_lj_isolation"
+
+  - "lj_isolation_sum"
+  - "dlj_isolation"
 
 abcd_base: &abcd_base
   - "lj_lj_absdphi_invmass"
@@ -201,6 +232,8 @@ abcd_base: &abcd_base
   - "lj_lj_absdphi_ptRatio"
   - "lj_lj_absdR_ptRatio"
   - "lj_lj_absdeta_ptRatio"
+  - "lj_isolation_lj_pt"
+  - "lj_lj_absdphi_isosum"
 
 genE_base: &genE_base
   - "genE_n"
@@ -475,6 +508,7 @@ displacement_base: &displacement_base
   - "mu_lj_pfMu_n"
   - "mu_lj_pfMuon_dxy"
   - "mu_lj_pfMuon_dxy_lowRange"
+  - "mu_lj_pfMuon_dxy_XLowRange"
   - "mu_lj_pfMuon_dxy_XLowRange"
   - "mu_lj_pfMuon_min_dxy"
   - "mu_lj_pfMuon_min_dxy_XLowRange"
