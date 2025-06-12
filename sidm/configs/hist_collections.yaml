@@ -221,6 +221,13 @@ isolation_base: &isolation_base
   - "lj_isolation_sum"
   - "dlj_isolation"
 
+muon_crosscleaning_base: &muon_crosscleaning_base  
+  - "pfMuon_dsaMuon_dR"
+  - "pfMuon_dsaMuon_dR_lowRange"
+  - "pfMuonlj_dsaMuonlj_dR"
+  - "pfmu_lj_n"
+  - "dsamu_lj_n"
+
 abcd_base: &abcd_base
   - "lj_lj_absdphi_invmass"
   - "lj_lj_absdphi_absdR"
@@ -466,6 +473,7 @@ base: &base
   - *abcd_base
   - *electron_photon_base
   - *isolation_base
+  - *muon_crosscleaning_base
 
 base_plus_gen: &base_plus_gen
   - *base
