@@ -30,6 +30,8 @@ counter_defs = {
     "Gen As": lambda objs: ak.count(objs["genAs"].pt),
     "PF LJs": lambda objs: ak.count(objs["pfmu_ljs"].pt),
     "DSA LJs": lambda objs: ak.count(objs["dsamu_ljs"].pt),
+    "PF Muons": lambda objs: ak.count(objs["muons"].pt),
+    "DSA Muons": lambda objs: ak.count(objs["dsaMuons"].pt),
 }
 
 
@@ -1170,6 +1172,22 @@ hist_defs = {
             h.Axis(hist.axis.Regular(50, 0, 2, name="lj_isolation",
                    label="|LJ1 Isolation - LJ2 Isolation|"),
                    lambda objs, mask:  abs(objs["ljs"][mask, 1].isolation - objs["ljs"][mask, 0].isolation)),
+        ],
+        evt_mask=lambda objs: ak.num(objs["ljs"]) > 1,
+    ),
+    "lj_isolation_ratio1": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 10, name="lj_isolation_ratio1",
+                   label="LJ1 Isolation / LJ2 Isolation"),
+                   lambda objs, mask:  (objs["ljs"][mask, 0].isolation / objs["ljs"][mask, 1].isolation)),
+        ],
+        evt_mask=lambda objs: ak.num(objs["ljs"]) > 1,
+    ),
+    "lj_isolation_ratio2": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 10, name="lj_isolation_ratio2",
+                   label="LJ2 Isolation / LJ1 Isolation"),
+                   lambda objs, mask:  (objs["ljs"][mask, 1].isolation / objs["ljs"][mask, 0].isolation)),
         ],
         evt_mask=lambda objs: ak.num(objs["ljs"]) > 1,
     ),
