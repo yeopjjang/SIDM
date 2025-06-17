@@ -442,6 +442,12 @@ hist_defs = {
                    lambda objs, mask: dR(objs["dsaMuons"], objs["muons"]))
         ],
     ),
+    "pfMuon_dsaMuon_dR_lowRange_extrabin": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(200, 0, 1, name="pfMuon_dsaMuon_dR", label=r"$\Delta$R (DSA, PF) [Event Levl]"),
+                   lambda objs, mask: dR(objs["dsaMuons"], objs["muons"]))
+        ],
+    ),
     "pfMuonlj_dsaMuonlj_dR": h.Histogram(
         [
             h.Axis(hist.axis.Regular(50, 0, 2*math.pi, name="pfMuon_dsaMuon_dR", label=r"$\Delta$R (DSA LJ, PF LJ)"),
