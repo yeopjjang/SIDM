@@ -26,7 +26,28 @@ ljsource_cuts: &ljsource_cuts
       - "|eta| < 2.4"
       - "displaced ID"
       - "dR(dsa, pf) > 0.2"
-
+########################################
+ljsource_cuts_nodR: &ljsource_cuts_nodR
+  obj_cuts: &obj_ljsource_cuts_nodR
+    electrons: &electrons_ljsource_cuts_nodR
+      - "pT > 10 GeV"
+      - "|eta| < 2.4"
+      - 'MVANonIsoWPL'
+    muons: &muons_ljsource_cuts_nodR
+      - "looseID"
+      - "pT > 5 GeV"
+      - "|eta| < 2.4"
+    photons: &photons_ljsource_cuts_nodR
+      - "pT > 20 GeV"
+      - "|eta| < 2.5"
+      - 'Custom Cutbased'
+      - "pixelSeed"
+      - 'Photon DR Veto 0p025'
+    dsaMuons: &dsaMuons_ljsource_cuts_nodR
+      - "pT > 10 GeV"
+      - "|eta| < 2.4"
+      - "displaced ID"
+#########################################
 # require final-state gen e and mu
 gen_level_cuts: &gen_level_cuts
   obj_cuts: &obj_gen_level_cuts
@@ -60,6 +81,15 @@ baseNoLj: &baseNoLj
     <<: *obj_ljsource_cuts
   evt_cuts: &evt_baseNoLj
     - *evt_baseNoLjNoljsource
+
+##########################
+baseNoLj_nodR: &baseNoLj_nodR
+  obj_cuts: &obj_baseNoLj_nodR
+    <<: *obj_baseNoLjNoLjsource
+    <<: *obj_ljsource_cuts_nodR
+  evt_cuts: &evt_baseNoLj_nodR
+    - *evt_baseNoLjNoljsource
+##########################
 
 baseNoLj_noTrigger: &baseNoLj_noTrigger
   obj_cuts: 

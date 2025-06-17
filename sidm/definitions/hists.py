@@ -432,13 +432,13 @@ hist_defs = {
     # pfmuon-dsaMuon
     "pfMuon_dsaMuon_dR": h.Histogram(
         [
-            h.Axis(hist.axis.Regular(50, 0, 2*math.pi, name="pfMuon_dsaMuon_dR", label=r"$\Delta$R (DSA, PF)"),
+            h.Axis(hist.axis.Regular(50, 0, 2*math.pi, name="pfMuon_dsaMuon_dR", label=r"$\Delta$R (DSA, PF) [Event Level]"),
                    lambda objs, mask: dR(objs["dsaMuons"], objs["muons"]))
         ],
     ),
     "pfMuon_dsaMuon_dR_lowRange": h.Histogram(
         [
-            h.Axis(hist.axis.Regular(50, 0, 1, name="pfMuon_dsaMuon_dR", label=r"$\Delta$R (DSA, PF)"),
+            h.Axis(hist.axis.Regular(50, 0, 1, name="pfMuon_dsaMuon_dR", label=r"$\Delta$R (DSA, PF) [Event Levl]"),
                    lambda objs, mask: dR(objs["dsaMuons"], objs["muons"]))
         ],
     ),
