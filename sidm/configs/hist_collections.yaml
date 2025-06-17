@@ -234,6 +234,7 @@ muon_crosscleaning_base: &muon_crosscleaning_base
   - "pfMuon_dsaMuon_dR"
   - "pfMuon_dsaMuon_dR_lowRange"
   - "pfMuon_dsaMuon_dR_lowRange_extrabin"
+  - "dsaMuon_pfMuon_dR_lowRange_extrabin"
   - "pfMuonlj_dsaMuonlj_dR"
   - "pfmu_lj_n"
   - "dsamu_lj_n"
