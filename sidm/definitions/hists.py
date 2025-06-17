@@ -438,13 +438,13 @@ hist_defs = {
     ),
     "pfMuon_dsaMuon_dR_lowRange": h.Histogram(
         [
-            h.Axis(hist.axis.Regular(50, 0, 1, name="pfMuon_dsaMuon_dR", label=r"$\Delta$R (DSA, PF) [Event Levl]"),
+            h.Axis(hist.axis.Regular(50, 0, 1, name="pfMuon_dsaMuon_dR", label=r"$\Delta$R (DSA, PF) [Event Level]"),
                    lambda objs, mask: dR(objs["dsaMuons"], objs["muons"]))
         ],
     ),
     "pfMuon_dsaMuon_dR_lowRange_extrabin": h.Histogram(
         [
-            h.Axis(hist.axis.Regular(200, 0, 1, name="pfMuon_dsaMuon_dR", label=r"$\Delta$R (DSA, PF) [Event Levl]"),
+            h.Axis(hist.axis.Regular(200, 0, 1, name="pfMuon_dsaMuon_dR", label=r"$\Delta$R (DSA, PF) [Event Level]"),
                    lambda objs, mask: dR(objs["dsaMuons"], objs["muons"]))
         ],
     ),
@@ -1165,6 +1165,13 @@ hist_defs = {
                    lambda objs, mask:  objs["ljs"].isolation),
         ],
     ),
+    "lj_isolation_zoom": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 0.2, name="lj_isolation",
+                   label="LJ Isolation"),
+                   lambda objs, mask:  objs["ljs"].isolation),
+        ],
+    ),
     "lj_isolation_sum": h.Histogram(
         [
             h.Axis(hist.axis.Regular(50, 0, 2, name="lj_isolation_sum",
@@ -1204,37 +1211,79 @@ hist_defs = {
                    lambda objs, mask:  objs["mu_ljs"].isolation),
         ],
     ),
+    "mu_lj_isolation_zoom": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 0.2, name="mu_lj_isolation",
+                   label="Mu-LJ Isolation"),
+                   lambda objs, mask:  objs["mu_ljs"].isolation),
+        ],
+    ),
     "pfmu_lj_isolation": h.Histogram(
         [
-            h.Axis(hist.axis.Regular(50, 0, 1, name="pfmu_lj_isolation",
+            h.Axis(hist.axis.Regular(50, 0, 2, name="pfmu_lj_isolation",
+                   label="PF Mu-LJ Isolation"),
+                   lambda objs, mask:  objs["pfmu_ljs"].isolation),
+        ],
+    ),
+    "pfmu_lj_isolation_zoom": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 0.2, name="pfmu_lj_isolation",
                    label="PF Mu-LJ Isolation"),
                    lambda objs, mask:  objs["pfmu_ljs"].isolation),
         ],
     ),
     "dsamu_lj_isolation": h.Histogram(
         [
-            h.Axis(hist.axis.Regular(50, 0, 1, name="dsamu_lj_isolation",
+            h.Axis(hist.axis.Regular(50, 0, 2, name="dsamu_lj_isolation",
+                   label="DSA Mu-LJ Isolation"),
+                   lambda objs, mask:  objs["dsamu_ljs"].isolation),
+        ],
+    ),
+    "dsamu_lj_isolation_zoom": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 0.2, name="dsamu_lj_isolation",
                    label="DSA Mu-LJ Isolation"),
                    lambda objs, mask:  objs["dsamu_ljs"].isolation),
         ],
     ),
     "egm_lj_isolation": h.Histogram(
         [
-            h.Axis(hist.axis.Regular(50, 0, 1, name="egm_lj_isolation",
+            h.Axis(hist.axis.Regular(50, 0, 2, name="egm_lj_isolation",
+                   label="EGM-LJ Isolation"),
+                   lambda objs, mask:  objs["egm_ljs"].isolation),
+        ],
+    ),
+    "egm_lj_isolation_zoom": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 0.2, name="egm_lj_isolation",
                    label="EGM-LJ Isolation"),
                    lambda objs, mask:  objs["egm_ljs"].isolation),
         ],
     ),
     "electron_lj_isolation": h.Histogram(
         [
-            h.Axis(hist.axis.Regular(50, 0, 1, name="electron_lj_isolation",
+            h.Axis(hist.axis.Regular(50, 0, 2, name="electron_lj_isolation",
+                   label="Electron-LJ Isolation"),
+                   lambda objs, mask:  objs["electron_ljs"].isolation),
+        ],
+    ),
+    "electron_lj_isolation_zoom": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 0.2, name="electron_lj_isolation",
                    label="Electron-LJ Isolation"),
                    lambda objs, mask:  objs["electron_ljs"].isolation),
         ],
     ),
     "photon_lj_isolation": h.Histogram(
         [
-            h.Axis(hist.axis.Regular(50, 0, 1, name="photon_lj_isolation",
+            h.Axis(hist.axis.Regular(50, 0, 2, name="photon_lj_isolation",
+                   label="Photon-LJ Isolation"),
+                   lambda objs, mask:  objs["photon_ljs"].isolation),
+        ],
+    ),
+    "photon_lj_isolation_zoom": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 0.2, name="photon_lj_isolation",
                    label="Photon-LJ Isolation"),
                    lambda objs, mask:  objs["photon_ljs"].isolation),
         ],
