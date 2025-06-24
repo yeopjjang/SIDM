@@ -454,6 +454,12 @@ hist_defs = {
                    lambda objs, mask: dR(objs["dsaMuons"], objs["muons"]))
         ],
     ),
+    "dsaMuon_pfMuon_dR_XXlowRange_extrabin": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(200, 0, 0.1, name="pfMuon_dsaMuon_dR", label=r"$\Delta$R (DSA, PF) [Event Level]"),
+                   lambda objs, mask: dR(objs["dsaMuons"], objs["muons"]))
+        ],
+    ),
     "pfMuon_dsaMuon_dR_lowRange_extrabin": h.Histogram(
         [
             h.Axis(hist.axis.Regular(200, 0, 1, name="dsaMuon_pfMuon_dR", label=r"$\Delta$R (PF, DSA) [Event Level]"),
@@ -463,6 +469,12 @@ hist_defs = {
     "pfMuon_dsaMuon_dR_XlowRange_extrabin": h.Histogram(
         [
             h.Axis(hist.axis.Regular(200, 0, 0.5, name="dsaMuon_pfMuon_dR", label=r"$\Delta$R (PF, DSA) [Event Level]"),
+                   lambda objs, mask: dR(objs["muons"], objs["dsaMuons"]))
+        ],
+    ),
+    "pfMuon_dsaMuon_dR_XXlowRange_extrabin": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(200, 0, 0.1, name="dsaMuon_pfMuon_dR", label=r"$\Delta$R (PF, DSA) [Event Level]"),
                    lambda objs, mask: dR(objs["muons"], objs["dsaMuons"]))
         ],
     ),
