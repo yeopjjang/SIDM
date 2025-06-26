@@ -2419,24 +2419,24 @@ hist_defs = {
         [
             h.Axis(hist.axis.Regular(100, 0, 2.0, name="genA_muLj_ptRatio",
                    label=r"Muon Lepton Jet pT / (closest) $Z_d$ pT"),
-                   lambda objs, mask: objs["mu_ljs"].pt
-                       / objs["mu_ljs"].nearest(objs["genAs_toMu"], threshold=0.4).pt),
+                   lambda objs, mask: (objs["genAs_toMu"][mask]).nearest(objs["mu_ljs"][mask], threshold=0.4).pt
+                       / objs["genAs_toMu"].pt),
         ],
     ),
     "genA_dsaMuonLj_ptRatio": h.Histogram(
         [
             h.Axis(hist.axis.Regular(100, 0, 2.0, name="genA_dsaMuonLj_ptRatio",
                    label=r"DSA Muon Lepton Jet pT / (closest) $Z_d$ pT"),
-                   lambda objs, mask: (objs["dsaMuons"][mask]).nearest(objs["ljs"][mask], threshold=0.4).pt
-                       / (objs["dsaMuons"][mask]).nearest(objs["genAs_toMu"][mask], threshold=0.4).pt),
+                   lambda objs, mask: (objs["genAs_toMu"][mask]).nearest(objs["dsamu_ljs"][mask], threshold=0.4).pt
+                       / objs["genAs_toMu"][mask].pt),
         ],
     ),
     "genA_pfMuonLj_ptRatio": h.Histogram(
         [
             h.Axis(hist.axis.Regular(100, 0, 2.0, name="genA_pfMuonLj_ptRatio",
                    label=r"PF Muon Lepton Jet pT / (closest) $Z_d$ pT"),
-                   lambda objs, mask: (objs["muons"][mask]).nearest(objs["ljs"][mask], threshold=0.4).pt
-                       / (objs["muons"][mask]).nearest(objs["genAs_toMu"][mask], threshold=0.4).pt),
+                   lambda objs, mask: (objs["genAs_toMu"][mask]).nearest(objs["pfmu_ljs"][mask], threshold=0.4).pt
+                       / objs["genAs_toMu"][mask].pt),
         ],
     ),
     "genA_dsaMuon0Lj_ptRatio": h.Histogram(
