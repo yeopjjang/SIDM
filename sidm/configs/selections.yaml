@@ -37,6 +37,7 @@ ljsource_cuts_crosscleaning: &ljsource_cuts_crosscleaning
       - "looseID"
       - "pT > 5 GeV"
       - "|eta| < 2.4"
+      - "dR(mu, A) < 0.5"
     photons: &photons_ljsource_cuts_crosscleaning
       - "pT > 20 GeV"
       - "|eta| < 2.5"
