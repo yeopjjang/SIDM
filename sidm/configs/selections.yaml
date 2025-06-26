@@ -49,6 +49,27 @@ ljsource_cuts_crosscleaning: &ljsource_cuts_crosscleaning
       - "|eta| < 2.4"
       - "displaced ID"
       - "dR(mu, A) < 0.5"
+
+ljsource_cuts_basic: &ljsource_cuts_basic
+  obj_cuts: &obj_ljsource_cuts_basic
+    electrons: &electrons_ljsource_cuts_basic
+      - "pT > 10 GeV"
+      - "|eta| < 2.4"
+      - 'MVANonIsoWPL'
+    muons: &muons_ljsource_cuts_basic
+      - "looseID"
+      - "pT > 5 GeV"
+      - "|eta| < 2.4"
+    photons: &photons_ljsource_cuts_basic
+      - "pT > 20 GeV"
+      - "|eta| < 2.5"
+      - 'Custom Cutbased'
+      - "pixelSeed"
+      - 'Photon DR Veto 0p025'
+    dsaMuons: &dsaMuons_ljsource_cuts_basic
+      - "pT > 10 GeV"
+      - "|eta| < 2.4"
+      - "displaced ID"
 #########################################
 # require final-state gen e and mu
 gen_level_cuts: &gen_level_cuts
@@ -85,6 +106,13 @@ baseNoLj: &baseNoLj
     - *evt_baseNoLjNoljsource
 
 ##########################
+baseNoLj_basic: &baseNoLj_basic
+  obj_cuts: &obj_baseNoLj_basic
+    <<: *obj_baseNoLjNoLjsource
+    <<: *obj_ljsource_cuts_basic
+  evt_cuts: &evt_baseNoLj_basic
+    - *evt_baseNoLjNoljsource
+    
 baseNoLj_crosscleaning: &baseNoLj_crosscleaning
   obj_cuts: &obj_baseNoLj_crosscleaning
     <<: *obj_baseNoLjNoLjsource
