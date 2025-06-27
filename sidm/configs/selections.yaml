@@ -147,6 +147,87 @@ baseNoLj_crosscleaning_dRcut: &baseNoLj_crosscleaning_dRcut
   evt_cuts: &evt_baseNoLj_crosscleaning_dRcut
     - *evt_baseNoLjNoljsource
 
+baseNoLj_crosscleaning_dRcut_p03: &baseNoLj_crosscleaning_dRcut_p03
+  obj_cuts: &obj_ljsource_cuts_crosscleaning_dRcut_p03
+    electrons: &electrons_ljsource_cuts_crosscleaning_dRcut_p03
+      - "pT > 10 GeV"
+      - "|eta| < 2.4"
+      - 'MVANonIsoWPL'
+    muons: &muons_ljsource_cuts_crosscleaning_dRcut_p03
+      - "looseID"
+      - "pT > 5 GeV"
+      - "|eta| < 2.4"
+      - "dR(mu, A) < 0.5"
+    photons: &photons_ljsource_cuts_crosscleaning_dRcut_p03
+      - "pT > 20 GeV"
+      - "|eta| < 2.5"
+      - 'Custom Cutbased'
+      - "pixelSeed"
+      - 'Photon DR Veto 0p025'
+    dsaMuons: &dsaMuons_ljsource_cuts_crosscleaning_dRcut_p03
+      - "pT > 10 GeV"
+      - "|eta| < 2.4"
+      - "displaced ID"
+      - "dR(mu, A) < 0.5"
+      - "dR(dsa, pf) > 0.03"
+    <<: *obj_baseNoLjNoLjsource
+  evt_cuts: &evt_baseNoLj_crosscleaning_dRcut_p03
+    - *evt_baseNoLjNoljsource
+
+baseNoLj_crosscleaning_dRcut_p04: &baseNoLj_crosscleaning_dRcut_p04
+  obj_cuts: &obj_ljsource_cuts_crosscleaning_dRcut_p04
+    electrons: &electrons_ljsource_cuts_crosscleaning_dRcut_p04
+      - "pT > 10 GeV"
+      - "|eta| < 2.4"
+      - 'MVANonIsoWPL'
+    muons: &muons_ljsource_cuts_crosscleaning_dRcut_p04
+      - "looseID"
+      - "pT > 5 GeV"
+      - "|eta| < 2.4"
+      - "dR(mu, A) < 0.5"
+    photons: &photons_ljsource_cuts_crosscleaning_dRcut_p04
+      - "pT > 20 GeV"
+      - "|eta| < 2.5"
+      - 'Custom Cutbased'
+      - "pixelSeed"
+      - 'Photon DR Veto 0p025'
+    dsaMuons: &dsaMuons_ljsource_cuts_crosscleaning_dRcut_p04
+      - "pT > 10 GeV"
+      - "|eta| < 2.4"
+      - "displaced ID"
+      - "dR(mu, A) < 0.5"
+      - "dR(dsa, pf) > 0.04"
+    <<: *obj_baseNoLjNoLjsource
+  evt_cuts: &evt_baseNoLj_crosscleaning_dRcut_p04
+    - *evt_baseNoLjNoljsource
+
+baseNoLj_crosscleaning_dRcut_p04: &baseNoLj_crosscleaning_dRcut_p05
+  obj_cuts: &obj_ljsource_cuts_crosscleaning_dRcut_p05
+    electrons: &electrons_ljsource_cuts_crosscleaning_dRcut_p05
+      - "pT > 10 GeV"
+      - "|eta| < 2.4"
+      - 'MVANonIsoWPL'
+    muons: &muons_ljsource_cuts_crosscleaning_dRcut_p05
+      - "looseID"
+      - "pT > 5 GeV"
+      - "|eta| < 2.4"
+      - "dR(mu, A) < 0.5"
+    photons: &photons_ljsource_cuts_crosscleaning_dRcut_p05
+      - "pT > 20 GeV"
+      - "|eta| < 2.5"
+      - 'Custom Cutbased'
+      - "pixelSeed"
+      - 'Photon DR Veto 0p025'
+    dsaMuons: &dsaMuons_ljsource_cuts_crosscleaning_dRcut_p05
+      - "pT > 10 GeV"
+      - "|eta| < 2.4"
+      - "displaced ID"
+      - "dR(mu, A) < 0.5"
+      - "dR(dsa, pf) > 0.05"
+    <<: *obj_baseNoLjNoLjsource
+  evt_cuts: &evt_baseNoLj_crosscleaning_dRcut_p05
+    - *evt_baseNoLjNoljsource
+
 baseNoLj_crosscleaning_dRcut_munum: &baseNoLj_crosscleaning_dRcut_munum
   obj_cuts: &obj_ljsource_cuts_crosscleaning_dRcut_munum
     electrons: &electrons_ljsource_cuts_crosscleaning_dRcut_munum
