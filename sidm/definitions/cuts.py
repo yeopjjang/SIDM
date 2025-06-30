@@ -175,6 +175,9 @@ obj_cut_defs = {
         "dR(mu, A) < 0.5": lambda objs: dR(objs["dsaMuons"], objs["genAs_toMu"]) < 0.5,
         "dR(dsa, pf) > 0.2": lambda objs: dR(objs["dsaMuons"], objs["muons"]) > 0.2,
         "dR(dsa, pf) > 0.02": lambda objs: dR(objs["dsaMuons"], objs["muons"]) > 0.02,
+        "dR(dsa, pf) > 0.03": lambda objs: dR(objs["dsaMuons"], objs["muons"]) > 0.03,
+        "dR(dsa, pf) > 0.04": lambda objs: dR(objs["dsaMuons"], objs["muons"]) > 0.04,
+        "dR(dsa, pf) > 0.05": lambda objs: dR(objs["dsaMuons"], objs["muons"]) > 0.05,
     },
 }
 

@@ -27,49 +27,49 @@ ljsource_cuts: &ljsource_cuts
       - "displaced ID"
       - "dR(dsa, pf) > 0.2"
 ########################################
-ljsource_cuts_crosscleaning: &ljsource_cuts_crosscleaning
-  obj_cuts: &obj_ljsource_cuts_crosscleaning
-    electrons: &electrons_ljsource_cuts_crosscleaning
-      - "pT > 10 GeV"
-      - "|eta| < 2.4"
-      - 'MVANonIsoWPL'
-    muons: &muons_ljsource_cuts_crosscleaning
-      - "looseID"
-      - "pT > 5 GeV"
-      - "|eta| < 2.4"
-      - "dR(mu, A) < 0.5"
-    photons: &photons_ljsource_cuts_crosscleaning
-      - "pT > 20 GeV"
-      - "|eta| < 2.5"
-      - 'Custom Cutbased'
-      - "pixelSeed"
-      - 'Photon DR Veto 0p025'
-    dsaMuons: &dsaMuons_ljsource_cuts_crosscleaning
-      - "pT > 10 GeV"
-      - "|eta| < 2.4"
-      - "displaced ID"
-      - "dR(mu, A) < 0.5"
-
 ljsource_cuts_basic: &ljsource_cuts_basic
   obj_cuts: &obj_ljsource_cuts_basic
-    electrons: &electrons_ljsource_cuts_basic
+    electrons: 
       - "pT > 10 GeV"
       - "|eta| < 2.4"
       - 'MVANonIsoWPL'
-    muons: &muons_ljsource_cuts_basic
+    muons: 
       - "looseID"
       - "pT > 5 GeV"
       - "|eta| < 2.4"
-    photons: &photons_ljsource_cuts_basic
+    photons: 
       - "pT > 20 GeV"
       - "|eta| < 2.5"
       - 'Custom Cutbased'
       - "pixelSeed"
       - 'Photon DR Veto 0p025'
-    dsaMuons: &dsaMuons_ljsource_cuts_basic
+    dsaMuons: 
       - "pT > 10 GeV"
       - "|eta| < 2.4"
       - "displaced ID"
+
+ljsource_cuts_DP_matching: &ljsource_cuts_DP_matching
+  obj_cuts: &obj_ljsource_cuts_DP_matching
+    electrons: 
+      - "pT > 10 GeV"
+      - "|eta| < 2.4"
+      - 'MVANonIsoWPL'
+    muons: 
+      - "looseID"
+      - "pT > 5 GeV"
+      - "|eta| < 2.4"
+      - "dR(mu, A) < 0.5"
+    photons:
+      - "pT > 20 GeV"
+      - "|eta| < 2.5"
+      - "Custom Cutbased"
+      - "pixelSeed"
+      - 'Photon DR Veto 0p025'
+    dsaMuons: 
+      - "pT > 10 GeV"
+      - "|eta| < 2.4"
+      - "displaced ID"
+      - "dR(mu, A) < 0.5"
 #########################################
 # require final-state gen e and mu
 gen_level_cuts: &gen_level_cuts
@@ -107,155 +107,135 @@ baseNoLj: &baseNoLj
 
 ##########################
 baseNoLj_basic: &baseNoLj_basic
-  obj_cuts: &obj_baseNoLj_basic
+  obj_cuts: 
     <<: *obj_baseNoLjNoLjsource
     <<: *obj_ljsource_cuts_basic
-  evt_cuts: &evt_baseNoLj_basic
+  evt_cuts: 
     - *evt_baseNoLjNoljsource
     
-baseNoLj_crosscleaning: &baseNoLj_crosscleaning
-  obj_cuts: &obj_baseNoLj_crosscleaning
+baseNoLj_DP_matching: &baseNoLj_DP_matching
+  obj_cuts: 
     <<: *obj_baseNoLjNoLjsource
-    <<: *obj_ljsource_cuts_crosscleaning
-  evt_cuts: &evt_baseNoLj_crosscleaning
+    <<: *obj_ljsource_cuts_DP_matching
+  evt_cuts: 
     - *evt_baseNoLjNoljsource
       
-baseNoLj_crosscleaning_dRcut: &baseNoLj_crosscleaning_dRcut
-  obj_cuts: &obj_ljsource_cuts_crosscleaning_dRcut
-    electrons: &electrons_ljsource_cuts_crosscleaning_dRcut
+baseNoLj_DP_matching_dR0p02: &baseNoLj_DP_matching_dR0p02
+  obj_cuts: &obj_baseNoLj_DP_matching_dR0p02
+    electrons: 
       - "pT > 10 GeV"
       - "|eta| < 2.4"
       - 'MVANonIsoWPL'
-    muons: &muons_ljsource_cuts_crosscleaning_dRcut
+    muons: 
       - "looseID"
       - "pT > 5 GeV"
       - "|eta| < 2.4"
       - "dR(mu, A) < 0.5"
-    photons: &photons_ljsource_cuts_crosscleaning_dRcut
+    photons: 
       - "pT > 20 GeV"
       - "|eta| < 2.5"
       - 'Custom Cutbased'
       - "pixelSeed"
       - 'Photon DR Veto 0p025'
-    dsaMuons: &dsaMuons_ljsource_cuts_crosscleaning_dRcut
+    dsaMuons: 
       - "pT > 10 GeV"
       - "|eta| < 2.4"
       - "displaced ID"
       - "dR(mu, A) < 0.5"
       - "dR(dsa, pf) > 0.02"
     <<: *obj_baseNoLjNoLjsource
-  evt_cuts: &evt_baseNoLj_crosscleaning_dRcut
+  evt_cuts: 
     - *evt_baseNoLjNoljsource
 
-baseNoLj_crosscleaning_dRcut_p03: &baseNoLj_crosscleaning_dRcut_p03
-  obj_cuts: &obj_ljsource_cuts_crosscleaning_dRcut_p03
-    electrons: &electrons_ljsource_cuts_crosscleaning_dRcut_p03
+baseNoLj_DP_matching_dR0p03: &baseNoLj_DP_matching_dR0p03
+  obj_cuts: 
+    electrons: 
       - "pT > 10 GeV"
       - "|eta| < 2.4"
       - 'MVANonIsoWPL'
-    muons: &muons_ljsource_cuts_crosscleaning_dRcut_p03
+    muons: 
       - "looseID"
       - "pT > 5 GeV"
       - "|eta| < 2.4"
       - "dR(mu, A) < 0.5"
-    photons: &photons_ljsource_cuts_crosscleaning_dRcut_p03
+    photons: 
       - "pT > 20 GeV"
       - "|eta| < 2.5"
       - 'Custom Cutbased'
       - "pixelSeed"
       - 'Photon DR Veto 0p025'
-    dsaMuons: &dsaMuons_ljsource_cuts_crosscleaning_dRcut_p03
+    dsaMuons: 
       - "pT > 10 GeV"
       - "|eta| < 2.4"
       - "displaced ID"
       - "dR(mu, A) < 0.5"
       - "dR(dsa, pf) > 0.03"
     <<: *obj_baseNoLjNoLjsource
-  evt_cuts: &evt_baseNoLj_crosscleaning_dRcut_p03
+  evt_cuts: 
     - *evt_baseNoLjNoljsource
 
-baseNoLj_crosscleaning_dRcut_p04: &baseNoLj_crosscleaning_dRcut_p04
-  obj_cuts: &obj_ljsource_cuts_crosscleaning_dRcut_p04
-    electrons: &electrons_ljsource_cuts_crosscleaning_dRcut_p04
+baseNoLj_DP_matching_dR0p04: &baseNoLj_DP_matching_dR0p04
+  obj_cuts: 
+    electrons: 
       - "pT > 10 GeV"
       - "|eta| < 2.4"
       - 'MVANonIsoWPL'
-    muons: &muons_ljsource_cuts_crosscleaning_dRcut_p04
+    muons: 
       - "looseID"
       - "pT > 5 GeV"
       - "|eta| < 2.4"
       - "dR(mu, A) < 0.5"
-    photons: &photons_ljsource_cuts_crosscleaning_dRcut_p04
+    photons: 
       - "pT > 20 GeV"
       - "|eta| < 2.5"
       - 'Custom Cutbased'
       - "pixelSeed"
       - 'Photon DR Veto 0p025'
-    dsaMuons: &dsaMuons_ljsource_cuts_crosscleaning_dRcut_p04
+    dsaMuons: 
       - "pT > 10 GeV"
       - "|eta| < 2.4"
       - "displaced ID"
       - "dR(mu, A) < 0.5"
       - "dR(dsa, pf) > 0.04"
     <<: *obj_baseNoLjNoLjsource
-  evt_cuts: &evt_baseNoLj_crosscleaning_dRcut_p04
+  evt_cuts: 
     - *evt_baseNoLjNoljsource
 
-baseNoLj_crosscleaning_dRcut_p05: &baseNoLj_crosscleaning_dRcut_p05
-  obj_cuts: &obj_ljsource_cuts_crosscleaning_dRcut_p05
-    electrons: &electrons_ljsource_cuts_crosscleaning_dRcut_p05
+baseNoLj_DP_matching_dR0p05: &baseNoLj_DP_matching_dR0p05
+  obj_cuts: 
+    electrons: 
       - "pT > 10 GeV"
       - "|eta| < 2.4"
       - 'MVANonIsoWPL'
-    muons: &muons_ljsource_cuts_crosscleaning_dRcut_p05
+    muons: 
       - "looseID"
       - "pT > 5 GeV"
       - "|eta| < 2.4"
       - "dR(mu, A) < 0.5"
-    photons: &photons_ljsource_cuts_crosscleaning_dRcut_p05
+    photons: 
       - "pT > 20 GeV"
       - "|eta| < 2.5"
       - 'Custom Cutbased'
       - "pixelSeed"
       - 'Photon DR Veto 0p025'
-    dsaMuons: &dsaMuons_ljsource_cuts_crosscleaning_dRcut_p05
+    dsaMuons: 
       - "pT > 10 GeV"
       - "|eta| < 2.4"
       - "displaced ID"
       - "dR(mu, A) < 0.5"
       - "dR(dsa, pf) > 0.05"
     <<: *obj_baseNoLjNoLjsource
-  evt_cuts: &evt_baseNoLj_crosscleaning_dRcut_p05
+  evt_cuts: 
     - *evt_baseNoLjNoljsource
 
-baseNoLj_crosscleaning_dRcut_munum: &baseNoLj_crosscleaning_dRcut_munum
-  obj_cuts: &obj_ljsource_cuts_crosscleaning_dRcut_munum
-    electrons: &electrons_ljsource_cuts_crosscleaning_dRcut_munum
-      - "pT > 10 GeV"
-      - "|eta| < 2.4"
-      - 'MVANonIsoWPL'
-    muons: &muons_ljsource_cuts_crosscleaning_dRcut_munum
-      - "looseID"
-      - "pT > 5 GeV"
-      - "|eta| < 2.4"
-      - "dR(mu, A) < 0.5"
-    photons: &photons_ljsource_cuts_crosscleaning_dRcut_munum
-      - "pT > 20 GeV"
-      - "|eta| < 2.5"
-      - 'Custom Cutbased'
-      - "pixelSeed"
-      - 'Photon DR Veto 0p025'
-    dsaMuons: &dsaMuons_ljsource_cuts_crosscleaning_dRcut_munum
-      - "pT > 10 GeV"
-      - "|eta| < 2.4"
-      - "displaced ID"
-      - "dR(mu, A) < 0.5"
-      - "dR(dsa, pf) > 0.02"
+baseNoLj_DP_matching_dR0p02_muon_charge: &baseNoLj_DP_matching_dR0p05_muon_charge
+  obj_cuts: 
+    <<: *obj_baseNoLj_DP_matching_dR0p02
     <<: *obj_baseNoLjNoLjsource
-  postLj_obj_cuts_: &postLj_obj_crosscleaning_dRcut_munum
-    ljs: &postLj_obj_ljs_crosscleaning_dRcut_munum
+  postLj_obj_cuts: 
+    ljs: 
       - "mu_charge == 0"
-  evt_cuts: &evt_baseNoLj_crosscleaning_dRcut_munum
+  evt_cuts: 
     - *evt_baseNoLjNoljsource
 ##########################
 
