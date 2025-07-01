@@ -13,7 +13,7 @@ import hist
 import awkward as ak
 # local
 from sidm.tools import histogram as h
-from sidm.tools.utilities import dR, lxy, matched, dxy, farthest
+from sidm.tools.utilities import dR, lxy, matched, dxy
 from sidm.definitions.objects import derived_objs
 # always reload local modules to pick up changes during development
 importlib.reload(h)
