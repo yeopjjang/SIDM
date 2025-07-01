@@ -13,7 +13,7 @@ import hist
 import awkward as ak
 # local
 from sidm.tools import histogram as h
-from sidm.tools.utilities import dR, lxy, matched, dxy
+from sidm.tools.utilities import dR, lxy, matched, dxy, farthest
 from sidm.definitions.objects import derived_objs
 # always reload local modules to pick up changes during development
 importlib.reload(h)
@@ -66,7 +66,6 @@ default_binnings = {
     "lxy": (100, 0, 100),
 }
 
-
 # define convenience functions to simplify creating basic hists
 def make_label(obj, attr, absval):
     obj_label = obj_labels.get(obj, obj)
@@ -93,8 +92,7 @@ def obj_eta_phi(obj, nbins_x=None, xmin=None, xmax=None, nbins_y=None, ymin=None
         obj_attr(obj, "eta", nbins_x, xmin, xmax),
         obj_attr(obj, "phi", nbins_y, ymin, ymax),
     )
-
-
+    
 # define histograms
 hist_defs = {
     # pv
@@ -1445,7 +1443,152 @@ hist_defs = {
                    lambda objs, mask: lxy(objs["genAs_toMu"][mask])),
         ],
         evt_mask=lambda objs: (ak.num(matched(objs["muons"], objs["genAs_toMu"], 0.5)) == 2) & (ak.num(matched(objs["dsaMuons"], objs["genAs_toMu"], 0.5)) == 2),
+    ),    
+    "genAs_toMu_lxy_nosel_large": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 300, name="genAs_toMu_lxy_nosel",
+                                     label=r"Dark photon (to $\mu\mu$) $L_{xy}$ [cm]"),
+                   lambda objs, mask: lxy(objs["genAs_toMu"][mask])),
+        ],
+    ),
+    "genAs_toMu_lxy_noDSA_large": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 300, name="genAs_toMu_lxy_noDSA",
+                                     label=r"Dark photon (to $\mu\mu$) $L_{xy}$ [cm]"),
+                   lambda objs, mask: lxy(objs["genAs_toMu"][mask])),
+        ],
+        evt_mask=lambda objs: ak.num(matched(objs["dsaMuons"], objs["genAs_toMu"], 0.5)) == 0,
+    ),
+    "genAs_toMu_lxy_oneDSA_large": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 300, name="genAs_toMu_lxy_oneDSA",
+                                     label=r"Dark photon (to $\mu\mu$) $L_{xy}$ [cm]"),
+                   lambda objs, mask: lxy(objs["genAs_toMu"][mask])),
+        ],
+        evt_mask=lambda objs: ak.num(matched(objs["dsaMuons"], objs["genAs_toMu"], 0.5)) == 1,
+    ),
+    "genAs_toMu_lxy_twoDSA_large": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 300, name="genAs_toMu_lxy_twoDSA",
+                                     label=r"Dark photon (to $\mu\mu$) $L_{xy}$ [cm]"),
+                   lambda objs, mask: lxy(objs["genAs_toMu"][mask])),
+        ],
+        evt_mask=lambda objs: ak.num(matched(objs["dsaMuons"], objs["genAs_toMu"], 0.5)) == 2,
+    ),  
+    "genAs_toMu_lxy_noPF_large": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 300, name="genAs_toMu_lxy_noPF",
+                                     label=r"Dark photon (to $\mu\mu$) $L_{xy}$ [cm]"),
+                   lambda objs, mask: lxy(objs["genAs_toMu"][mask])),
+        ],
+        evt_mask=lambda objs: ak.num(matched(objs["muons"], objs["genAs_toMu"], 0.5)) == 0,
+    ),
+    "genAs_toMu_lxy_noPF_noDSA_large": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 300, name="genAs_toMu_lxy_noPF_noDSA",
+                                     label=r"Dark photon (to $\mu\mu$) $L_{xy}$ [cm]"),
+                   lambda objs, mask: lxy(objs["genAs_toMu"][mask])),
+        ],
+        evt_mask=lambda objs: (ak.num(matched(objs["muons"], objs["genAs_toMu"], 0.5)) == 0) & (ak.num(matched(objs["dsaMuons"], objs["genAs_toMu"], 0.5)) == 0),
+    ),  
+    "genAs_toMu_lxy_noPF_oneDSA_large": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 300, name="genAs_toMu_lxy_noPF_oneDSA",
+                                     label=r"Dark photon (to $\mu\mu$) $L_{xy}$ [cm]"),
+                   lambda objs, mask: lxy(objs["genAs_toMu"][mask])),
+        ],
+        evt_mask=lambda objs: (ak.num(matched(objs["muons"], objs["genAs_toMu"], 0.5)) == 0) & (ak.num(matched(objs["dsaMuons"], objs["genAs_toMu"], 0.5)) == 1),
+    ),  
+    "genAs_toMu_lxy_noPF_twoDSA_large": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 300, name="genAs_toMu_lxy_noPF_twoDSA",
+                                     label=r"Dark photon (to $\mu\mu$) $L_{xy}$ [cm]"),
+                   lambda objs, mask: lxy(objs["genAs_toMu"][mask])),
+        ],
+        evt_mask=lambda objs: (ak.num(matched(objs["muons"], objs["genAs_toMu"], 0.5)) == 0) & (ak.num(matched(objs["dsaMuons"], objs["genAs_toMu"], 0.5)) == 2),
+    ),  
+    "genAs_toMu_lxy_onePF_large": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 300, name="genAs_toMu_lxy_onePF",
+                                     label=r"Dark photon (to $\mu\mu$) $L_{xy}$ [cm]"),
+                   lambda objs, mask: lxy(objs["genAs_toMu"][mask])),
+        ],
+        evt_mask=lambda objs: ak.num(matched(objs["muons"], objs["genAs_toMu"], 0.5)) == 1,
+    ),
+    "genAs_toMu_lxy_onePF_noDSA_large": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 300, name="genAs_toMu_lxy_onePF_noDSA",
+                                     label=r"Dark photon (to $\mu\mu$) $L_{xy}$ [cm]"),
+                   lambda objs, mask: lxy(objs["genAs_toMu"][mask])),
+        ],
+        evt_mask=lambda objs: (ak.num(matched(objs["muons"], objs["genAs_toMu"], 0.5)) == 1) & (ak.num(matched(objs["dsaMuons"], objs["genAs_toMu"], 0.5)) == 0),
+    ),
+    "genAs_toMu_lxy_onePF_oneDSA_large": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 300, name="genAs_toMu_lxy_onePF_oneDSA",
+                                     label=r"Dark photon (to $\mu\mu$) $L_{xy}$ [cm]"),
+                   lambda objs, mask: lxy(objs["genAs_toMu"][mask])),
+        ],
+        evt_mask=lambda objs: (ak.num(matched(objs["muons"], objs["genAs_toMu"], 0.5)) == 1) & (ak.num(matched(objs["dsaMuons"], objs["genAs_toMu"], 0.5)) == 1),
+    ),  
+    "genAs_toMu_lxy_onePF_twoDSA_large": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 300, name="genAs_toMu_lxy_onePF_twoDSA",
+                                     label=r"Dark photon (to $\mu\mu$) $L_{xy}$ [cm]"),
+                   lambda objs, mask: lxy(objs["genAs_toMu"][mask])),
+        ],
+        evt_mask=lambda objs: (ak.num(matched(objs["muons"], objs["genAs_toMu"], 0.5)) == 1) & (ak.num(matched(objs["dsaMuons"], objs["genAs_toMu"], 0.5)) == 2),
+    ),  
+    "genAs_toMu_lxy_twoPF_large": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 300, name="genAs_toMu_lxy_twoPF",
+                                     label=r"Dark photon (to $\mu\mu$) $L_{xy}$ [cm]"),
+                   lambda objs, mask: lxy(objs["genAs_toMu"][mask])),
+        ],
+        evt_mask=lambda objs: ak.num(matched(objs["muons"], objs["genAs_toMu"], 0.5)) == 2,
+    ),
+    "genAs_toMu_lxy_twoPF_noDSA_large": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 300, name="genAs_toMu_lxy_twoPF_noDSA",
+                                     label=r"Dark photon (to $\mu\mu$) $L_{xy}$ [cm]"),
+                   lambda objs, mask: lxy(objs["genAs_toMu"][mask])),
+        ],
+        evt_mask=lambda objs: (ak.num(matched(objs["muons"], objs["genAs_toMu"], 0.5)) == 2) & (ak.num(matched(objs["dsaMuons"], objs["genAs_toMu"], 0.5)) == 0),
     ), 
+    "genAs_toMu_lxy_twoPF_oneDSA_large": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 300, name="genAs_toMu_lxy_twoPF_oneDSA",
+                                     label=r"Dark photon (to $\mu\mu$) $L_{xy}$ [cm]"),
+                   lambda objs, mask: lxy(objs["genAs_toMu"][mask])),
+        ],
+        evt_mask=lambda objs: (ak.num(matched(objs["muons"], objs["genAs_toMu"], 0.5)) == 2) & (ak.num(matched(objs["dsaMuons"], objs["genAs_toMu"], 0.5)) == 1),
+    ), 
+    "genAs_toMu_lxy_twoPF_twoDSA_large": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 300, name="genAs_toMu_lxy_twoPF_twoDSA",
+                                     label=r"Dark photon (to $\mu\mu$) $L_{xy}$ [cm]"),
+                   lambda objs, mask: lxy(objs["genAs_toMu"][mask])),
+        ],
+        evt_mask=lambda objs: (ak.num(matched(objs["muons"], objs["genAs_toMu"], 0.5)) == 2) & (ak.num(matched(objs["dsaMuons"], objs["genAs_toMu"], 0.5)) == 2),
+    ),    
+
+    "ptRatio_closestDSA_over_PF": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 2, name="ptRatio_closestDSA_over_PF",
+                                     label=r"Closest DSA $p_T$ / PF $p_T$"),
+                   lambda objs, mask: (objs["muons"][mask].nearest(objs["dsaMuons"][mask])).pt / objs["muons"][mask].pt),
+        ],
+        evt_mask=lambda objs: (ak.num(matched(objs["muons"], objs["genAs_toMu"], 0.5)) == 1) & (ak.num(matched(objs["dsaMuons"], objs["genAs_toMu"], 0.5)) == 2),
+    ),
+    "ptRatio_otherDSA_over_PF": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 5, name="ptRatio_otherDSA_over_PF",
+                                     label=r"Other DSA $p_T$ / PF $p_T$"),
+                   lambda objs, mask: (farthest(objs["muons"][mask], objs["dsaMuons"][mask]).pt / objs["muons"][mask].pt)),
+        ],
+        evt_mask=lambda objs: (ak.num(matched(objs["muons"], objs["genAs_toMu"], 0.5)) == 1) & (ak.num(matched(objs["dsaMuons"], objs["genAs_toMu"], 0.5)) == 2),
+    ),
+
     # ABCD plane
     "lj_lj_absdphi_invmass": h.Histogram(
         [
