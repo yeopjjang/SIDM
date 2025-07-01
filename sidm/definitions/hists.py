@@ -1580,14 +1580,6 @@ hist_defs = {
         ],
         evt_mask=lambda objs: (ak.num(matched(objs["muons"], objs["genAs_toMu"], 0.5)) == 1) & (ak.num(matched(objs["dsaMuons"], objs["genAs_toMu"], 0.5)) == 2),
     ),
-    "ptRatio_otherDSA_over_PF": h.Histogram(
-        [
-            h.Axis(hist.axis.Regular(50, 0, 5, name="ptRatio_otherDSA_over_PF",
-                                     label=r"Other DSA $p_T$ / PF $p_T$"),
-                   lambda objs, mask: (farthest(objs["muons"][mask], objs["dsaMuons"][mask]).pt / objs["muons"][mask].pt)),
-        ],
-        evt_mask=lambda objs: (ak.num(matched(objs["muons"], objs["genAs_toMu"], 0.5)) == 1) & (ak.num(matched(objs["dsaMuons"], objs["genAs_toMu"], 0.5)) == 2),
-    ),
 
     # ABCD plane
     "lj_lj_absdphi_invmass": h.Histogram(
