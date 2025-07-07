@@ -49713,7 +49713,7 @@ skimmed_llpNanoAOD_v2:
       # - skimmed_output2_123.root #ValueError: unrecognized compression algorithm: b'\x96\x15'
       - skimmed_output2_124.root
       - skimmed_output2_125.root
-      - skimmed_output2_126.root
+      # - skimmed_output2_126.root # DeserializationError: while reading
       - skimmed_output2_127.root
       - skimmed_output2_128.root
       - skimmed_output2_129.root
