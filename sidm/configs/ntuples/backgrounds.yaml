@@ -49710,7 +49710,7 @@ skimmed_llpNanoAOD_v2:
       - skimmed_output2_120.root
       - skimmed_output2_121.root
       - skimmed_output2_122.root
-      - skimmed_output2_123.root 
+      # - skimmed_output2_123.root #ValueError: unrecognized compression algorithm: b'\x96\x15'
       - skimmed_output2_124.root
       - skimmed_output2_125.root
       - skimmed_output2_126.root
