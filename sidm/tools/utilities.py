@@ -67,6 +67,40 @@ def dR(obj1, obj2):
     dr = obj1.nearest(obj2, return_metric=True)[1]
     return ak.fill_none(dr, np.inf)
 
+def dR_general(obj1, obj2):
+    """Return ΔR between obj1 and obj2, filling None with inf"""
+    return ak.fill_none(obj1.delta_r(obj2), np.inf)
+
+def get_closest_dsa(pf, dsa):
+    """
+    Return the DSA muon closest to each PF muon (event-wise).
+    Assumes:
+      - pf: [N]
+      - dsa: [N, M]
+    """
+    dRs = dR_general(pf, dsa)
+    idx = ak.argmin(dRs, axis=1)
+    safe_idx = ak.fill_none(idx, 0)
+    rows = ak.Array(np.arange(len(dsa)))
+    selected = dsa[rows, safe_idx]
+    selected["mass"] = ak.full_like(selected.pt, 0.105712890625)
+    return selected
+
+def get_farthest_dsa(pf, dsa):
+    """
+    Return the DSA muon farthest from each PF muon (event-wise).
+    Assumes:
+      - pf: [N]
+      - dsa: [N, M]
+    """
+    dRs = dR_general(pf, dsa)
+    idx = ak.argmax(dRs, axis=1)
+    safe_idx = ak.fill_none(idx, 0)
+    rows = ak.Array(np.arange(len(dsa)))
+    selected = dsa[rows, safe_idx]
+    selected["mass"] = ak.full_like(selected.pt, 0.105712890625)
+    return selected
+
 def dR_outer(obj1, obj2):
     """Return dR between outer tracks of obj1 and obj2"""
     return np.sqrt((obj1.outerEta - obj2.outerEta)**2 + (obj1.outerPhi - obj2.outerPhi)**2)

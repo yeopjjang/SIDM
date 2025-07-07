@@ -276,7 +276,22 @@ muon_crosscleaning_base: &muon_crosscleaning_base
   - "genAs_toMu_lxy_twoPF_oneDSA_large"
   - "genAs_toMu_lxy_twoPF_twoDSA_large"
 
-  - "ptRatio_closestDSA_over_PF"
+  - "PFcount"
+  - "DSAcount"
+  - "matchPFcount"
+  - "matchDSAcount"
+  
+  - "closestDSA_PF_dR"
+  - "farthestDSA_PF_dR"
+  - "closestDSA_PF_ptRatio"
+  - "farthestDSA_PF_ptRatio"
+  - "closestDSAplusPF_DP_ptRatio"
+  - "farthestDSAplusPF_DP_ptRatio"
+  - "DP_DP_mass"
+  - "closestDSA_PF_DP_mass"
+  - "farthestDSA_PF_DP_mass"
+  - "closestDSA_PF_dR_outer"
+  - "farthestDSA_PF_dR_outer"
 
 abcd_base: &abcd_base
   - "lj_lj_absdphi_invmass"
