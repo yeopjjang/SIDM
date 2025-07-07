@@ -1063,11 +1063,95 @@ hist_defs = {
                    lambda objs, mask:  objs["pfmu_ljs"].matched_jet.pt),
         ],
     ),
+    "pfmu_matched_jet_chEmEF": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 1, name="pfmu_matched_jet_chEmEF",
+                   label="PF Mu Matched Jet Charged EM Fraction"),
+                   lambda objs, mask:  objs["pfmu_ljs"].matched_jet.chEmEF),
+        ],
+    ),
+    "pfmu_matched_jet_chFPV0EF": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 1, name="pfmu_matched_jet_chFPV0EF",
+                   label="PF Mu Matched Jet Charged EM (from PV==0) Fraction"),
+                   lambda objs, mask:  objs["pfmu_ljs"].matched_jet.chFPV0EF),
+        ],
+    ),
+    "pfmu_matched_jet_chHEF": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 1, name="pfmu_matched_jet_chHEF",
+                   label="PF Mu Matched Jet Charged Hadron Fraction"),
+                   lambda objs, mask:  objs["pfmu_ljs"].matched_jet.chHEF),
+        ],
+    ),
+    "pfmu_matched_jet_muEF": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 1, name="pfmu_matched_jet_muEF",
+                   label="PF Mu Matched Jet Muon Fraction"),
+                   lambda objs, mask:  objs["pfmu_ljs"].matched_jet.muEF),
+        ],
+    ),
+    "pfmu_matched_jet_neEmEF": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 1, name="pfmu_matched_jet_neEmEF",
+                   label="PF Mu Matched Jet Neutral EM Fraction"),
+                   lambda objs, mask:  objs["pfmu_ljs"].matched_jet.neEmEF),
+        ],
+    ),
+    "pfmu_matched_jet_neHEF": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 1, name="pfmu_matched_jet_neHEF",
+                   label="PF Mu Matched Jet Neutral Hadron Fraction"),
+                   lambda objs, mask:  objs["pfmu_ljs"].matched_jet.neHEF),
+        ],
+    ),
     "dsamu_matched_jet_pt": h.Histogram(
         [
             h.Axis(hist.axis.Regular(50, 0, 800, name="dsamu_matched_jet_pt",
                    label="DSA Mu Matched Jet PT [GeV]"),
                    lambda objs, mask:  objs["dsamu_ljs"].matched_jet.pt),
+        ],
+    ),
+    "dsamu_matched_jet_chEmEF": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 1, name="dsamu_matched_jet_chEmEF",
+                   label="DSA Mu Matched Jet Charged EM Fraction"),
+                   lambda objs, mask:  objs["dsamu_ljs"].matched_jet.chEmEF),
+        ],
+    ),
+    "dsamu_matched_jet_chFPV0EF": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 1, name="dsamu_matched_jet_chFPV0EF",
+                   label="DSA Mu Matched Jet Charged EM (from PV==0) Fraction"),
+                   lambda objs, mask:  objs["dsamu_ljs"].matched_jet.chFPV0EF),
+        ],
+    ),
+    "dsamu_matched_jet_chHEF": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 1, name="dsamu_matched_jet_chHEF",
+                   label="DSA Mu Matched Jet Charged Hadron Fraction"),
+                   lambda objs, mask:  objs["dsamu_ljs"].matched_jet.chHEF),
+        ],
+    ),
+    "dsamu_matched_jet_muEF": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 1, name="dsamu_matched_jet_muEF",
+                   label="DSA Mu Matched Jet Muon Fraction"),
+                   lambda objs, mask:  objs["dsamu_ljs"].matched_jet.muEF),
+        ],
+    ),
+    "dsamu_matched_jet_neEmEF": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 1, name="dsamu_matched_jet_neEmEF",
+                   label="DSA Mu Matched Jet Neutral EM Fraction"),
+                   lambda objs, mask:  objs["dsamu_ljs"].matched_jet.neEmEF),
+        ],
+    ),
+    "dsamu_matched_jet_neHEF": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 1, name="dsamu_matched_jet_neHEF",
+                   label="DSA Mu Matched Jet Neutral Hadron Fraction"),
+                   lambda objs, mask:  objs["dsamu_ljs"].matched_jet.neHEF),
         ],
     ),
     "egm_matched_jet_pt": h.Histogram(
@@ -1084,11 +1168,95 @@ hist_defs = {
                    lambda objs, mask:  objs["electron_ljs"].matched_jet.pt),
         ],
     ),
+    "electron_matched_jet_chEmEF": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 1, name="electron_matched_jet_chEmEF",
+                   label="Electron Matched Jet Charged EM Fraction"),
+                   lambda objs, mask:  objs["electron_ljs"].matched_jet.chEmEF),
+        ],
+    ),
+    "electron_matched_jet_chFPV0EF": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 1, name="electron_matched_jet_chFPV0EF",
+                   label="Electron Matched Jet Charged EM (from PV==0) Fraction"),
+                   lambda objs, mask:  objs["electron_ljs"].matched_jet.chFPV0EF),
+        ],
+    ),
+    "electron_matched_jet_chHEF": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 1, name="electron_matched_jet_chHEF",
+                   label="Electron Matched Jet Charged Hadron Fraction"),
+                   lambda objs, mask:  objs["electron_ljs"].matched_jet.chHEF),
+        ],
+    ),
+    "electron_matched_jet_muEF": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 1, name="electron_matched_jet_muEF",
+                   label="Electron Matched Jet Muon Fraction"),
+                   lambda objs, mask:  objs["electron_ljs"].matched_jet.muEF),
+        ],
+    ),
+    "electron_matched_jet_neEmEF": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 1, name="electron_matched_jet_neEmEF",
+                   label="Electron Matched Jet Neutral EM Fraction"),
+                   lambda objs, mask:  objs["electron_ljs"].matched_jet.neEmEF),
+        ],
+    ),
+    "electron_matched_jet_neHEF": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 1, name="electron_matched_jet_neHEF",
+                   label="Electron Matched Jet Neutral Hadron Fraction"),
+                   lambda objs, mask:  objs["electron_ljs"].matched_jet.neHEF),
+        ],
+    ),
     "photon_matched_jet_pt": h.Histogram(
         [
             h.Axis(hist.axis.Regular(50, 0, 800, name="photon_matched_jet_pt",
                    label="Photon Matched Jet PT [GeV]"),
                    lambda objs, mask:  objs["photon_ljs"].matched_jet.pt),
+        ],
+    ),
+    "photon_matched_jet_chEmEF": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 1, name="photon_matched_jet_chEmEF",
+                   label="Photon Matched Jet Charged EM Fraction"),
+                   lambda objs, mask:  objs["photon_ljs"].matched_jet.chEmEF),
+        ],
+    ),
+    "photon_matched_jet_chFPV0EF": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 1, name="photon_matched_jet_chFPV0EF",
+                   label="Photon Matched Jet Charged EM (from PV==0) Fraction"),
+                   lambda objs, mask:  objs["photon_ljs"].matched_jet.chFPV0EF),
+        ],
+    ),
+    "photon_matched_jet_chHEF": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 1, name="photon_matched_jet_chHEF",
+                   label="Photon Matched Jet Charged Hadron Fraction"),
+                   lambda objs, mask:  objs["photon_ljs"].matched_jet.chHEF),
+        ],
+    ),
+    "photon_matched_jet_muEF": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 1, name="photon_matched_jet_muEF",
+                   label="Photon Matched Jet Muon Fraction"),
+                   lambda objs, mask:  objs["photon_ljs"].matched_jet.muEF),
+        ],
+    ),
+    "photon_matched_jet_neEmEF": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 1, name="photon_matched_jet_neEmEF",
+                   label="Photon Matched Jet Neutral EM Fraction"),
+                   lambda objs, mask:  objs["photon_ljs"].matched_jet.neEmEF),
+        ],
+    ),
+    "photon_matched_jet_neHEF": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 1, name="photon_matched_jet_neHEF",
+                   label="Photon Matched Jet Neutral Hadron Fraction"),
+                   lambda objs, mask:  objs["photon_ljs"].matched_jet.neHEF),
         ],
     ),
     "matched_jet_lepfraction": h.Histogram(
