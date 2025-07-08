@@ -49567,7 +49567,7 @@ skimmed_llpNanoAOD_v2:
       - skimmed_output1_28.root
       - skimmed_output1_29.root
       - skimmed_output1_30.root
-      - skimmed_output1_31.root
+      # - skimmed_output1_31.root IndexError: index -1 is out of bounds for axis 0 with size 0
       - skimmed_output1_32.root
       - skimmed_output1_33.root
       - skimmed_output1_34.root
