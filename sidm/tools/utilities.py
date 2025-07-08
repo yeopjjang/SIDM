@@ -86,6 +86,21 @@ def get_closest_dsa(pf, dsa):
     selected["mass"] = ak.full_like(selected.pt, 0.105712890625)
     return selected
 
+def get_closest_dsa_outer(pf, dsa):
+    """
+    Return the DSA muon closest to each PF muon (event-wise).
+    Assumes:
+      - pf: [N]
+      - dsa: [N, M]
+    """
+    dRs = dR_outer(pf, dsa)
+    idx = ak.argmin(dRs, axis=1)
+    safe_idx = ak.fill_none(idx, 0)
+    rows = ak.Array(np.arange(len(dsa)))
+    selected = dsa[rows, safe_idx]
+    selected["mass"] = ak.full_like(selected.pt, 0.105712890625)
+    return selected
+
 def get_farthest_dsa(pf, dsa):
     """
     Return the DSA muon farthest from each PF muon (event-wise).
@@ -94,6 +109,21 @@ def get_farthest_dsa(pf, dsa):
       - dsa: [N, M]
     """
     dRs = dR_general(pf, dsa)
+    idx = ak.argmax(dRs, axis=1)
+    safe_idx = ak.fill_none(idx, 0)
+    rows = ak.Array(np.arange(len(dsa)))
+    selected = dsa[rows, safe_idx]
+    selected["mass"] = ak.full_like(selected.pt, 0.105712890625)
+    return selected
+
+def get_farthest_dsa_outer(pf, dsa):
+    """
+    Return the DSA muon farthest from each PF muon (event-wise).
+    Assumes:
+      - pf: [N]
+      - dsa: [N, M]
+    """
+    dRs = dR_outer(pf, dsa)
     idx = ak.argmax(dRs, axis=1)
     safe_idx = ak.fill_none(idx, 0)
     rows = ak.Array(np.arange(len(dsa)))
