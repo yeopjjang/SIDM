@@ -49610,7 +49610,7 @@ skimmed_llpNanoAOD_v2:
       - skimmed_output2_19.root 
       - skimmed_output2_20.root
       # - skimmed_output2_21.root # ValueError: 'PV filter' is not in list
-      - skimmed_output2_22.root
+      # - skimmed_output2_22.root # DeserializationError: while reading
       - skimmed_output2_23.root
       - skimmed_output2_24.root
       # - skimmed_output2_25.root # DeserializationError: while reading
@@ -49618,7 +49618,7 @@ skimmed_llpNanoAOD_v2:
       - skimmed_output2_27.root
       - skimmed_output2_28.root
       - skimmed_output2_29.root
-      - skimmed_output2_30.root
+      # - skimmed_output2_30.root # DeserializationError: while reading
       # - skimmed_output2_31.root # DeserializationError: while reading
       # - skimmed_output2_32.root # DeserializationError: while reading
       - skimmed_output2_33.root
