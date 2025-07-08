@@ -49718,14 +49718,14 @@ skimmed_llpNanoAOD_v2:
       - skimmed_output2_128.root
       # - skimmed_output2_129.root 
       - skimmed_output2_130.root
-      - skimmed_output2_131.root
+      # - skimmed_output2_131.root # DeserializationError: while reading
       - skimmed_output2_132.root
       - skimmed_output2_133.root
       - skimmed_output2_134.root
       # - skimmed_output2_135.root # error: Error -5 while decompressing data: incomplete or truncated stream
       - skimmed_output2_136.root
       - skimmed_output2_137.root
-      - skimmed_output2_138.root
+      # - skimmed_output2_138.root # error: Error -5 while decompressing data: incomplete or truncated stream
       - skimmed_output2_139.root
       - skimmed_output2_140.root
       - skimmed_output2_141.root
