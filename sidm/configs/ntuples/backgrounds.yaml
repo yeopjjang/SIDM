@@ -49664,8 +49664,8 @@ skimmed_llpNanoAOD_v2:
       - skimmed_output2_73.root
       - skimmed_output2_74.root 
       - skimmed_output2_75.root
-      # - skimmed_output2_76.root AssertionError: 
-      - skimmed_output2_77.root
+      # - skimmed_output2_76.root # AssertionError: 
+      # - skimmed_output2_77.root # DeserializationError: while reading
       - skimmed_output2_79.root
       - skimmed_output2_80.root
       - skimmed_output2_81.root
