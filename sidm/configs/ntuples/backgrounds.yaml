@@ -49557,7 +49557,7 @@ skimmed_llpNanoAOD_v2:
       - skimmed_output1_18.root
       - skimmed_output1_19.root
       - skimmed_output1_20.root
-      - skimmed_output1_21.root
+      # - skimmed_output1_21.root error: Error -3 while decompressing data: invalid code lengths set
       - skimmed_output1_22.root
       - skimmed_output1_23.root
       - skimmed_output1_24.root
