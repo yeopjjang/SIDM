@@ -255,6 +255,8 @@ isolation_base: &isolation_base
   - "photon_matched_jet_neEmEF"
   - "photon_matched_jet_neHEF"
 
+  - "dpt_matched_jet_lj"
+
 muon_crosscleaning_base: &muon_crosscleaning_base  
   - "pfMuon_dsaMuon_dR"
   - "pfMuon_dsaMuon_dR_lowRange"
@@ -348,6 +350,11 @@ abcd_base: &abcd_base
   - "lj_lj_absdR_ptRatio"
   - "lj_lj_absdeta_ptRatio"
   - "lj_isolation_lj_pt"
+  - "mulj_isolation_mulj_pt"
+  - "lj_isolation_matchedjet_pt"
+  - "mulj_isolation_mumatchedjet_pt"
+  - "lj_isolation_matchedjet_fraction"
+  - "mulj_isolation_mumatchedjet_fraction"
   - "lj_lj_absdphi_isosum"
 
 genE_base: &genE_base

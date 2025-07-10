@@ -27,6 +27,7 @@ counter_defs = {
     "Matched gen As to muons": lambda objs: ak.count(derived_objs["genAs_toMu_matched_lj"](objs, 0.4).pt),
     "Matched gen As to electrons": lambda objs: ak.count(derived_objs["genAs_toE_matched_lj"](objs, 0.4).pt),
     "LJ Isolation": lambda objs:  ak.count(objs["ljs"].isolation),
+    "Matched Jet": lambda objs: ak.count(objs["ljs"].matched_jet.pt),
     "Gen As": lambda objs: ak.count(objs["genAs"].pt),
     "PF LJs": lambda objs: ak.count(objs["pfmu_ljs"].pt),
     "DSA LJs": lambda objs: ak.count(objs["dsamu_ljs"].pt),
@@ -1358,6 +1359,13 @@ hist_defs = {
                    lambda objs, mask: objs["photon_ljs"].dR_matched_jet),
         ],
     ), 
+    "dpt_matched_jet_lj": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 20, name="matched_jet_dR",
+                   label="|Matched Jet $p_{T}$ - LJ $p_{T}$| / LJ $p_{T}$"),
+                   lambda objs, mask: abs(objs["ljs"].matched_jet.pt - objs["ljs"].pt) / objs["ljs"].pt),
+        ],
+    ),
     "lj_isolation": h.Histogram(
         [
             h.Axis(hist.axis.Regular(50, 0, 2, name="lj_isolation",
@@ -2099,6 +2107,46 @@ hist_defs = {
                    lambda objs, mask: objs["ljs"][mask].isolation),
             h.Axis(hist.axis.Regular(100, 0, 700, name="lj_pt", label=r"LJ $p_{T}$"),
                    lambda objs, mask: objs["ljs"][mask].pt),
+        ],
+    ),
+    "mulj_isolation_mulj_pt": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(100, 0, 1, name="lj_isolation", label="Mu-LJ Isolation"),
+                   lambda objs, mask: objs["mu_ljs"][mask].isolation),
+            h.Axis(hist.axis.Regular(100, 0, 700, name="lj_pt", label=r"Mu-LJ $p_{T}$"),
+                   lambda objs, mask: objs["mu_ljs"][mask].pt),
+        ],
+    ),
+    "lj_isolation_matchedjet_pt": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(100, 0, 1, name="lj_isolation", label="LJ Isolation"),
+                   lambda objs, mask: objs["ljs"][mask].isolation),
+            h.Axis(hist.axis.Regular(100, 0, 700, name="lj_pt", label=r"Matched Jet $p_{T}$"),
+                   lambda objs, mask: ak.fill_none((objs["ljs"][mask].matched_jet.pt), 0)),
+        ],
+    ),
+    "mulj_isolation_mumatchedjet_pt": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(100, 0, 1, name="lj_isolation", label="Mu-LJ Isolation"),
+                   lambda objs, mask: objs["mu_ljs"][mask].isolation),
+            h.Axis(hist.axis.Regular(100, 0, 700, name="lj_pt", label=r"Mu Type Matched Jet $p_{T}$"),
+                   lambda objs, mask: ak.fill_none((objs["mu_ljs"][mask].matched_jet.pt), 0)),
+        ],
+    ),
+    "lj_isolation_matchedjet_fraction": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(100, 0, 1, name="lj_isolation", label="LJ Isolation"),
+                   lambda objs, mask: objs["ljs"][mask].isolation),
+            h.Axis(hist.axis.Regular(100, 0, 1, name="lj_pt", label=r"Matched Jet Lepton Fraction"),
+                   lambda objs, mask: ak.fill_none((objs["ljs"][mask].lepton_fraction), 0)),
+        ],
+    ),
+    "mulj_isolation_mumatchedjet_fraction": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(100, 0, 1, name="lj_isolation", label="Mu-LJ Isolation"),
+                   lambda objs, mask: objs["mu_ljs"][mask].isolation),
+            h.Axis(hist.axis.Regular(100, 0, 1, name="lj_pt", label=r"Mu Type Matched Jet Lepton Fraction"),
+                   lambda objs, mask: ak.fill_none((objs["mu_ljs"][mask].lepton_fraction), 0)),
         ],
     ),
     "lj_lj_absdphi_isosum": h.Histogram(
