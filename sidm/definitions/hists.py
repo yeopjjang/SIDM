@@ -13,7 +13,7 @@ import hist
 import awkward as ak
 # local
 from sidm.tools import histogram as h
-from sidm.tools.utilities import dR, lxy, matched, dxy, dR_general, get_closest_dsa, get_farthest_dsa, dR_outer, get_closest_dsa_outer, get_farthest_dsa_outer
+from sidm.tools.utilities import dR, lxy, matched, dxy, dR_general, get_closest_dsa, get_farthest_dsa, dR_outer, get_closest_dsa_outer, get_farthest_dsa_outer, ptfrac, get_closest_by_ptfrac, get_farthest_by_ptfrac
 from sidm.definitions.objects import derived_objs
 # always reload local modules to pick up changes during development
 importlib.reload(h)
@@ -1916,6 +1916,92 @@ hist_defs = {
             h.Axis(hist.axis.Regular(50, 0, 1500, name="test",
                                      label=r"Farthest DSA + PF + DP(to EE) Mass [Outer]"),
                    lambda objs, mask: ((get_farthest_dsa_outer(matched(objs["muons"][mask], objs["genAs_toMu"][mask], 0.5)[:,0], matched(objs["dsaMuons"][mask], objs["genAs_toMu"][mask], 0.5)) + matched(objs["muons"][mask], objs["genAs_toMu"][mask], 0.5)[:,0]) + objs["genAs_toE"][mask]).mass),
+        ],
+        evt_mask=lambda objs: (ak.num(matched(objs["muons"], objs["genAs_toMu"], 0.5)) == 1) & (ak.num(matched(objs["dsaMuons"], objs["genAs_toMu"], 0.5)) == 2),
+    ),  
+    "closestPTDSA_PF_ptfrac": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 3.0, name="ptfrac", 
+                                     label="|PT(PF) - PT(DSA[Closest PT])| / PT(PF)"),
+                    lambda objs, mask: abs(get_closest_by_ptfrac(matched(objs["muons"][mask], objs["genAs_toMu"][mask], 0.5)[:, 0], matched(objs["dsaMuons"][mask], objs["genAs_toMu"][mask], 0.5)).pt - matched(objs["muons"][mask], objs["genAs_toMu"][mask], 0.5)[:, 0].pt)
+                                        / matched(objs["muons"][mask], objs["genAs_toMu"][mask], 0.5)[:, 0].pt),
+        ],
+        evt_mask=lambda objs: (ak.num(matched(objs["muons"], objs["genAs_toMu"], 0.5)) == 1) & (ak.num(matched(objs["dsaMuons"], objs["genAs_toMu"], 0.5)) == 2),
+    ),
+    "farthestPTDSA_PF_ptfrac": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 3.0, name="ptfrac", 
+                                     label="|PT(PF) - PT(DSA[Farthest PT])| / PT(PF)"),
+                    lambda objs, mask: abs(get_farthest_by_ptfrac(matched(objs["muons"][mask], objs["genAs_toMu"][mask], 0.5)[:, 0], matched(objs["dsaMuons"][mask], objs["genAs_toMu"][mask], 0.5)).pt - matched(objs["muons"][mask], objs["genAs_toMu"][mask], 0.5)[:, 0].pt)
+                                        / matched(objs["muons"][mask], objs["genAs_toMu"][mask], 0.5)[:, 0].pt),
+        ],
+        evt_mask=lambda objs: (ak.num(matched(objs["muons"], objs["genAs_toMu"], 0.5)) == 1) & (ak.num(matched(objs["dsaMuons"], objs["genAs_toMu"], 0.5)) == 2),
+    ),
+    "closestPTDSA_PF_dR_outer": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, .5, name="dr", label="ΔR Outer (PF, DSA[Closest PT])"),
+                lambda objs, mask: dR_outer(matched(objs["muons"][mask], objs["genAs_toMu"][mask], 0.5)[:,0], 
+                                                       get_closest_by_ptfrac(matched(objs["muons"][mask], objs["genAs_toMu"][mask], 0.5)[:,0], matched(objs["dsaMuons"][mask], objs["genAs_toMu"][mask], 0.5)))),
+        ],
+        evt_mask=lambda objs: (ak.num(matched(objs["muons"], objs["genAs_toMu"], 0.5)) == 1) & (ak.num(matched(objs["dsaMuons"], objs["genAs_toMu"], 0.5)) == 2),
+    ),
+    "farthestPTDSA_PF_dR_outer": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, .5, name="dr", label="ΔR Outer (PF, DSA[Farthest PT])"),
+                lambda objs, mask: dR_outer(matched(objs["muons"][mask], objs["genAs_toMu"][mask], 0.5)[:,0], 
+                                                       get_farthest_by_ptfrac(matched(objs["muons"][mask], objs["genAs_toMu"][mask], 0.5)[:,0], matched(objs["dsaMuons"][mask], objs["genAs_toMu"][mask], 0.5)))),
+        ],
+        evt_mask=lambda objs: (ak.num(matched(objs["muons"], objs["genAs_toMu"], 0.5)) == 1) & (ak.num(matched(objs["dsaMuons"], objs["genAs_toMu"], 0.5)) == 2),
+    ),
+    "closestPTDSA_PF_ptRatio": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 3, name="dr", label="DSA[Closest PT] PT / PF PT"),
+                lambda objs, mask: get_closest_by_ptfrac(matched(objs["muons"][mask], objs["genAs_toMu"][mask], 0.5)[:,0], matched(objs["dsaMuons"][mask], objs["genAs_toMu"][mask], 0.5)).pt /
+                                                   matched(objs["muons"][mask], objs["genAs_toMu"][mask], 0.5).pt),
+                                                       
+        ],
+        evt_mask=lambda objs: (ak.num(matched(objs["muons"], objs["genAs_toMu"], 0.5)) == 1) & (ak.num(matched(objs["dsaMuons"], objs["genAs_toMu"], 0.5)) == 2),
+    ),
+    "farthestPTDSA_PF_ptRatio": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 3, name="dr", label="DSA[Farthest PT] PT / PF PT"),
+                lambda objs, mask: get_farthest_by_ptfrac(matched(objs["muons"][mask], objs["genAs_toMu"][mask], 0.5)[:,0], matched(objs["dsaMuons"][mask], objs["genAs_toMu"][mask], 0.5)).pt /
+                                                   matched(objs["muons"][mask], objs["genAs_toMu"][mask], 0.5).pt),
+                                                       
+        ],
+        evt_mask=lambda objs: (ak.num(matched(objs["muons"], objs["genAs_toMu"], 0.5)) == 1) & (ak.num(matched(objs["dsaMuons"], objs["genAs_toMu"], 0.5)) == 2),
+    ),
+    "closestPTDSAplusPF_DP_ptRatio": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 2, name="dr", label="(DSA[Closest PT] + PF) PT / Dark photon(to $\mu$$\mu$) PT"),
+                lambda objs, mask: (get_closest_by_ptfrac(matched(objs["muons"][mask], objs["genAs_toMu"][mask], 0.5)[:,0], matched(objs["dsaMuons"][mask], objs["genAs_toMu"][mask], 0.5)) + matched(objs["muons"][mask], objs["genAs_toMu"][mask], 0.5)[:,0]).pt / 
+                                     objs["genAs_toMu"][mask].pt),
+                                                       
+        ],
+        evt_mask=lambda objs: (ak.num(matched(objs["muons"], objs["genAs_toMu"], 0.5)) == 1) & (ak.num(matched(objs["dsaMuons"], objs["genAs_toMu"], 0.5)) == 2),
+    ),
+    "farthestPTDSAplusPF_DP_ptRatio": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 2, name="dr", label="(DSA[Farthest] + PF) PT / Dark photon(to $\mu$$\mu$) PT"),
+                lambda objs, mask: (get_farthest_by_ptfrac(matched(objs["muons"][mask], objs["genAs_toMu"][mask], 0.5)[:,0], matched(objs["dsaMuons"][mask], objs["genAs_toMu"][mask], 0.5)) + matched(objs["muons"][mask], objs["genAs_toMu"][mask], 0.5)[:,0]).pt / 
+                                     objs["genAs_toMu"][mask].pt),
+                                                       
+        ],
+        evt_mask=lambda objs: (ak.num(matched(objs["muons"], objs["genAs_toMu"], 0.5)) == 1) & (ak.num(matched(objs["dsaMuons"], objs["genAs_toMu"], 0.5)) == 2),
+    ),
+    "closestPTDSA_PF_DP_mass": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 1500, name="test",
+                                     label=r"DSA[Closest PT] + PF + DP(to EE) Mass"),
+                   lambda objs, mask: ((get_closest_by_ptfrac(matched(objs["muons"][mask], objs["genAs_toMu"][mask], 0.5)[:,0], matched(objs["dsaMuons"][mask], objs["genAs_toMu"][mask], 0.5)) + matched(objs["muons"][mask], objs["genAs_toMu"][mask], 0.5)[:,0]) + objs["genAs_toE"][mask]).mass),
+        ],
+        evt_mask=lambda objs: (ak.num(matched(objs["muons"], objs["genAs_toMu"], 0.5)) == 1) & (ak.num(matched(objs["dsaMuons"], objs["genAs_toMu"], 0.5)) == 2),
+    ),  
+    "farthestPTDSA_PF_DP_mass": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 1500, name="test",
+                                     label=r"DSA[Farthest] + PF + DP(to EE) Mass"),
+                   lambda objs, mask: ((get_farthest_by_ptfrac(matched(objs["muons"][mask], objs["genAs_toMu"][mask], 0.5)[:,0], matched(objs["dsaMuons"][mask], objs["genAs_toMu"][mask], 0.5)) + matched(objs["muons"][mask], objs["genAs_toMu"][mask], 0.5)[:,0]) + objs["genAs_toE"][mask]).mass),
         ],
         evt_mask=lambda objs: (ak.num(matched(objs["muons"], objs["genAs_toMu"], 0.5)) == 1) & (ak.num(matched(objs["dsaMuons"], objs["genAs_toMu"], 0.5)) == 2),
     ),  

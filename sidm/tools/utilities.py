@@ -135,6 +135,36 @@ def dR_outer(obj1, obj2):
     """Return dR between outer tracks of obj1 and obj2"""
     return np.sqrt((obj1.outerEta - obj2.outerEta)**2 + (obj1.outerPhi - obj2.outerPhi)**2)
 
+def ptfrac(pf, dsa):
+    """
+    Return |ΔpT| / pT(PF), shape [N_events, N_dsa]
+    """
+    return abs(pf.pt[:, None] - dsa.pt) / pf.pt[:, None]
+
+def get_closest_by_ptfrac(pf, dsa):
+    """
+    Return DSA muon with the smallest |ΔpT|/pT(PF) per event.
+    """
+    pt_frac = ptfrac(pf, dsa)  # shape: [N, M]
+    idx = ak.argmin(pt_frac, axis=1)
+    safe_idx = ak.fill_none(idx, 0)
+    rows = ak.local_index(dsa, axis=0)
+    selected = dsa[rows, safe_idx]
+    selected["mass"] = ak.full_like(selected.pt, 0.105712890625)
+    return selected
+
+def get_farthest_by_ptfrac(pf, dsa):
+    """
+    Return DSA muon with the largest |ΔpT|/pT(PF) per event.
+    """
+    pt_frac = ptfrac(pf, dsa)
+    idx = ak.argmax(pt_frac, axis=1)
+    safe_idx = ak.fill_none(idx, 0)
+    rows = ak.local_index(dsa, axis=0)
+    selected = dsa[rows, safe_idx]
+    selected["mass"] = ak.full_like(selected.pt, 0.105712890625)
+    return selected
+
 def drop_none(obj):
     """Remove None entries from an array (not available in Awkward 1)"""
     return obj[~ak.is_none(obj, axis=1)] # fixme: not clear why axis=1 works and axis=-1 doesn't
