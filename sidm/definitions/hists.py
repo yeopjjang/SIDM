@@ -1361,9 +1361,9 @@ hist_defs = {
     ), 
     "dpt_matched_jet_lj": h.Histogram(
         [
-            h.Axis(hist.axis.Regular(50, 0, 20, name="matched_jet_dR",
-                   label="|Matched Jet $p_{T}$ - LJ $p_{T}$| / LJ $p_{T}$"),
-                   lambda objs, mask: abs(objs["ljs"].matched_jet.pt - objs["ljs"].pt) / objs["ljs"].pt),
+            h.Axis(hist.axis.Regular(50, 0, 800, name="dpt_matched_jet_lj",
+                   label="|Matched Jet $p_{T}$ - LJ $p_{T}$|"),
+                   lambda objs, mask: abs(objs["ljs"].matched_jet.pt - objs["ljs"].pt)),
         ],
     ),
     "lj_isolation": h.Histogram(
@@ -2012,7 +2012,8 @@ hist_defs = {
                    lambda objs, mask: ((get_farthest_by_ptfrac(matched(objs["muons"][mask], objs["genAs_toMu"][mask], 0.5)[:,0], matched(objs["dsaMuons"][mask], objs["genAs_toMu"][mask], 0.5)) + matched(objs["muons"][mask], objs["genAs_toMu"][mask], 0.5)[:,0]) + objs["genAs_toE"][mask]).mass),
         ],
         evt_mask=lambda objs: (ak.num(matched(objs["muons"], objs["genAs_toMu"], 0.5)) == 1) & (ak.num(matched(objs["dsaMuons"], objs["genAs_toMu"], 0.5)) == 2),
-    ),  
+    ),
+
     # ABCD plane
     "lj_lj_absdphi_invmass": h.Histogram(
         [
