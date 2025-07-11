@@ -340,6 +340,8 @@ muon_crosscleaning_base: &muon_crosscleaning_base
 
   - "PF_charge"
   - "DSA_charge"
+  - "cmatchDSA_PF_chargesum"
+  - "cunmatchDSA_PF_chargesum"
   - "cmatchDSA_PF_dR_outer"
   - "cunmatchDSA_PF_dR_outer"
   - "cmatchDSA_PF_ptRatio"

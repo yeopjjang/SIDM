@@ -2029,6 +2029,20 @@ hist_defs = {
         ],
         evt_mask=lambda objs: (ak.num(matched(objs["muons"], objs["genAs_toMu"], 0.5)) == 1) & (ak.num(matched(objs["dsaMuons"], objs["genAs_toMu"], 0.5)) == 2),
     ),
+    "cmatchDSA_PF_chargesum": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, .5, name="dr", label="PF + DSA[Charge Match] Charge Sum"),
+                lambda objs, mask: matched(objs["muons"][mask], objs["genAs_toMu"][mask], 0.5)[:,0].charge +  get_charge_matching(matched(objs["muons"][mask], objs["genAs_toMu"][mask], 0.5)[:,0], matched(objs["dsaMuons"][mask], objs["genAs_toMu"][mask], 0.5))[0].charge),
+        ],
+        evt_mask=lambda objs: (ak.num(matched(objs["muons"], objs["genAs_toMu"], 0.5)) == 1) & (ak.num(matched(objs["dsaMuons"], objs["genAs_toMu"], 0.5)) == 2),
+    ),
+    "cunmatchDSA_PF_chargesum": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, .5, name="dr", label="PF + DSA[Charge Unmatch] Charge Sum"),
+                lambda objs, mask: matched(objs["muons"][mask], objs["genAs_toMu"][mask], 0.5)[:,0].charge +  get_charge_matching(matched(objs["muons"][mask], objs["genAs_toMu"][mask], 0.5)[:,0], matched(objs["dsaMuons"][mask], objs["genAs_toMu"][mask], 0.5))[1].charge),
+        ],
+        evt_mask=lambda objs: (ak.num(matched(objs["muons"], objs["genAs_toMu"], 0.5)) == 1) & (ak.num(matched(objs["dsaMuons"], objs["genAs_toMu"], 0.5)) == 2),
+    ),
     "cmatchDSA_PF_dR_outer": h.Histogram(
         [
             h.Axis(hist.axis.Regular(50, 0, .5, name="dr", label="ΔR Outer (PF, DSA[Charge Match])"),
