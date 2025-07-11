@@ -338,6 +338,17 @@ muon_crosscleaning_base: &muon_crosscleaning_base
   - "closestPTDSA_PF_DP_mass"
   - "farthestPTDSA_PF_DP_mass"
 
+  - "PF_charge"
+  - "DSA_charge"
+  - "cmatchDSA_PF_dR_outer"
+  - "cunmatchDSA_PF_dR_outer"
+  - "cmatchDSA_PF_ptRatio"
+  - "cunmatchDSA_PF_ptRatio"
+  - "cmatchDSAplusPF_DP_ptRatio"
+  - "cunmatchDSAplusPF_DP_ptRatio"
+  - "cmatchDSA_PF_DP_mass"
+  - "cunmatchDSA_PF_DP_mass"
+
 abcd_base: &abcd_base
   - "lj_lj_absdphi_invmass"
   - "lj_lj_absdphi_absdR"

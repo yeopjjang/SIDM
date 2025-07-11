@@ -136,15 +136,9 @@ def dR_outer(obj1, obj2):
     return np.sqrt((obj1.outerEta - obj2.outerEta)**2 + (obj1.outerPhi - obj2.outerPhi)**2)
 
 def ptfrac(pf, dsa):
-    """
-    Return |ΔpT| / pT(PF), shape [N_events, N_dsa]
-    """
     return abs(pf.pt[:, None] - dsa.pt) / pf.pt[:, None]
 
 def get_closest_by_ptfrac(pf, dsa):
-    """
-    Return DSA muon with the smallest |ΔpT|/pT(PF) per event.
-    """
     pt_frac = ptfrac(pf, dsa)  # shape: [N, M]
     idx = ak.argmin(pt_frac, axis=1)
     safe_idx = ak.fill_none(idx, 0)
@@ -154,9 +148,6 @@ def get_closest_by_ptfrac(pf, dsa):
     return selected
 
 def get_farthest_by_ptfrac(pf, dsa):
-    """
-    Return DSA muon with the largest |ΔpT|/pT(PF) per event.
-    """
     pt_frac = ptfrac(pf, dsa)
     idx = ak.argmax(pt_frac, axis=1)
     safe_idx = ak.fill_none(idx, 0)
@@ -164,7 +155,35 @@ def get_farthest_by_ptfrac(pf, dsa):
     selected = dsa[rows, safe_idx]
     selected["mass"] = ak.full_like(selected.pt, 0.105712890625)
     return selected
+    
+def get_charge_matching(pf, dsa):
+    pf_charge = pf.charge
+    dsa_charge = dsa.charge
+    charge_sum = pf_charge[:, None] + dsa_charge
+    is_match = charge_sum == 0
+    match_count = ak.sum(is_match, axis=1)
 
+    idx_charge = ak.where(is_match[:, 0], 0, 1)
+    pt_frac = ptfrac(pf, dsa)
+    idx_ptfrac_closest = ak.argmin(pt_frac, axis=1)
+    idx_ptfrac_farthest = ak.argmax(pt_frac, axis=1)
+
+    matched_idx = ak.where(match_count == 1, idx_charge, idx_ptfrac_farthest)
+    unmatched_idx = ak.where(match_count == 1, 1 - matched_idx, idx_ptfrac_closest)
+
+    safe_matched_idx = ak.fill_none(matched_idx, 0)
+    safe_unmatched_idx = ak.fill_none(unmatched_idx, 0)
+    
+    row_idx = ak.local_index(dsa, axis=0)
+
+    matched = dsa[row_idx, safe_matched_idx]
+    unmatched = dsa[row_idx, safe_unmatched_idx]
+    
+    matched["mass"] = ak.full_like(matched.pt, 0.10571289)
+    unmatched["mass"] = ak.full_like(unmatched.pt, 0.10571289)
+
+    return matched, unmatched
+    
 def drop_none(obj):
     """Remove None entries from an array (not available in Awkward 1)"""
     return obj[~ak.is_none(obj, axis=1)] # fixme: not clear why axis=1 works and axis=-1 doesn't
