@@ -351,6 +351,17 @@ muon_crosscleaning_base: &muon_crosscleaning_base
   - "cmatchDSA_PF_DP_mass"
   - "cunmatchDSA_PF_DP_mass"
 
+  - "genMu_genMu_ptratio"
+  - "genMu_genMu_DP_ptRatio"
+  - "genMu_genMu_DP_mass"
+  - "L_genMu_genMu_DP_ptRatio"
+  - "S_genMu_genMu_DP_ptRatio"
+  - "L_genMu_genMu_DP_mass"
+  - "S_genMu_genMu_DP_mass"
+  - "LDC_genMu_genMu_DP_mass"
+  - "SDC_genMu_genMu_DP_mass"
+  - "DC_DSA_PF_DP_mass"
+
 abcd_base: &abcd_base
   - "lj_lj_absdphi_invmass"
   - "lj_lj_absdphi_absdR"

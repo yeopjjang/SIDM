@@ -2111,6 +2111,14 @@ hist_defs = {
         ],
         evt_mask=lambda objs: (ak.num(matched(objs["muons"], objs["genAs_toMu"], 0.5)) == 1) & (ak.num(matched(objs["dsaMuons"], objs["genAs_toMu"], 0.5)) == 2),
     ),
+    "DC_DSA_PF_DP_mass": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 1500, name="test",
+                                     label=r"DSA[Charge Unmatch] + PF + DP(to EE) Mass"),
+                   lambda objs, mask: ((get_charge_matching(matched(objs["muons"][mask], objs["genAs_toMu"][mask], 0.5)[:,0], matched(objs["dsaMuons"][mask], objs["genAs_toMu"][mask], 0.5))[0] + get_charge_matching(matched(objs["muons"][mask], objs["genAs_toMu"][mask], 0.5)[:,0], matched(objs["dsaMuons"][mask], objs["genAs_toMu"][mask], 0.5))[1] + matched(objs["muons"][mask], objs["genAs_toMu"][mask], 0.5)[:,0]) + objs["genAs_toE"][mask]).mass),
+        ],
+        evt_mask=lambda objs: (ak.num(matched(objs["muons"], objs["genAs_toMu"], 0.5)) == 1) & (ak.num(matched(objs["dsaMuons"], objs["genAs_toMu"], 0.5)) == 2),
+    ),
     # ABCD plane
     "lj_lj_absdphi_invmass": h.Histogram(
         [
@@ -2497,6 +2505,77 @@ hist_defs = {
         [
             h.Axis(hist.axis.Regular(100, 0, 200, name="genMu_genMu_pt"),
                    lambda objs, mask: objs["genMus"][mask, :2].sum().pt),
+        ],
+        evt_mask=lambda objs: ak.num(objs["genMus"]) > 1,
+    ),
+    "genMu_genMu_ptratio": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 3, name="genMu_genMu_ptratio"),
+                   lambda objs, mask: objs["genMus"][mask, 1].pt / objs["genMus"][mask, 0].pt),
+        ],
+        evt_mask=lambda objs: ak.num(objs["genMus"]) > 1,
+    ),
+    "genMu_genMu_DP_ptRatio": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 2, name="dr", label="(Gen Mu + Gen Mu) PT / Dark photon(to $\mu$$\mu$) PT"),
+                lambda objs, mask: (objs["genMus"][mask, 1] + objs["genMus"][mask, 0]).pt / objs["genAs_toMu"][mask].pt),
+                                                       
+        ],
+        evt_mask=lambda objs: ak.num(objs["genMus"]) > 1,
+    ),
+    "L_genMu_genMu_DP_ptRatio": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 2, name="dr", label="(L Gen Mu + L Gen Mu) PT / Dark photon(to $\mu$$\mu$) PT"),
+                lambda objs, mask: (objs["genMus"][mask, 0] + objs["genMus"][mask, 0]).pt / objs["genAs_toMu"][mask].pt),
+                                                       
+        ],
+        evt_mask=lambda objs: ak.num(objs["genMus"]) > 1,
+    ),
+    "S_genMu_genMu_DP_ptRatio": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 2, name="dr", label="(SL Gen Mu + SL Gen Mu) PT / Dark photon(to $\mu$$\mu$) PT"),
+                lambda objs, mask: (objs["genMus"][mask, 1] + objs["genMus"][mask, 1]).pt / objs["genAs_toMu"][mask].pt),
+                                                       
+        ],
+        evt_mask=lambda objs: ak.num(objs["genMus"]) > 1,
+    ),
+    "genMu_genMu_DP_mass": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 1500, name="dr", label="Gen Mu + Gen Mu + Dark photon(to EE) Mass"),
+                lambda objs, mask: (objs["genMus"][mask, 1] + objs["genMus"][mask, 0] + objs["genAs_toE"][mask]).mass),
+                                                       
+        ],
+        evt_mask=lambda objs: ak.num(objs["genMus"]) > 1,
+    ),
+    "L_genMu_genMu_DP_mass": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 1500, name="dr", label="L Gen Mu + L Gen Mu + Dark photon(to EE) Mass"),
+                lambda objs, mask: (objs["genMus"][mask, 0] + objs["genMus"][mask, 0] + objs["genAs_toE"][mask]).mass),
+                                                       
+        ],
+        evt_mask=lambda objs: ak.num(objs["genMus"]) > 1,
+    ),
+    "S_genMu_genMu_DP_mass": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 1500, name="dr", label="SL Gen Mu + SL Gen Mu + Dark photon(to EE) Mass"),
+                lambda objs, mask: (objs["genMus"][mask, 1] + objs["genMus"][mask, 1] + objs["genAs_toE"][mask]).mass),
+                                                       
+        ],
+        evt_mask=lambda objs: ak.num(objs["genMus"]) > 1,
+    ),
+    "LDC_genMu_genMu_DP_mass": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 1500, name="dr", label="L Gen Mu(D-C) + SL Gen Mu + Dark photon(to EE) Mass"),
+                lambda objs, mask: (objs["genMus"][mask, 0] + objs["genMus"][mask, 1] + objs["genMus"][mask, 0] + objs["genAs_toE"][mask]).mass),
+                                                       
+        ],
+        evt_mask=lambda objs: ak.num(objs["genMus"]) > 1,
+    ),
+    "SDC_genMu_genMu_DP_mass": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 1500, name="dr", label="L Gen Mu + SL Gen Mu(D-C) + Dark photon(to EE) Mass"),
+                lambda objs, mask: (objs["genMus"][mask, 0] + objs["genMus"][mask, 1] + objs["genMus"][mask, 1] + objs["genAs_toE"][mask]).mass),
+                                                       
         ],
         evt_mask=lambda objs: ak.num(objs["genMus"]) > 1,
     ),
