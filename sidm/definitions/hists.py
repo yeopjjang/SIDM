@@ -1162,6 +1162,48 @@ hist_defs = {
                    lambda objs, mask:  objs["egm_ljs"].matched_jet.pt),
         ],
     ),
+    "egm_matched_jet_chEmEF": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 1, name="egm_matched_jet_chEmEF",
+                   label="EGM Matched Jet Charged EM Fraction"),
+                   lambda objs, mask:  objs["egm_ljs"].matched_jet.chEmEF),
+        ],
+    ),
+    "egm_matched_jet_chFPV0EF": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 1, name="egm_matched_jet_chFPV0EF",
+                   label="EGM Matched Jet Charged EM (from PV==0) Fraction"),
+                   lambda objs, mask:  objs["egm_ljs"].matched_jet.chFPV0EF),
+        ],
+    ),
+    "egm_matched_jet_chHEF": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 1, name="egm_matched_jet_chHEF",
+                   label="EGM Matched Jet Charged Hadron Fraction"),
+                   lambda objs, mask:  objs["egm_ljs"].matched_jet.chHEF),
+        ],
+    ),
+    "egm_matched_jet_muEF": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 1, name="egm_matched_jet_muEF",
+                   label="EGM Matched Jet Muon Fraction"),
+                   lambda objs, mask:  objs["egm_ljs"].matched_jet.muEF),
+        ],
+    ),
+    "egm_matched_jet_neEmEF": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 1, name="egm_matched_jet_neEmEF",
+                   label="EGM Matched Jet Neutral EM Fraction"),
+                   lambda objs, mask:  objs["egm_ljs"].matched_jet.neEmEF),
+        ],
+    ),
+    "egm_matched_jet_neHEF": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 1, name="egm_matched_jet_neHEF",
+                   label="EGM Matched Jet Neutral Hadron Fraction"),
+                   lambda objs, mask:  objs["egm_ljs"].matched_jet.neHEF),
+        ],
+    ),
     "electron_matched_jet_pt": h.Histogram(
         [
             h.Axis(hist.axis.Regular(50, 0, 800, name="electron_matched_jet_pt",
@@ -2114,7 +2156,7 @@ hist_defs = {
     "DC_DSA_PF_DP_mass": h.Histogram(
         [
             h.Axis(hist.axis.Regular(50, 0, 1500, name="test",
-                                     label=r"DSA[Charge Unmatch] + PF + DP(to EE) Mass"),
+                                     label=r"DSA1 + DSA2 + PF + DP(to EE) Mass"),
                    lambda objs, mask: ((get_charge_matching(matched(objs["muons"][mask], objs["genAs_toMu"][mask], 0.5)[:,0], matched(objs["dsaMuons"][mask], objs["genAs_toMu"][mask], 0.5))[0] + get_charge_matching(matched(objs["muons"][mask], objs["genAs_toMu"][mask], 0.5)[:,0], matched(objs["dsaMuons"][mask], objs["genAs_toMu"][mask], 0.5))[1] + matched(objs["muons"][mask], objs["genAs_toMu"][mask], 0.5)[:,0]) + objs["genAs_toE"][mask]).mass),
         ],
         evt_mask=lambda objs: (ak.num(matched(objs["muons"], objs["genAs_toMu"], 0.5)) == 1) & (ak.num(matched(objs["dsaMuons"], objs["genAs_toMu"], 0.5)) == 2),

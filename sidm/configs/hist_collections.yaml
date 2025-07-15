@@ -254,6 +254,12 @@ isolation_base: &isolation_base
   - "photon_matched_jet_muEF"
   - "photon_matched_jet_neEmEF"
   - "photon_matched_jet_neHEF"
+  - "egm_matched_jet_chEmEF"
+  - "egm_matched_jet_chFPV0EF"
+  - "egm_matched_jet_chHEF"
+  - "egm_matched_jet_muEF"
+  - "egm_matched_jet_neEmEF"
+  - "egm_matched_jet_neHEF"
 
   - "dpt_matched_jet_lj"
 
