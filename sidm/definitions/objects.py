@@ -76,3 +76,10 @@ derived_objs["genAs_matched_muLj"]      = lambda objs, r: matched(objs["genAs"],
 derived_objs["genAs_toMu_matched_muLj"] = lambda objs, r: matched(objs["genAs_toMu"], objs["mu_ljs"], r)
 derived_objs["genAs_matched_egmLj"]     = lambda objs, r: matched(objs["genAs"], objs["egm_ljs"], r)
 derived_objs["genAs_toE_matched_egmLj"] = lambda objs, r: matched(objs["genAs_toE"], objs["egm_ljs"], r)
+
+derived_objs["gen_matched_lj"]          = lambda objs, r: matched(objs["gens"], objs["ljs"], r)
+derived_objs["gen_matched_mu_lj"]          = lambda objs, r: matched(objs["gens"], objs["mu_ljs"], r)
+derived_objs["gen_matched_egm_lj"]          = lambda objs, r: matched(objs["gens"], objs["egm_ljs"], r)
+derived_objs["gen_matched_pfmu_lj"]          = lambda objs, r: matched(objs["gens"], objs["pfmu_ljs"], r)
+derived_objs["gen_matched_electron_lj"]          = lambda objs, r: matched(objs["gens"], objs["electron_ljs"], r)
+derived_objs["gen_matched_photon_lj"]          = lambda objs, r: matched(objs["gens"], objs["photon_ljs"], r)

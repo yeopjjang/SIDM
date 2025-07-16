@@ -183,7 +183,7 @@ def get_charge_matching(pf, dsa):
     unmatched["mass"] = ak.full_like(unmatched.pt, 0.10571289)
 
     return matched, unmatched
-    
+
 def drop_none(obj):
     """Remove None entries from an array (not available in Awkward 1)"""
     return obj[~ak.is_none(obj, axis=1)] # fixme: not clear why axis=1 works and axis=-1 doesn't

@@ -34,9 +34,10 @@ counter_defs = {
     "PF Muons": lambda objs: ak.count(objs["muons"].pt),
     "DSA Muons": lambda objs: ak.count(objs["dsaMuons"].pt),
 
-    # "PF": lambda objs: matched(objs["muons"], objs["genAs_toMu"], 0.5),
-    # "DSA": lambda objs: matched(objs["dsaMuons"], objs["genAs_toMu"], 0.5),
-    # "DP": lambda objs: objs["genAs_toE"],
+    # "Gen": lambda objs: objs["gens"],
+    # "lj_mu": lambda objs: objs["ljs"].pfMuons,
+    # "lj_e": lambda objs: objs["egm_ljs"].electrons,
+    # "lj_g": lambda objs: objs["egm_ljs"].photons,
 }
 
 
@@ -98,7 +99,7 @@ def obj_eta_phi(obj, nbins_x=None, xmin=None, xmax=None, nbins_y=None, ymin=None
         obj_attr(obj, "phi", nbins_y, ymin, ymax),
     )
     
-# define histograms
+# define histograms    
 hist_defs = {
     # pv
     "pv_n": obj_attr("pvs", "npvs", nbins=50, label="Number of PVs"),
@@ -1536,6 +1537,80 @@ hist_defs = {
             h.Axis(hist.axis.Regular(50, 0, 0.2, name="photon_lj_isolation",
                    label="Photon-LJ Isolation"),
                    lambda objs, mask:  objs["photon_ljs"].isolation),
+        ],
+    ),
+    # Journey for finding mother
+    "gen_id": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(1000, 0, 1000, name="gen_id", label="Gen pdgID near LJ"),
+                   lambda objs, mask: abs(derived_objs["gen_matched_lj"](objs, 0.4).pdgId)),
+        ],
+    ),
+    "gen_id_mu": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(1000, 0, 1000, name="gen_id_mu", label="Gen pdgID near Mu-LJ"),
+                   lambda objs, mask: abs(derived_objs["gen_matched_mu_lj"](objs, 0.4).pdgId)),
+        ],
+    ),
+    "gen_id_egm": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(1000, 0, 1000, name="gen_id_egm", label="Gen pdgID near EGM-LJ"),
+                   lambda objs, mask: abs(derived_objs["gen_matched_egm_lj"](objs, 0.4).pdgId)),
+        ],
+    ),
+    "gen_mother_id": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(120, 0, 120, name="gen_mother_idx", label="Gen Mother pdgID near LJ"),
+                   lambda objs, mask: abs(derived_objs["gen_matched_lj"](objs, 0.4).genPartIdxMother)),
+        ],
+    ),
+    "gen_mother_id_mu": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(120, 0, 120, name="gen_mother_idx_mu", label="Gen Mother pdgID near Mu-LJ"),
+                   lambda objs, mask: abs(derived_objs["gen_matched_mu_lj"](objs, 0.4).genPartIdxMother)),
+        ],
+    ),
+    "gen_mother_id_egm": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(120, 0, 120, name="gen_mother_idx_egm", label="Gen Mother pdgID near EGM-LJ"),
+                   lambda objs, mask: abs(derived_objs["gen_matched_egm_lj"](objs, 0.4).genPartIdxMother)),
+        ],
+    ),
+
+    "gen_id_pfmuonlj": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(1000, 0, 1000, name="gen_id_pfmuonlj", label="Gen pdgID near PF Muon LJ"),
+                   lambda objs, mask: abs(derived_objs["gen_matched_pfmu_lj"](objs, 0.4).pdgId)),
+        ],
+    ),
+    "gen_id_electronlj": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(1000, 0, 1000, name="gen_id_electronlj", label="Gen pdgID near Electron LJ"),
+                   lambda objs, mask: abs(derived_objs["gen_matched_electron_lj"](objs, 0.4).pdgId)),
+        ],
+    ),
+    "gen_id_photonlj": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(1000, 0, 1000, name="gen_id_photonlj", label="Gen pdgID near Photon LJ"),
+                   lambda objs, mask: abs(derived_objs["gen_matched_photon_lj"](objs, 0.4).pdgId)),
+        ],
+    ),
+    "gen_mother_id_pfmuonlj": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(120, 0, 120, name="gen_id_pfmuonlj", label="Gen Mother pdgID near PF Muon LJ"),
+                   lambda objs, mask: abs(derived_objs["gen_matched_pfmu_lj"](objs, 0.4).genPartIdxMother)),
+        ],
+    ),
+    "gen_mother_id_electronlj": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(120, 0, 120, name="gen_id_electronlj", label="Gen Mother pdgID near Electron LJ"),
+                   lambda objs, mask: abs(derived_objs["gen_matched_electron_lj"](objs, 0.4).genPartIdxMother)),
+        ],
+    ),
+    "gen_mother_id_photonlj": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(120, 0, 12, name="gen_id_photonlj", label="Gen Mother pdgID near Photon LJ"),
+                   lambda objs, mask: abs(derived_objs["gen_matched_photon_lj"](objs, 0.4).genPartIdxMother)),
         ],
     ),
     # Muon Cross-cleaning

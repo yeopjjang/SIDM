@@ -263,6 +263,20 @@ isolation_base: &isolation_base
 
   - "dpt_matched_jet_lj"
 
+  - "gen_id"
+  - "gen_id_mu"
+  - "gen_id_egm"
+  - "gen_mother_id"
+  - "gen_mother_id_mu"
+  - "gen_mother_id_egm"
+  - "gen_id_pfmuonlj"
+  - "gen_id_electronlj"
+  - "gen_id_photonlj"
+  - "gen_mother_id_pfmuonlj"
+  - "gen_mother_id_electronlj"
+  - "gen_mother_id_photonlj"
+
+
 muon_crosscleaning_base: &muon_crosscleaning_base  
   - "pfMuon_dsaMuon_dR"
   - "pfMuon_dsaMuon_dR_lowRange"

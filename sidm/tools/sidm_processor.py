@@ -226,6 +226,8 @@ class SidmProcessor(processor.ProcessorABC):
         ljs["electron_n"] = ak.num(ljs.electrons, axis=-1)
         ljs["photon_n"] = ak.num(ljs.photons, axis=-1)
 
+        # test
+
         # dRSpread (the maximum dR betwen any pair of constituents in each lepton jet)
         # a) for each constituent, find the dR between it and all other constituents in the same LJ
         # b) flatten that into a list of dRs per LJ
