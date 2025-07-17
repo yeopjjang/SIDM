@@ -54,6 +54,7 @@ preLj_objs["genAs_toMu"] = lambda evts: toPid(preLj_objs["genAs"](evts), 13)
 preLj_objs["genAs_toE"]  = lambda evts: toPid(preLj_objs["genAs"](evts), 11)
 preLj_objs["rho_PFIso"]  = lambda evts: evts.fixedGridRhoFastjetAll
 preLj_objs["jets"]       = lambda evts: evts.Jet
+preLj_objs["fs_gens"]    = lambda evts: evts.GenPart[evts.GenPart.status == 1]
 
 # define objects whose that will be added to objs by the sidm_processor after LJs are clustered
 # and LJ cuts are applied. postLj_obj cuts can be applied to these
@@ -80,6 +81,12 @@ derived_objs["genAs_toE_matched_egmLj"] = lambda objs, r: matched(objs["genAs_to
 derived_objs["gen_matched_lj"]          = lambda objs, r: matched(objs["gens"], objs["ljs"], r)
 derived_objs["gen_matched_mu_lj"]          = lambda objs, r: matched(objs["gens"], objs["mu_ljs"], r)
 derived_objs["gen_matched_egm_lj"]          = lambda objs, r: matched(objs["gens"], objs["egm_ljs"], r)
+derived_objs["fs_gen_matched_lj"]          = lambda objs, r: matched(objs["fs_gens"], objs["ljs"], r)
+derived_objs["fs_gen_matched_mu_lj"]          = lambda objs, r: matched(objs["fs_gens"], objs["mu_ljs"], r)
+derived_objs["fs_gen_matched_egm_lj"]          = lambda objs, r: matched(objs["fs_gens"], objs["egm_ljs"], r)
 derived_objs["gen_matched_pfmu_lj"]          = lambda objs, r: matched(objs["gens"], objs["pfmu_ljs"], r)
 derived_objs["gen_matched_electron_lj"]          = lambda objs, r: matched(objs["gens"], objs["electron_ljs"], r)
 derived_objs["gen_matched_photon_lj"]          = lambda objs, r: matched(objs["gens"], objs["photon_ljs"], r)
+derived_objs["fs_gen_matched_pfmu_lj"]          = lambda objs, r: matched(objs["fs_gens"], objs["pfmu_ljs"], r)
+derived_objs["fs_gen_matched_electron_lj"]          = lambda objs, r: matched(objs["fs_gens"], objs["electron_ljs"], r)
+derived_objs["fs_gen_matched_photon_lj"]          = lambda objs, r: matched(objs["fs_gens"], objs["photon_ljs"], r)

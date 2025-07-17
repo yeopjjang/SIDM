@@ -269,12 +269,27 @@ isolation_base: &isolation_base
   - "gen_mother_id"
   - "gen_mother_id_mu"
   - "gen_mother_id_egm"
+
+  - "fs_gen_id"
+  - "fs_gen_id_mu"
+  - "fs_gen_id_egm"
+  - "fs_gen_mother_id"
+  - "fs_gen_mother_id_mu"
+  - "fs_gen_mother_id_egm"
+  
   - "gen_id_pfmuonlj"
   - "gen_id_electronlj"
   - "gen_id_photonlj"
   - "gen_mother_id_pfmuonlj"
   - "gen_mother_id_electronlj"
   - "gen_mother_id_photonlj"
+
+  - "fs_gen_id_pfmuonlj"
+  - "fs_gen_id_electronlj"
+  - "fs_gen_id_photonlj"
+  - "fs_gen_mother_id_pfmuonlj"
+  - "fs_gen_mother_id_electronlj"
+  - "fs_gen_mother_id_photonlj"
 
 
 muon_crosscleaning_base: &muon_crosscleaning_base  
