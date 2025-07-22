@@ -33,11 +33,10 @@ counter_defs = {
     "DSA LJs": lambda objs: ak.count(objs["dsamu_ljs"].pt),
     "PF Muons": lambda objs: ak.count(objs["muons"].pt),
     "DSA Muons": lambda objs: ak.count(objs["dsaMuons"].pt),
-
+    
+    # "PF": lambda objs: objs["muons"],
+    # "DSA": lambda objs: objs["dsaMuons"],
     # "Gen": lambda objs: objs["gens"],
-    # "lj_mu": lambda objs: objs["ljs"].pfMuons,
-    # "lj_e": lambda objs: objs["egm_ljs"].electrons,
-    # "lj_g": lambda objs: objs["egm_ljs"].photons,
 }
 
 
@@ -1578,38 +1577,38 @@ hist_defs = {
     ),
     "gen_mother_id": h.Histogram(
         [
-            h.Axis(hist.axis.Regular(120, 0, 120, name="gen_mother_idx", label="Gen Mother pdgID near LJ"),
-                   lambda objs, mask: abs(derived_objs["gen_matched_lj"](objs, 0.4).genPartIdxMother)),
+            h.Axis(hist.axis.Regular(1000, 0, 1000, name="gen_mother_id", label="Gen Mother pdgID near LJ"),
+                   lambda objs, mask: abs(derived_objs["gen_matched_lj"](objs, 0.4).distinctParent.pdgId)),
         ],
     ),
     "gen_mother_id_mu": h.Histogram(
         [
-            h.Axis(hist.axis.Regular(120, 0, 120, name="gen_mother_idx_mu", label="Gen Mother pdgID near Mu-LJ"),
-                   lambda objs, mask: abs(derived_objs["gen_matched_mu_lj"](objs, 0.4).genPartIdxMother)),
+            h.Axis(hist.axis.Regular(1000, 0, 1000, name="gen_mother_id_mu", label="Gen Mother pdgID near Mu-LJ"),
+                   lambda objs, mask: abs(derived_objs["gen_matched_mu_lj"](objs, 0.4).distinctParent.pdgId)),
         ],
     ),
     "gen_mother_id_egm": h.Histogram(
         [
-            h.Axis(hist.axis.Regular(120, 0, 120, name="gen_mother_idx_egm", label="Gen Mother pdgID near EGM-LJ"),
-                   lambda objs, mask: abs(derived_objs["gen_matched_egm_lj"](objs, 0.4).genPartIdxMother)),
+            h.Axis(hist.axis.Regular(1000, 0, 1000, name="gen_mother_id_egm", label="Gen Mother pdgID near EGM-LJ"),
+                   lambda objs, mask: abs(derived_objs["gen_matched_egm_lj"](objs, 0.4).distinctParent.pdgId)),
         ],
     ),
     "fs_gen_mother_id": h.Histogram(
         [
-            h.Axis(hist.axis.Regular(120, 0, 120, name="fs_gen_mother_id", label="Final State Gen Mother pdgID near LJ"),
-                   lambda objs, mask: abs(derived_objs["fs_gen_matched_lj"](objs, 0.4).genPartIdxMother)),
+            h.Axis(hist.axis.Regular(1000, 0, 1000, name="fs_gen_mother_id", label="Final State Gen Mother pdgID near LJ"),
+                   lambda objs, mask: abs(derived_objs["fs_gen_matched_lj"](objs, 0.4).distinctParent.pdgId)),
         ],
     ),
     "fs_gen_mother_id_mu": h.Histogram(
         [
-            h.Axis(hist.axis.Regular(120, 0, 120, name="fs_gen_mother_id_mu", label="Final State Gen Mother pdgID near Mu-LJ"),
-                   lambda objs, mask: abs(derived_objs["fs_gen_matched_mu_lj"](objs, 0.4).genPartIdxMother)),
+            h.Axis(hist.axis.Regular(1000, 0, 1000, name="fs_gen_mother_id_mu", label="Final State Gen Mother pdgID near Mu-LJ"),
+                   lambda objs, mask: abs(derived_objs["fs_gen_matched_mu_lj"](objs, 0.4).distinctParent.pdgId)),
         ],
     ),
     "fs_gen_mother_id_egm": h.Histogram(
         [
-            h.Axis(hist.axis.Regular(120, 0, 120, name="fs_gen_mother_id_egm", label="Final State Gen Mother pdgID near EGM-LJ"),
-                   lambda objs, mask: abs(derived_objs["fs_gen_matched_egm_lj"](objs, 0.4).genPartIdxMother)),
+            h.Axis(hist.axis.Regular(1000, 0, 1000, name="fs_gen_mother_id_egm", label="Final State Gen Mother pdgID near EGM-LJ"),
+                   lambda objs, mask: abs(derived_objs["fs_gen_matched_egm_lj"](objs, 0.4).distinctParent.pdgId)),
         ],
     ),
     "gen_id_pfmuonlj": h.Histogram(
@@ -1650,38 +1649,38 @@ hist_defs = {
     ),
     "gen_mother_id_pfmuonlj": h.Histogram(
         [
-            h.Axis(hist.axis.Regular(120, 0, 120, name="gen_id_pfmuonlj", label="Gen Mother pdgID near PF Muon LJ"),
-                   lambda objs, mask: abs(derived_objs["gen_matched_pfmu_lj"](objs, 0.4).genPartIdxMother)),
+            h.Axis(hist.axis.Regular(1000, 0, 1000, name="gen_id_pfmuonlj", label="Gen Mother pdgID near PF Muon LJ"),
+                   lambda objs, mask: abs(derived_objs["gen_matched_pfmu_lj"](objs, 0.4).distinctParent.pdgId)),
         ],
     ),
     "gen_mother_id_electronlj": h.Histogram(
         [
-            h.Axis(hist.axis.Regular(120, 0, 120, name="gen_id_electronlj", label="Gen Mother pdgID near Electron LJ"),
-                   lambda objs, mask: abs(derived_objs["gen_matched_electron_lj"](objs, 0.4).genPartIdxMother)),
+            h.Axis(hist.axis.Regular(1000, 0, 1000, name="gen_id_electronlj", label="Gen Mother pdgID near Electron LJ"),
+                   lambda objs, mask: abs(derived_objs["gen_matched_electron_lj"](objs, 0.4).distinctParent.pdgId)),
         ],
     ),
     "gen_mother_id_photonlj": h.Histogram(
         [
-            h.Axis(hist.axis.Regular(120, 0, 12, name="gen_id_photonlj", label="Gen Mother pdgID near Photon LJ"),
-                   lambda objs, mask: abs(derived_objs["gen_matched_photon_lj"](objs, 0.4).genPartIdxMother)),
+            h.Axis(hist.axis.Regular(1000, 0, 1000, name="gen_id_photonlj", label="Gen Mother pdgID near Photon LJ"),
+                   lambda objs, mask: abs(derived_objs["gen_matched_photon_lj"](objs, 0.4).distinctParent.pdgId)),
         ],
     ),
     "fs_gen_mother_id_pfmuonlj": h.Histogram(
         [
-            h.Axis(hist.axis.Regular(120, 0, 120, name="fs_gen_mother_id_pfmuonlj", label="Final State Gen Mother pdgID near PF Muon LJ"),
-                   lambda objs, mask: abs(derived_objs["fs_gen_matched_pfmu_lj"](objs, 0.4).genPartIdxMother)),
+            h.Axis(hist.axis.Regular(1000, 0, 1000, name="fs_gen_mother_id_pfmuonlj", label="Final State Gen Mother pdgID near PF Muon LJ"),
+                   lambda objs, mask: abs(derived_objs["fs_gen_matched_pfmu_lj"](objs, 0.4).distinctParent.pdgId)),
         ],
     ),
     "fs_gen_mother_id_electronlj": h.Histogram(
         [
-            h.Axis(hist.axis.Regular(120, 0, 120, name="fs_gen_mother_id_electronlj", label="Final State Gen Mother pdgID near Electron LJ"),
-                   lambda objs, mask: abs(derived_objs["fs_gen_matched_electron_lj"](objs, 0.4).genPartIdxMother)),
+            h.Axis(hist.axis.Regular(1000, 0, 1000, name="fs_gen_mother_id_electronlj", label="Final State Gen Mother pdgID near Electron LJ"),
+                   lambda objs, mask: abs(derived_objs["fs_gen_matched_electron_lj"](objs, 0.4).distinctParent.pdgId)),
         ],
     ),
     "fs_gen_mother_id_photonlj": h.Histogram(
         [
-            h.Axis(hist.axis.Regular(120, 0, 12, name="fs_gen_mother_id_photonlj", label="Final State Gen Mother pdgID near Photon LJ"),
-                   lambda objs, mask: abs(derived_objs["fs_gen_matched_photon_lj"](objs, 0.4).genPartIdxMother)),
+            h.Axis(hist.axis.Regular(1000, 0, 1000, name="fs_gen_mother_id_photonlj", label="Final State Gen Mother pdgID near Photon LJ"),
+                   lambda objs, mask: abs(derived_objs["fs_gen_matched_photon_lj"](objs, 0.4).distinctParent.pdgId)),
         ],
     ),
     # Muon Cross-cleaning
