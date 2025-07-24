@@ -291,6 +291,9 @@ isolation_base: &isolation_base
   - "fs_gen_mother_id_electronlj"
   - "fs_gen_mother_id_photonlj"
 
+  - "fs_e_gen_mother_id"
+  - "fs_mu_gen_mother_id"
+  - "fs_pho_gen_mother_id"
 
 muon_crosscleaning_base: &muon_crosscleaning_base  
   - "pfMuon_dsaMuon_dR"

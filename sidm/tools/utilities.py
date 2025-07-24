@@ -184,6 +184,14 @@ def get_charge_matching(pf, dsa):
 
     return matched, unmatched
 
+def pick_leptonlike_pdgid(obj):
+    mask_e = (abs(obj.pdgId) == 11)
+    mask_mu = (abs(obj.pdgId) == 13)
+    mask_pho = (abs(obj.pdgId) == 22)
+
+    e, mu, pho = obj[mask_e], obj[mask_mu], obj[mask_pho]
+    return e, mu, pho
+
 def drop_none(obj):
     """Remove None entries from an array (not available in Awkward 1)"""
     return obj[~ak.is_none(obj, axis=1)] # fixme: not clear why axis=1 works and axis=-1 doesn't

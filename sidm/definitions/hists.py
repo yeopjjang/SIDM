@@ -13,7 +13,7 @@ import hist
 import awkward as ak
 # local
 from sidm.tools import histogram as h
-from sidm.tools.utilities import dR, lxy, matched, dxy, dR_general, get_closest_dsa, get_farthest_dsa, dR_outer, get_closest_dsa_outer, get_farthest_dsa_outer, ptfrac, get_closest_by_ptfrac, get_farthest_by_ptfrac, get_charge_matching
+from sidm.tools.utilities import dR, lxy, matched, dxy, dR_general, get_closest_dsa, get_farthest_dsa, dR_outer, get_closest_dsa_outer, get_farthest_dsa_outer, ptfrac, get_closest_by_ptfrac, get_farthest_by_ptfrac, get_charge_matching, pick_leptonlike_pdgid
 from sidm.definitions.objects import derived_objs
 # always reload local modules to pick up changes during development
 importlib.reload(h)
@@ -1609,6 +1609,24 @@ hist_defs = {
         [
             h.Axis(hist.axis.Regular(1000, 0, 1000, name="fs_gen_mother_id_egm", label="Final State Gen Mother pdgID near EGM-LJ"),
                    lambda objs, mask: abs(derived_objs["fs_gen_matched_egm_lj"](objs, 0.4).distinctParent.pdgId)),
+        ],
+    ),
+    "fs_e_gen_mother_id": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(1000, 0, 1000, name="fs_e_gen_mother_id", label="Electron Mother pdgID near LJ"),
+                   lambda objs, mask: abs(pick_leptonlike_pdgid(derived_objs["fs_gen_matched_lj"](objs, 0.4))[0].distinctParent.pdgId)),
+        ],
+    ),
+    "fs_mu_gen_mother_id": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(1000, 0, 1000, name="fs_mu_gen_mother_id", label="Muon Mother pdgID near LJ"),
+                   lambda objs, mask: abs(pick_leptonlike_pdgid(derived_objs["fs_gen_matched_lj"](objs, 0.4))[1].distinctParent.pdgId)),
+        ],
+    ),
+    "fs_pho_gen_mother_id": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(1000, 0, 1000, name="fs_pho_gen_mother_id", label="Photon Mother pdgID near LJ"),
+                   lambda objs, mask: abs(pick_leptonlike_pdgid(derived_objs["fs_gen_matched_lj"](objs, 0.4))[2].distinctParent.pdgId)),
         ],
     ),
     "gen_id_pfmuonlj": h.Histogram(
