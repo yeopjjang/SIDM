@@ -76,3 +76,7 @@ derived_objs["genAs_matched_muLj"]      = lambda objs, r: matched(objs["genAs"],
 derived_objs["genAs_toMu_matched_muLj"] = lambda objs, r: matched(objs["genAs_toMu"], objs["mu_ljs"], r)
 derived_objs["genAs_matched_egmLj"]     = lambda objs, r: matched(objs["genAs"], objs["egm_ljs"], r)
 derived_objs["genAs_toE_matched_egmLj"] = lambda objs, r: matched(objs["genAs_toE"], objs["egm_ljs"], r)
+
+derived_objs["muons_matched_genAs"] = lambda objs, r: matched(objs["muons"], objs["genAs_toMu"], r)
+derived_objs["dsaMuons_matched_genAs"] = lambda objs, r: matched(objs["dsaMuons"], objs["genAs_toMu"], r)
+

@@ -67,9 +67,13 @@ def dR(obj1, obj2):
     dr = obj1.nearest(obj2, return_metric=True)[1]
     return ak.fill_none(dr, np.inf)
 
+def dR_general(obj1, obj2):
+    """Return ΔR between obj1 and obj2, filling None with inf"""
+    return ak.fill_none(obj1.delta_r(obj2), np.inf)
+
 def dR_outer(obj1, obj2):
     """Return dR between outer tracks of obj1 and obj2"""
-    return np.sqrt((obj1.outerEta - obj2.outerEta)**2 + (obj1.outerPhi - obj2.outerPhi)**2)
+    return ak.fill_none(np.sqrt((obj1.outerEta - obj2.outerEta)**2 + (obj1.outerPhi - obj2.outerPhi)**2), np.inf)
 
 def drop_none(obj):
     """Remove None entries from an array (not available in Awkward 1)"""
@@ -78,6 +82,10 @@ def drop_none(obj):
 def matched(obj1, obj2, r):
     """Return set of obj1 that have >=1 obj2 within r; remove None entries before returning"""
     return drop_none(obj1[dR(obj1, obj2) < r])
+
+def add_matched_dsamuon_mass(obj):
+    obj["mass"] = ak.full_like(obj.pt, 0.105712890625)
+    return obj
 
 def rho(obj, ref=None, use_v=False):
     """Return transverse distance between object and reference (default reference is 0,0)"""

@@ -4,7 +4,7 @@
 import awkward as ak
 # local
 from sidm.definitions.objects import derived_objs
-from sidm.tools.utilities import dR, lxy, rho, check_bits, returnBitMapTArrayPhoton
+from sidm.tools.utilities import dR, lxy, rho, check_bits, returnBitMapTArrayPhoton, dR_outer
 
 obj_cut_defs = {
     "pvs": {
@@ -138,7 +138,6 @@ obj_cut_defs = {
     "muons": {
         #Tested the following to try to enable us to apply these cuts to muons *and* matched_muons associated to dsas
         "looseID": lambda objs, muons: muons.looseId,
-        "looseID": lambda objs, muons: muons.looseId,
         "pT > 5 GeV": lambda objs, muons: muons.pt > 5,
         "|eta| < 2.4": lambda objs, muons: abs(muons.eta) < 2.4,
         "dR(mu, A) < 0.5": lambda objs, muons: dR(muons, objs["genAs_toMu"]) < 0.5,
@@ -177,6 +176,14 @@ obj_cut_defs = {
        # "no PF match" : lambda objs, dsa: dsa.muonMatch1/dsa.nSegments < 0.667,
         "dR(mu, A) < 0.5": lambda objs, dsa: dR(dsa, objs["genAs_toMu"]) < 0.5,
         "dR(dsa, pf) > 0.2": lambda objs, dsa: dR(dsa, objs["muons"]) > 0.2,
+        "dR Outer(dsa, pf) > 0.01": lambda objs, dsa: dR_outer(dsa, objs["muons"]) > 0.01,
+#        "segmatch veto": lambda objs, dsa: dsa[ak.all(ak.is_none(dsa["good_matched_muons"], axis=2), axis=2)]
+    },
+}
+preLj_obj_cut_defs = {
+    "dsaMuons": {
+        "dR(dsa, pf) > 0.01": lambda objs: dR(objs["dsaMuons"], objs["muons"]) > 0.01,
+        "segmatch veto": lambda objs: ak.all(ak.is_none(objs["dsaMuons"].good_matched_muons, axis=2), axis=2)
     },
 }
 

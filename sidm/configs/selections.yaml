@@ -89,7 +89,54 @@ base_ljObjCut: &base_ljObjCut
       - "mu_charge == 0"
   evt_cuts:
     - *evt_baseNoLj
-    
+######################
+baseNoLj_basic: &baseNoLj_basic
+  obj_cuts: 
+    <<: *obj_baseNoLjNoLjsource
+    <<: *obj_ljsource_cuts
+  evt_cuts: 
+    - *evt_baseNoLjNoljsource
+
+baseNoLj_DP_matching: &baseNoLj_DP_matching
+  obj_cuts: 
+    <<: *obj_baseNoLjNoLjsource
+    <<: *obj_ljsource_cuts
+    muons: 
+      - "dR(mu, A) < 0.5"    
+    dsaMuons: 
+      - "dR(mu, A) < 0.5"
+  evt_cuts: 
+    - *evt_baseNoLjNoljsource
+
+baseNoLj_DP_matching_dR_cut: &baseNoLj_DP_matching_dR_cut
+  obj_cuts: 
+    <<: *obj_baseNoLjNoLjsource
+    <<: *obj_ljsource_cuts
+    muons:
+      - "dR(mu, A) < 0.5"
+    dsaMuons:
+      - "dR(mu, A) < 0.5"
+  preLj_obj_cuts:
+    dsaMuons:
+      - "dR(dsa, pf) > 0.01"
+  evt_cuts: 
+    - *evt_baseNoLjNoljsource
+
+baseNoLj_DP_matching_seg_veto: &baseNoLj_DP_matching_seg_veto
+  obj_cuts: 
+    <<: *obj_baseNoLjNoLjsource
+    <<: *obj_ljsource_cuts
+    muons:
+      - "dR(mu, A) < 0.5"
+    dsaMuons:
+      - "dR(mu, A) < 0.5"
+  preLj_obj_cuts:
+    dsaMuons:
+      - "segmatch veto"
+  evt_cuts: 
+    - *evt_baseNoLjNoljsource
+#####################
+
 # add >=2 LJ requirement
 base: &base
   obj_cuts: &obj_base

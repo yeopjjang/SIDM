@@ -101,6 +101,10 @@ class SidmProcessor(processor.ProcessorABC):
                     sel_objs["muons"]["good_matched_dsa_muons"] = nested_selection.apply_obj_cuts(sel_objs, sel_objs["muons"].matched_dsa_muons,"dsaMuons")
                 except Exception as e:
                     print(f"Failed to apply selections to the nested matched muon collections. Error message: {e}")
+                    
+                # apply selections to muons which already contains good matched information
+                prelj_selection = selection.JaggedSelection(cuts["preLj_obj"], self.verbose)
+                sel_objs = prelj_selection.apply_obj_cuts_preLj(sel_objs)
                 
                 # reconstruct lepton jets
                 sel_objs["ljs"] = self.build_lepton_jets(sel_objs, float(lj_reco))
@@ -226,6 +230,8 @@ class SidmProcessor(processor.ProcessorABC):
         ## FIX ME! Won't be able to access the dsaMuon matches from the LJ constituent muon, and vice versa 
         ## (can only access it from the original muon collection in objects)
 
+        objs["dsaMuons"]["mass"] = ak.full_like(objs["dsaMuons"].pt, 0.105712890625)
+
         safe_pf_fields = list(objs["muons"].fields) 
         safe_dsa_fields = list(objs["dsaMuons"].fields)
 
@@ -283,6 +289,7 @@ class SidmProcessor(processor.ProcessorABC):
         for channel in self.channel_names:
             ch_cuts[channel] = {}
             ch_cuts[channel]["obj"] = {}
+            ch_cuts[channel]["preLj_obj"] = {}
             ch_cuts[channel]["lj"] = {}
             ch_cuts[channel]["postLj_obj"] = {}
             ch_cuts[channel]["evt"] = {}
@@ -292,6 +299,10 @@ class SidmProcessor(processor.ProcessorABC):
                 if obj not in ch_cuts[channel]["obj"]:
                     ch_cuts[channel]["obj"][obj] = []
                 ch_cuts[channel]["obj"][obj] = utilities.flatten(obj_cuts)
+            
+            if "preLj_obj_cuts" in cuts:
+                for obj, obj_cuts in cuts["preLj_obj_cuts"].items():
+                    ch_cuts[channel]["preLj_obj"][obj] = utilities.flatten(obj_cuts)
 
             if "postLj_obj_cuts" in cuts:
                 for obj, obj_cuts in cuts["postLj_obj_cuts"].items():
