@@ -229,6 +229,13 @@ muon_crosscleaning_base: &muon_crosscleaning_base
   - "genAs_toMu_lxy_twoPF_oneDSA_large"
   - "genAs_toMu_lxy_twoPF_twoDSA_large"
 
+  - "muonN_lxy_noPF_noDSA"
+  - "muonN_lxy_noPF_oneDSA"
+  - "dpN_lxy_noPF_noDSA"
+  - "dpN_lxy_noPF_oneDSA"
+  - "test1"
+  - "test2"
+
 abcd_base: &abcd_base
   - "lj_lj_absdphi_invmass"
   - "lj_lj_absdphi_absdR"

@@ -141,6 +141,7 @@ obj_cut_defs = {
         "pT > 5 GeV": lambda objs, muons: muons.pt > 5,
         "|eta| < 2.4": lambda objs, muons: abs(muons.eta) < 2.4,
         "dR(mu, A) < 0.5": lambda objs, muons: dR(muons, objs["genAs_toMu"]) < 0.5,
+        "dR(mu, A) < 0.5 nested": lambda objs, muons: dR(muons, objs["genAs_toMu"][:,:,None]) < 0.5,
     },
     "photons":{
         "pT > 20 GeV": lambda objs: objs["photons"].pt > 20,
@@ -175,15 +176,15 @@ obj_cut_defs = {
         # just use segment-based matching
        # "no PF match" : lambda objs, dsa: dsa.muonMatch1/dsa.nSegments < 0.667,
         "dR(mu, A) < 0.5": lambda objs, dsa: dR(dsa, objs["genAs_toMu"]) < 0.5,
+        "dR(mu, A) < 0.5 nested": lambda objs, dsa: dR(dsa, objs["genAs_toMu"][:,:,None]) < 0.5,   
         "dR(dsa, pf) > 0.2": lambda objs, dsa: dR(dsa, objs["muons"]) > 0.2,
-        "dR Outer(dsa, pf) > 0.01": lambda objs, dsa: dR_outer(dsa, objs["muons"]) > 0.01,
-#        "segmatch veto": lambda objs, dsa: dsa[ak.all(ak.is_none(dsa["good_matched_muons"], axis=2), axis=2)]
     },
 }
+
 preLj_obj_cut_defs = {
-    "dsaMuons": {
+    "dsaMuons": { 
         "dR(dsa, pf) > 0.01": lambda objs: dR(objs["dsaMuons"], objs["muons"]) > 0.01,
-        "segmatch veto": lambda objs: ak.all(ak.is_none(objs["dsaMuons"].good_matched_muons, axis=2), axis=2)
+        "segmatch veto": lambda objs: ak.all(ak.is_none(objs["dsaMuons"].good_matched_muons, axis=2), axis=2),
     },
 }
 

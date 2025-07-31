@@ -1156,7 +1156,56 @@ hist_defs = {
 
 
 
-    # Muon Cross-cleaning
+    
+    "muonN_lxy_noPF_noDSA": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(8, 0, 4, name="genAs_toMu_lxy_noPF_noDSA",
+                                     label=r"Number of PF + DSA Muon (PF=0, DSA=0)"),
+                   lambda objs, mask: ak.num(objs["muons"][mask]) + ak.num(objs["dsaMuons"][mask])),
+        ],
+        evt_mask=lambda objs: (ak.num(objs["muons"]) == 0) & (ak.num(objs["dsaMuons"]) == 0),
+    ),  
+    "muonN_lxy_noPF_oneDSA": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(8, 0, 4, name="genAs_toMu_lxy_noPF_oneDSA",
+                                     label=r"Number of PF + DSA Muon (PF=0, DSA=1)"),
+                   lambda objs, mask: ak.num(objs["muons"][mask]) + ak.num(objs["dsaMuons"][mask])),
+        ],
+        evt_mask=lambda objs: (ak.num(objs["muons"]) == 0) & (ak.num(objs["dsaMuons"]) == 1),
+    ),
+    "dpN_lxy_noPF_noDSA": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(16, -4, 4, name="genAs_toMu_lxy_noPF_noDSA",
+                                     label=r"Number of DP (PF=0, DSA=0)"),
+                   lambda objs, mask: ak.num(objs["genAs_toMu"][mask])),
+        ],
+        evt_mask=lambda objs: (ak.num(objs["muons"]) == 0) & (ak.num(objs["dsaMuons"]) == 0),
+    ),  
+    "dpN_lxy_noPF_oneDSA": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(16, -4, 4, name="genAs_toMu_lxy_noPF_oneDSA",
+                                     label=r"Number of DP (PF=0, DSA=1)"),
+                   lambda objs, mask: ak.num(objs["genAs_toMu"][mask])),
+        ],
+        evt_mask=lambda objs: (ak.num(objs["muons"]) == 0) & (ak.num(objs["dsaMuons"]) == 1),
+    ),
+    "test1": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 400, name="genAs_toMu_lxy_noPF_noDSA",
+                                     label=r"Dark photon (to $\mu\mu$) $L_{xy}$ [cm]"),
+                   lambda objs, mask: lxy(objs["genAs_toMu"][mask])),
+        ],
+        evt_mask=lambda objs: (ak.num(matched(objs["muons"], objs["genAs_toMu"], 0.5)) == 0) & (ak.num(matched(objs["dsaMuons"], objs["genAs_toMu"], 0.5)) == 0),
+    ),  
+    "test2": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 400, name="genAs_toMu_lxy_noPF_oneDSA",
+                                     label=r"Dark photon (to $\mu\mu$) $L_{xy}$ [cm]"),
+                   lambda objs, mask: lxy(objs["genAs_toMu"][mask])),
+        ],
+        evt_mask=lambda objs: (ak.num(matched(objs["muons"], objs["genAs_toMu"], 0.5)) == 0) & (ak.num(matched(objs["dsaMuons"], objs["genAs_toMu"], 0.5)) == 1),
+    ),  
+    
     "genAs_toMu_lxy_nosel_large": h.Histogram(
         [
             h.Axis(hist.axis.Regular(50, 0, 400, name="genAs_toMu_lxy_nosel",
