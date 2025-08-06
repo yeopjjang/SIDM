@@ -15,7 +15,7 @@ import hist
 import awkward as ak
 # local
 from sidm.tools import histogram as h
-from sidm.tools.utilities import dR, lxy, matched, dxy, dR_outer, dR_general, add_matched_dsamuon_mass
+from sidm.tools.utilities import dR, lxy, matched, dxy, dR_outer, dR_general, add_matched_dsamuon_mass, lj_combination_dR
 from sidm.definitions.objects import derived_objs
 # always reload local modules to pick up changes during development
 importlib.reload(h)
@@ -29,9 +29,11 @@ counter_defs = {
     "Matched gen As to muons": lambda objs: ak.count(derived_objs["genAs_toMu_matched_lj"](objs, 0.4).pt),
     "Matched gen As to electrons": lambda objs: ak.count(derived_objs["genAs_toE_matched_lj"](objs, 0.4).pt),
     
-    # "PF": lambda objs: objs["muons"],
-    # "DSA": lambda objs: objs["dsaMuons"],
-    # "DP": lambda objs: objs["genAs_toMu"],
+    "PF": lambda objs: objs["muons"],
+    "DSA": lambda objs: objs["dsaMuons"],
+    "DP_m": lambda objs: objs["genAs_toMu"],
+    "DP_e": lambda objs: objs["genAs_toE"],
+    "LJ": lambda objs: objs["ljs"],
 }
 
 
@@ -1153,59 +1155,6 @@ hist_defs = {
         ],
         evt_mask=lambda objs: (ak.num(objs["muons"]) == 2) & (ak.num(objs["dsaMuons"]) == 2),
     ),    
-
-
-
-    
-    "muonN_lxy_noPF_noDSA": h.Histogram(
-        [
-            h.Axis(hist.axis.Regular(8, 0, 4, name="genAs_toMu_lxy_noPF_noDSA",
-                                     label=r"Number of PF + DSA Muon (PF=0, DSA=0)"),
-                   lambda objs, mask: ak.num(objs["muons"][mask]) + ak.num(objs["dsaMuons"][mask])),
-        ],
-        evt_mask=lambda objs: (ak.num(objs["muons"]) == 0) & (ak.num(objs["dsaMuons"]) == 0),
-    ),  
-    "muonN_lxy_noPF_oneDSA": h.Histogram(
-        [
-            h.Axis(hist.axis.Regular(8, 0, 4, name="genAs_toMu_lxy_noPF_oneDSA",
-                                     label=r"Number of PF + DSA Muon (PF=0, DSA=1)"),
-                   lambda objs, mask: ak.num(objs["muons"][mask]) + ak.num(objs["dsaMuons"][mask])),
-        ],
-        evt_mask=lambda objs: (ak.num(objs["muons"]) == 0) & (ak.num(objs["dsaMuons"]) == 1),
-    ),
-    "dpN_lxy_noPF_noDSA": h.Histogram(
-        [
-            h.Axis(hist.axis.Regular(16, -4, 4, name="genAs_toMu_lxy_noPF_noDSA",
-                                     label=r"Number of DP (PF=0, DSA=0)"),
-                   lambda objs, mask: ak.num(objs["genAs_toMu"][mask])),
-        ],
-        evt_mask=lambda objs: (ak.num(objs["muons"]) == 0) & (ak.num(objs["dsaMuons"]) == 0),
-    ),  
-    "dpN_lxy_noPF_oneDSA": h.Histogram(
-        [
-            h.Axis(hist.axis.Regular(16, -4, 4, name="genAs_toMu_lxy_noPF_oneDSA",
-                                     label=r"Number of DP (PF=0, DSA=1)"),
-                   lambda objs, mask: ak.num(objs["genAs_toMu"][mask])),
-        ],
-        evt_mask=lambda objs: (ak.num(objs["muons"]) == 0) & (ak.num(objs["dsaMuons"]) == 1),
-    ),
-    "test1": h.Histogram(
-        [
-            h.Axis(hist.axis.Regular(50, 0, 400, name="genAs_toMu_lxy_noPF_noDSA",
-                                     label=r"Dark photon (to $\mu\mu$) $L_{xy}$ [cm]"),
-                   lambda objs, mask: lxy(objs["genAs_toMu"][mask])),
-        ],
-        evt_mask=lambda objs: (ak.num(matched(objs["muons"], objs["genAs_toMu"], 0.5)) == 0) & (ak.num(matched(objs["dsaMuons"], objs["genAs_toMu"], 0.5)) == 0),
-    ),  
-    "test2": h.Histogram(
-        [
-            h.Axis(hist.axis.Regular(50, 0, 400, name="genAs_toMu_lxy_noPF_oneDSA",
-                                     label=r"Dark photon (to $\mu\mu$) $L_{xy}$ [cm]"),
-                   lambda objs, mask: lxy(objs["genAs_toMu"][mask])),
-        ],
-        evt_mask=lambda objs: (ak.num(matched(objs["muons"], objs["genAs_toMu"], 0.5)) == 0) & (ak.num(matched(objs["dsaMuons"], objs["genAs_toMu"], 0.5)) == 1),
-    ),  
-    
     "genAs_toMu_lxy_nosel_large": h.Histogram(
         [
             h.Axis(hist.axis.Regular(50, 0, 400, name="genAs_toMu_lxy_nosel",
@@ -1333,6 +1282,167 @@ hist_defs = {
         ],
         evt_mask=lambda objs: (ak.num(objs["muons"]) == 2) & (ak.num(objs["dsaMuons"]) == 2),
     ),    
+    "lj_lj_invmass_nosel": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(100, 0, 1200, name="ljlj_mass",
+                                     label=r"Invariant Mass ($LJ_{0}$, $LJ_{1}$)"),
+                   lambda objs, mask: (derived_objs["lj_matched_genAs_toMu"](objs, 0.4)[mask] + derived_objs["lj_matched_genAs_toE"](objs, 0.4)[mask]).mass),
+        ],
+        evt_mask=lambda objs: ((ak.num(derived_objs["lj_matched_genAs_toMu"](objs, 0.4)) + ak.num(derived_objs["lj_matched_genAs_toE"](objs, 0.4))) > 1),
+    ),
+    "lj_lj_invmass_noDSA": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(100, 0, 1200, name="ljlj_mass",
+                                     label=r"Invariant Mass ($LJ_{0}$, $LJ_{1}$)"),
+                   lambda objs, mask: (derived_objs["lj_matched_genAs_toMu"](objs, 0.4)[mask] + derived_objs["lj_matched_genAs_toE"](objs, 0.4)[mask]).mass),
+        ],
+        evt_mask=lambda objs: ((ak.num(derived_objs["lj_matched_genAs_toMu"](objs, 0.4)) + ak.num(derived_objs["lj_matched_genAs_toE"](objs, 0.4))) > 1) & (ak.num(objs["dsaMuons"]) == 0),
+    ),
+    "lj_lj_invmass_oneDSA": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(100, 0, 1200, name="ljlj_mass",
+                                     label=r"Invariant Mass ($LJ_{0}$, $LJ_{1}$)"),
+                   lambda objs, mask: (derived_objs["lj_matched_genAs_toMu"](objs, 0.4)[mask] + derived_objs["lj_matched_genAs_toE"](objs, 0.4)[mask]).mass),
+        ],
+        evt_mask=lambda objs: ((ak.num(derived_objs["lj_matched_genAs_toMu"](objs, 0.4)) + ak.num(derived_objs["lj_matched_genAs_toE"](objs, 0.4))) > 1) & (ak.num(objs["dsaMuons"]) == 1),
+    ),
+    "lj_lj_invmass_twoDSA": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(100, 0, 1200, name="ljlj_mass",
+                                     label=r"Invariant Mass ($LJ_{0}$, $LJ_{1}$)"),
+                   lambda objs, mask: (derived_objs["lj_matched_genAs_toMu"](objs, 0.4)[mask] + derived_objs["lj_matched_genAs_toE"](objs, 0.4)[mask]).mass),
+        ],
+        evt_mask=lambda objs: ((ak.num(derived_objs["lj_matched_genAs_toMu"](objs, 0.4)) + ak.num(derived_objs["lj_matched_genAs_toE"](objs, 0.4))) > 1) & (ak.num(objs["dsaMuons"]) == 2),
+    ),
+    "lj_lj_invmass_noPF": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(100, 0, 1200, name="ljlj_mass",
+                                     label=r"Invariant Mass ($LJ_{0}$, $LJ_{1}$)"),
+                   lambda objs, mask: (derived_objs["lj_matched_genAs_toMu"](objs, 0.4)[mask] + derived_objs["lj_matched_genAs_toE"](objs, 0.4)[mask]).mass),
+        ],
+        evt_mask=lambda objs: ((ak.num(derived_objs["lj_matched_genAs_toMu"](objs, 0.4)) + ak.num(derived_objs["lj_matched_genAs_toE"](objs, 0.4))) > 1) & (ak.num(objs["muons"]) == 0),
+    ),
+    "lj_lj_invmass_noPF_noDSA": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(100, 0, 1200, name="ljlj_mass",
+                                     label=r"Invariant Mass ($LJ_{0}$, $LJ_{1}$)"),
+                   lambda objs, mask: (derived_objs["lj_matched_genAs_toMu"](objs, 0.4)[mask] + derived_objs["lj_matched_genAs_toE"](objs, 0.4)[mask]).mass),
+        ],
+        evt_mask=lambda objs: ((ak.num(derived_objs["lj_matched_genAs_toMu"](objs, 0.4)) + ak.num(derived_objs["lj_matched_genAs_toE"](objs, 0.4))) > 1) & (ak.num(objs["muons"]) == 0) & (ak.num(objs["dsaMuons"]) == 0),
+    ),
+    "lj_lj_invmass_noPF_oneDSA": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(100, 0, 1200, name="ljlj_mass",
+                                     label=r"Invariant Mass ($LJ_{0}$, $LJ_{1}$)"),
+                   lambda objs, mask: (derived_objs["lj_matched_genAs_toMu"](objs, 0.4)[mask] + derived_objs["lj_matched_genAs_toE"](objs, 0.4)[mask]).mass),
+        ],
+        evt_mask=lambda objs: ((ak.num(derived_objs["lj_matched_genAs_toMu"](objs, 0.4)) + ak.num(derived_objs["lj_matched_genAs_toE"](objs, 0.4))) > 1) & (ak.num(objs["muons"]) == 0) & (ak.num(objs["dsaMuons"]) == 1),
+    ),
+    "lj_lj_invmass_noPF_twoDSA": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(100, 0, 1200, name="ljlj_mass",
+                                     label=r"Invariant Mass ($LJ_{0}$, $LJ_{1}$)"),
+                   lambda objs, mask: (derived_objs["lj_matched_genAs_toMu"](objs, 0.4)[mask] + derived_objs["lj_matched_genAs_toE"](objs, 0.4)[mask]).mass),
+        ],
+        evt_mask=lambda objs: ((ak.num(derived_objs["lj_matched_genAs_toMu"](objs, 0.4)) + ak.num(derived_objs["lj_matched_genAs_toE"](objs, 0.4))) > 1) & (ak.num(objs["muons"]) == 0) & (ak.num(objs["dsaMuons"]) == 2),
+    ),
+    "lj_lj_invmass_onePF": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(100, 0, 1200, name="ljlj_mass",
+                                     label=r"Invariant Mass ($LJ_{0}$, $LJ_{1}$)"),
+                   lambda objs, mask: (derived_objs["lj_matched_genAs_toMu"](objs, 0.4)[mask] + derived_objs["lj_matched_genAs_toE"](objs, 0.4)[mask]).mass),
+        ],
+        evt_mask=lambda objs: ((ak.num(derived_objs["lj_matched_genAs_toMu"](objs, 0.4)) + ak.num(derived_objs["lj_matched_genAs_toE"](objs, 0.4))) > 1) & (ak.num(objs["muons"]) == 1),
+    ),
+    "lj_lj_invmass_onePF_noDSA": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(100, 0, 1200, name="ljlj_mass",
+                                     label=r"Invariant Mass ($LJ_{0}$, $LJ_{1}$)"),
+                   lambda objs, mask: (derived_objs["lj_matched_genAs_toMu"](objs, 0.4)[mask] + derived_objs["lj_matched_genAs_toE"](objs, 0.4)[mask]).mass),
+        ],
+        evt_mask=lambda objs: ((ak.num(derived_objs["lj_matched_genAs_toMu"](objs, 0.4)) + ak.num(derived_objs["lj_matched_genAs_toE"](objs, 0.4))) > 1) & (ak.num(objs["muons"]) == 1) & (ak.num(objs["dsaMuons"]) == 0),
+    ),
+    "lj_lj_invmass_onePF_oneDSA": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(100, 0, 1200, name="ljlj_mass",
+                                     label=r"Invariant Mass ($LJ_{0}$, $LJ_{1}$)"),
+                   lambda objs, mask: (derived_objs["lj_matched_genAs_toMu"](objs, 0.4)[mask] + derived_objs["lj_matched_genAs_toE"](objs, 0.4)[mask]).mass),
+        ],
+        evt_mask=lambda objs: ((ak.num(derived_objs["lj_matched_genAs_toMu"](objs, 0.4)) + ak.num(derived_objs["lj_matched_genAs_toE"](objs, 0.4))) > 1) & (ak.num(objs["muons"]) == 1) & (ak.num(objs["dsaMuons"]) == 1),
+    ),
+    "lj_lj_invmass_onePF_twoDSA": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(100, 0, 1200, name="ljlj_mass",
+                                     label=r"Invariant Mass ($LJ_{0}$, $LJ_{1}$)"),
+                   lambda objs, mask: (derived_objs["lj_matched_genAs_toMu"](objs, 0.4)[mask] + derived_objs["lj_matched_genAs_toE"](objs, 0.4)[mask]).mass),
+        ],
+        evt_mask=lambda objs: ((ak.num(derived_objs["lj_matched_genAs_toMu"](objs, 0.4)) + ak.num(derived_objs["lj_matched_genAs_toE"](objs, 0.4))) > 1) & (ak.num(objs["muons"]) == 1) & (ak.num(objs["dsaMuons"]) == 2),
+    ),
+    "lj_lj_invmass_twoPF": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(100, 0, 1200, name="ljlj_mass",
+                                     label=r"Invariant Mass ($LJ_{0}$, $LJ_{1}$)"),
+                   lambda objs, mask: (derived_objs["lj_matched_genAs_toMu"](objs, 0.4)[mask] + derived_objs["lj_matched_genAs_toE"](objs, 0.4)[mask]).mass),
+        ],
+        evt_mask=lambda objs: ((ak.num(derived_objs["lj_matched_genAs_toMu"](objs, 0.4)) + ak.num(derived_objs["lj_matched_genAs_toE"](objs, 0.4))) > 1) & (ak.num(objs["muons"]) == 2),
+    ),
+    "lj_lj_invmass_twoPF_noDSA": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(100, 0, 1200, name="ljlj_mass",
+                                     label=r"Invariant Mass ($LJ_{0}$, $LJ_{1}$)"),
+                   lambda objs, mask: (derived_objs["lj_matched_genAs_toMu"](objs, 0.4)[mask] + derived_objs["lj_matched_genAs_toE"](objs, 0.4)[mask]).mass),
+        ],
+        evt_mask=lambda objs: ((ak.num(derived_objs["lj_matched_genAs_toMu"](objs, 0.4)) + ak.num(derived_objs["lj_matched_genAs_toE"](objs, 0.4))) > 1) & (ak.num(objs["muons"]) == 2) & (ak.num(objs["dsaMuons"]) == 0),
+    ),
+    "lj_lj_invmass_twoPF_oneDSA": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(100, 0, 1200, name="ljlj_mass",
+                                     label=r"Invariant Mass ($LJ_{0}$, $LJ_{1}$)"),
+                   lambda objs, mask: (derived_objs["lj_matched_genAs_toMu"](objs, 0.4)[mask] + derived_objs["lj_matched_genAs_toE"](objs, 0.4)[mask]).mass),
+        ],
+        evt_mask=lambda objs: ((ak.num(derived_objs["lj_matched_genAs_toMu"](objs, 0.4)) + ak.num(derived_objs["lj_matched_genAs_toE"](objs, 0.4))) > 1) & (ak.num(objs["muons"]) == 2) & (ak.num(objs["dsaMuons"]) == 1),
+    ),
+    "lj_lj_invmass_twoPF_twoDSA": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(100, 0, 1200, name="ljlj_mass",
+                                     label=r"Invariant Mass ($LJ_{0}$, $LJ_{1}$)"),
+                   lambda objs, mask: (derived_objs["lj_matched_genAs_toMu"](objs, 0.4)[mask] + derived_objs["lj_matched_genAs_toE"](objs, 0.4)[mask]).mass),
+        ],
+        evt_mask=lambda objs: ((ak.num(derived_objs["lj_matched_genAs_toMu"](objs, 0.4)) + ak.num(derived_objs["lj_matched_genAs_toE"](objs, 0.4))) > 1) & (ak.num(objs["muons"]) == 2) & (ak.num(objs["dsaMuons"]) == 2),
+    ),
+    "mlj_num": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(10, 0, 5, name="mlj_num", label=r"Number of LJ (Mu DP matched)"),
+                   lambda objs, mask: ak.num(derived_objs["lj_matched_genAs_toMu"](objs, 0.4))),
+        ],
+    ),
+    "elj_num": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(10, 0, 5, name="elj_num", label=r"Number of LJ (E DP matched)"),
+                   lambda objs, mask: ak.num(derived_objs["lj_matched_genAs_toE"](objs, 0.4))),
+        ],
+    ),
+    "lj_lj_dR": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 2*math.pi, name="lj_lj_dR", label=r"dR(LJ,LJ) [LJ > 2 case, All Combination]"),
+                   lambda objs, mask: lj_combination_dR(objs["ljs"][mask])[0]),
+        ],
+        evt_mask=lambda objs: (ak.num(objs["ljs"]) > 2),
+    ),
+    "min_lj_lj_dR": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 2*math.pi, name="min_lj_lj_dR", label=r"Minimum dR(LJ,LJ) [LJ > 2 case, All Combination]"),
+                   lambda objs, mask: lj_combination_dR(objs["ljs"][mask])[1]),
+        ],
+        evt_mask=lambda objs: (ak.num(objs["ljs"]) > 2),
+    ),
+    "max_lj_lj_dR": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 2*math.pi, name="max_lj_lj_dR", label=r"Maximum dR(LJ,LJ) [LJ > 2 case, All Combination]"),
+                   lambda objs, mask: lj_combination_dR(objs["ljs"][mask])[2]),
+        ],
+        evt_mask=lambda objs: (ak.num(objs["ljs"]) > 2),
+    ),
     # ABCD plane
     "lj_lj_absdphi_invmass": h.Histogram(
         [

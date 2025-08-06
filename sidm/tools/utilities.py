@@ -87,6 +87,13 @@ def add_matched_dsamuon_mass(obj):
     obj["mass"] = ak.full_like(obj.pt, 0.105712890625)
     return obj
 
+def lj_combination_dR(obj):
+    pair = ak.combinations(obj, 2, axis=1, fields=["lj1", "lj2"])
+    dR = dR_general(pair["lj1"], pair["lj2"])
+    min_dR = ak.min(dR_general(pair["lj1"], pair["lj2"]), axis=1)
+    max_dR = ak.max(dR_general(pair["lj1"], pair["lj2"]), axis=1)
+    return dR, min_dR, max_dR
+
 def rho(obj, ref=None, use_v=False):
     """Return transverse distance between object and reference (default reference is 0,0)"""
     if use_v:
