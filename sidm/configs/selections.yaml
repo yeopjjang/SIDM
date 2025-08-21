@@ -130,7 +130,7 @@ baseNoLj_basic_highdR: &baseNoLj_basic_highdR
       - "dR(dsa, pf) high"
   evt_cuts: 
     - *evt_baseNoLjNoljsource
-    
+
 baseNoLj_DP_matching: &baseNoLj_DP_matching
   obj_cuts: 
     <<: *obj_baseNoLjNoLjsource
@@ -305,6 +305,19 @@ base_isosel: &base_isosel
       - "|eta| < 2.4"
       - "mu_charge == 0"
       - "iso < 0.2"
+  evt_cuts:
+    - *evt_baseNoLj
+    - ">=2 LJs"
+
+base_nonisosel: &base_nonisosel
+  obj_cuts:
+    <<: *obj_baseNoLj
+  postLj_obj_cuts:
+    ljs: 
+      - "pT > 30 GeV"
+      - "|eta| < 2.4"
+      - "mu_charge == 0"
+      - "iso >= 0.2"
   evt_cuts:
     - *evt_baseNoLj
     - ">=2 LJs"

@@ -230,6 +230,7 @@ isolation_base: &isolation_base
   - "lj_isolation_ratio1"
   - "lj_isolation_ratio2"
 
+matched_jet_fraction_base: &matched_jet_fraction_base  
   - "pfmu_matched_jet_chEmEF"
   - "pfmu_matched_jet_chFPV0EF"
   - "pfmu_matched_jet_chHEF"
@@ -260,9 +261,9 @@ isolation_base: &isolation_base
   - "egm_matched_jet_muEF"
   - "egm_matched_jet_neEmEF"
   - "egm_matched_jet_neHEF"
-
   - "dpt_matched_jet_lj"
 
+lj_fraction_mother_base: &lj_fraction_mother_base  
   - "gen_id"
   - "gen_id_mu"
   - "gen_id_egm"
@@ -294,6 +295,24 @@ isolation_base: &isolation_base
   - "fs_e_gen_mother_id"
   - "fs_mu_gen_mother_id"
   - "fs_pho_gen_mother_id"
+
+lj_energy_transfer_base: &lj_energy_transfer_base
+  - "e_mother_dp_pt"
+  - "e_mother_W_pt"
+  - "mu_mother_dp_pt"
+  - "mu_mother_Z_pt"
+  - "mu_mother_D_pt"
+  - "mu_mother_B_pt"
+  - "mu_mother_qg_pt"
+  - "mu_mother_pion_pt"
+  - "pho_mother_e_pt"
+  - "pho_mother_mu_pt"
+  - "pho_mother_Z_pt"
+  - "pho_mother_pion_pt"
+  - "pho_mother_qg_pt"
+
+  - "e_mother_dp_ptsum"
+  - "mu_mother_dp_ptsum"
 
 muon_crosscleaning_base: &muon_crosscleaning_base  
   - "pfMuon_dsaMuon_dR"
