@@ -67,9 +67,170 @@ def dR(obj1, obj2):
     dr = obj1.nearest(obj2, return_metric=True)[1]
     return ak.fill_none(dr, np.inf)
 
+def dR_general(obj1, obj2):
+    """Return ΔR between obj1 and obj2, filling None with inf"""
+    return ak.fill_none(obj1.delta_r(obj2), np.inf)
+
+def get_closest_dsa(pf, dsa):
+    """
+    Return the DSA muon closest to each PF muon (event-wise).
+    Assumes:
+      - pf: [N]
+      - dsa: [N, M]
+    """
+    dRs = dR_general(pf, dsa)
+    idx = ak.argmin(dRs, axis=1)
+    safe_idx = ak.fill_none(idx, 0)
+    rows = ak.Array(np.arange(len(dsa)))
+    selected = dsa[rows, safe_idx]
+    selected["mass"] = ak.full_like(selected.pt, 0.105712890625)
+    return selected
+
+def get_closest_dsa_outer(pf, dsa):
+    """
+    Return the DSA muon closest to each PF muon (event-wise).
+    Assumes:
+      - pf: [N]
+      - dsa: [N, M]
+    """
+    dRs = dR_outer(pf, dsa)
+    idx = ak.argmin(dRs, axis=1)
+    safe_idx = ak.fill_none(idx, 0)
+    rows = ak.Array(np.arange(len(dsa)))
+    selected = dsa[rows, safe_idx]
+    selected["mass"] = ak.full_like(selected.pt, 0.105712890625)
+    return selected
+
+def get_farthest_dsa(pf, dsa):
+    """
+    Return the DSA muon farthest from each PF muon (event-wise).
+    Assumes:
+      - pf: [N]
+      - dsa: [N, M]
+    """
+    dRs = dR_general(pf, dsa)
+    idx = ak.argmax(dRs, axis=1)
+    safe_idx = ak.fill_none(idx, 0)
+    rows = ak.Array(np.arange(len(dsa)))
+    selected = dsa[rows, safe_idx]
+    selected["mass"] = ak.full_like(selected.pt, 0.105712890625)
+    return selected
+
+def get_farthest_dsa_outer(pf, dsa):
+    """
+    Return the DSA muon farthest from each PF muon (event-wise).
+    Assumes:
+      - pf: [N]
+      - dsa: [N, M]
+    """
+    dRs = dR_outer(pf, dsa)
+    idx = ak.argmax(dRs, axis=1)
+    safe_idx = ak.fill_none(idx, 0)
+    rows = ak.Array(np.arange(len(dsa)))
+    selected = dsa[rows, safe_idx]
+    selected["mass"] = ak.full_like(selected.pt, 0.105712890625)
+    return selected
+
 def dR_outer(obj1, obj2):
     """Return dR between outer tracks of obj1 and obj2"""
     return np.sqrt((obj1.outerEta - obj2.outerEta)**2 + (obj1.outerPhi - obj2.outerPhi)**2)
+
+def ptfrac(pf, dsa):
+    return abs(pf.pt[:, None] - dsa.pt) / pf.pt[:, None]
+
+def get_closest_by_ptfrac(pf, dsa):
+    pt_frac = ptfrac(pf, dsa)  # shape: [N, M]
+    idx = ak.argmin(pt_frac, axis=1)
+    safe_idx = ak.fill_none(idx, 0)
+    rows = ak.local_index(dsa, axis=0)
+    selected = dsa[rows, safe_idx]
+    selected["mass"] = ak.full_like(selected.pt, 0.105712890625)
+    return selected
+
+def get_farthest_by_ptfrac(pf, dsa):
+    pt_frac = ptfrac(pf, dsa)
+    idx = ak.argmax(pt_frac, axis=1)
+    safe_idx = ak.fill_none(idx, 0)
+    rows = ak.local_index(dsa, axis=0)
+    selected = dsa[rows, safe_idx]
+    selected["mass"] = ak.full_like(selected.pt, 0.105712890625)
+    return selected
+    
+def get_charge_matching(pf, dsa):
+    pf_charge = pf.charge
+    dsa_charge = dsa.charge
+    charge_sum = pf_charge[:, None] + dsa_charge
+    is_match = charge_sum == 0
+    match_count = ak.sum(is_match, axis=1)
+
+    idx_charge = ak.where(is_match[:, 0], 0, 1)
+    pt_frac = ptfrac(pf, dsa)
+    idx_ptfrac_closest = ak.argmin(pt_frac, axis=1)
+    idx_ptfrac_farthest = ak.argmax(pt_frac, axis=1)
+
+    matched_idx = ak.where(match_count == 1, idx_charge, idx_ptfrac_farthest)
+    unmatched_idx = ak.where(match_count == 1, 1 - matched_idx, idx_ptfrac_closest)
+
+    safe_matched_idx = ak.fill_none(matched_idx, 0)
+    safe_unmatched_idx = ak.fill_none(unmatched_idx, 0)
+    
+    row_idx = ak.local_index(dsa, axis=0)
+
+    matched = dsa[row_idx, safe_matched_idx]
+    unmatched = dsa[row_idx, safe_unmatched_idx]
+    
+    matched["mass"] = ak.full_like(matched.pt, 0.10571289)
+    unmatched["mass"] = ak.full_like(unmatched.pt, 0.10571289)
+
+    return matched, unmatched
+
+def pick_leptonlike_pdgid(obj):
+    mask_e = (abs(obj.pdgId) == 11)
+    mask_mu = (abs(obj.pdgId) == 13)
+    mask_pho = (abs(obj.pdgId) == 22)
+
+    e, mu, pho = obj[mask_e], obj[mask_mu], obj[mask_pho]
+    return e, mu, pho
+
+def pick_e_mother_category(obj):
+    e_mask = (abs(obj.pdgId) == 11)
+    obj = obj[e_mask]
+    mother = obj.distinctParent.pdgId
+    
+    mask_dp = (abs(mother) == 32)
+    mask_W = (abs(mother) == 24)
+
+    m_dp, m_W = obj[mask_dp], obj[mask_W]
+    return obj, m_dp, m_W
+
+def pick_mu_mother_category(obj):
+    mu_mask = (abs(obj.pdgId) == 13)
+    obj = obj[mu_mask]
+    mother = abs(obj.distinctParent.pdgId)
+    
+    mask_dp = (mother == 32)
+    mask_Z = (mother == 23)
+    mask_D = (mother == 411) | (mother == 421) | (mother == 423) | (mother == 431)
+    mask_B = (mother == 511) | (mother == 521) | (mother == 531) | (mother == 541)
+    mask_qg = (mother == 1) | (mother == 2) | (mother == 3) | (mother == 4) | (mother == 5) | (mother == 6) | (mother == 9) | (mother == 21)
+    mask_pion = (mother == 111) | (mother == 211)
+    
+    m_dp, m_Z, m_D, m_B, m_qg, m_pion = obj[mask_dp], obj[mask_Z], obj[mask_D], obj[mask_B], obj[mask_qg], obj[mask_pion]
+    return obj, m_dp, m_Z, m_D, m_B, m_qg, m_pion
+
+def pick_pho_mother_category(obj):
+    pho_mask = (abs(obj.pdgId) == 22)
+    obj = obj[pho_mask]
+    mother = obj.distinctParent.pdgId
+    
+    mask_e = (abs(mother) == 11)
+    mask_mu = (abs(mother) == 13)
+    mask_Z = (abs(mother) == 23)
+    mask_pion = (mother == 111) | (mother == 211)
+    mask_qg = (mother == 1) | (mother == 2) | (mother == 3) | (mother == 4) | (mother == 5) | (mother == 6) | (mother == 9) | (mother == 21)
+    
+    m_e, m_mu, m_Z, m_pion, m_qg = obj[mask_e], obj[mask_mu], obj[mask_Z], obj[mask_pion], obj[mask_qg]
+    return obj, m_e, m_mu, m_Z, m_pion, m_qg
 
 def drop_none(obj):
     """Remove None entries from an array (not available in Awkward 1)"""

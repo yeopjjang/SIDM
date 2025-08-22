@@ -100,6 +100,32 @@ base: &base
     - *evt_baseNoLj
     - ">=2 LJs"
 
+base_isosel: &base_isosel
+  obj_cuts:
+    <<: *obj_baseNoLj
+  postLj_obj_cuts:
+    ljs: 
+      - "pT > 30 GeV"
+      - "|eta| < 2.4"
+      - "mu_charge == 0"
+      - "iso < 0.2"
+  evt_cuts:
+    - *evt_baseNoLj
+    - ">=2 LJs"
+
+base_nonisosel: &base_nonisosel
+  obj_cuts:
+    <<: *obj_baseNoLj
+  postLj_obj_cuts:
+    ljs: 
+      - "pT > 30 GeV"
+      - "|eta| < 2.4"
+      - "mu_charge == 0"
+      - "iso >= 0.2"
+  evt_cuts:
+    - *evt_baseNoLj
+    - ">=2 LJs"
+
 4mu: &4mu
   <<: *base
   evt_cuts: &evt_4mu

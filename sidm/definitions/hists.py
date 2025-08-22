@@ -13,7 +13,7 @@ import hist
 import awkward as ak
 # local
 from sidm.tools import histogram as h
-from sidm.tools.utilities import dR, lxy, matched, dxy
+from sidm.tools.utilities import dR, lxy, matched, dxy, dR_general, get_closest_dsa, get_farthest_dsa, dR_outer, get_closest_dsa_outer, get_farthest_dsa_outer, ptfrac, get_closest_by_ptfrac, get_farthest_by_ptfrac, get_charge_matching, pick_leptonlike_pdgid, pick_e_mother_category, pick_mu_mother_category, pick_pho_mother_category
 from sidm.definitions.objects import derived_objs
 # always reload local modules to pick up changes during development
 importlib.reload(h)
@@ -969,7 +969,6 @@ hist_defs = {
         evt_mask=lambda objs: ak.num(objs["ljs"]) > 1,
     ),
     # matchedjet
-    # matchedjet
     "matched_jet_pt": h.Histogram(
         [
             h.Axis(hist.axis.Regular(50, 0, 800, name="matched_jet_pt",
@@ -991,11 +990,95 @@ hist_defs = {
                    lambda objs, mask:  objs["pfmu_ljs"].matched_jet.pt),
         ],
     ),
+    "pfmu_matched_jet_chEmEF": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 1, name="pfmu_matched_jet_chEmEF",
+                   label="PF Mu Matched Jet Charged EM Fraction"),
+                   lambda objs, mask:  objs["pfmu_ljs"].matched_jet.chEmEF),
+        ],
+    ),
+    "pfmu_matched_jet_chFPV0EF": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 1, name="pfmu_matched_jet_chFPV0EF",
+                   label="PF Mu Matched Jet Charged EM (from PV==0) Fraction"),
+                   lambda objs, mask:  objs["pfmu_ljs"].matched_jet.chFPV0EF),
+        ],
+    ),
+    "pfmu_matched_jet_chHEF": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 1, name="pfmu_matched_jet_chHEF",
+                   label="PF Mu Matched Jet Charged Hadron Fraction"),
+                   lambda objs, mask:  objs["pfmu_ljs"].matched_jet.chHEF),
+        ],
+    ),
+    "pfmu_matched_jet_muEF": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 1, name="pfmu_matched_jet_muEF",
+                   label="PF Mu Matched Jet Muon Fraction"),
+                   lambda objs, mask:  objs["pfmu_ljs"].matched_jet.muEF),
+        ],
+    ),
+    "pfmu_matched_jet_neEmEF": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 1, name="pfmu_matched_jet_neEmEF",
+                   label="PF Mu Matched Jet Neutral EM Fraction"),
+                   lambda objs, mask:  objs["pfmu_ljs"].matched_jet.neEmEF),
+        ],
+    ),
+    "pfmu_matched_jet_neHEF": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 1, name="pfmu_matched_jet_neHEF",
+                   label="PF Mu Matched Jet Neutral Hadron Fraction"),
+                   lambda objs, mask:  objs["pfmu_ljs"].matched_jet.neHEF),
+        ],
+    ),
     "dsamu_matched_jet_pt": h.Histogram(
         [
             h.Axis(hist.axis.Regular(50, 0, 800, name="dsamu_matched_jet_pt",
                    label="DSA Mu Matched Jet PT [GeV]"),
                    lambda objs, mask:  objs["dsamu_ljs"].matched_jet.pt),
+        ],
+    ),
+    "dsamu_matched_jet_chEmEF": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 1, name="dsamu_matched_jet_chEmEF",
+                   label="DSA Mu Matched Jet Charged EM Fraction"),
+                   lambda objs, mask:  objs["dsamu_ljs"].matched_jet.chEmEF),
+        ],
+    ),
+    "dsamu_matched_jet_chFPV0EF": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 1, name="dsamu_matched_jet_chFPV0EF",
+                   label="DSA Mu Matched Jet Charged EM (from PV==0) Fraction"),
+                   lambda objs, mask:  objs["dsamu_ljs"].matched_jet.chFPV0EF),
+        ],
+    ),
+    "dsamu_matched_jet_chHEF": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 1, name="dsamu_matched_jet_chHEF",
+                   label="DSA Mu Matched Jet Charged Hadron Fraction"),
+                   lambda objs, mask:  objs["dsamu_ljs"].matched_jet.chHEF),
+        ],
+    ),
+    "dsamu_matched_jet_muEF": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 1, name="dsamu_matched_jet_muEF",
+                   label="DSA Mu Matched Jet Muon Fraction"),
+                   lambda objs, mask:  objs["dsamu_ljs"].matched_jet.muEF),
+        ],
+    ),
+    "dsamu_matched_jet_neEmEF": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 1, name="dsamu_matched_jet_neEmEF",
+                   label="DSA Mu Matched Jet Neutral EM Fraction"),
+                   lambda objs, mask:  objs["dsamu_ljs"].matched_jet.neEmEF),
+        ],
+    ),
+    "dsamu_matched_jet_neHEF": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 1, name="dsamu_matched_jet_neHEF",
+                   label="DSA Mu Matched Jet Neutral Hadron Fraction"),
+                   lambda objs, mask:  objs["dsamu_ljs"].matched_jet.neHEF),
         ],
     ),
     "egm_matched_jet_pt": h.Histogram(
@@ -1005,6 +1088,48 @@ hist_defs = {
                    lambda objs, mask:  objs["egm_ljs"].matched_jet.pt),
         ],
     ),
+    "egm_matched_jet_chEmEF": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 1, name="egm_matched_jet_chEmEF",
+                   label="EGM Matched Jet Charged EM Fraction"),
+                   lambda objs, mask:  objs["egm_ljs"].matched_jet.chEmEF),
+        ],
+    ),
+    "egm_matched_jet_chFPV0EF": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 1, name="egm_matched_jet_chFPV0EF",
+                   label="EGM Matched Jet Charged EM (from PV==0) Fraction"),
+                   lambda objs, mask:  objs["egm_ljs"].matched_jet.chFPV0EF),
+        ],
+    ),
+    "egm_matched_jet_chHEF": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 1, name="egm_matched_jet_chHEF",
+                   label="EGM Matched Jet Charged Hadron Fraction"),
+                   lambda objs, mask:  objs["egm_ljs"].matched_jet.chHEF),
+        ],
+    ),
+    "egm_matched_jet_muEF": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 1, name="egm_matched_jet_muEF",
+                   label="EGM Matched Jet Muon Fraction"),
+                   lambda objs, mask:  objs["egm_ljs"].matched_jet.muEF),
+        ],
+    ),
+    "egm_matched_jet_neEmEF": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 1, name="egm_matched_jet_neEmEF",
+                   label="EGM Matched Jet Neutral EM Fraction"),
+                   lambda objs, mask:  objs["egm_ljs"].matched_jet.neEmEF),
+        ],
+    ),
+    "egm_matched_jet_neHEF": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 1, name="egm_matched_jet_neHEF",
+                   label="EGM Matched Jet Neutral Hadron Fraction"),
+                   lambda objs, mask:  objs["egm_ljs"].matched_jet.neHEF),
+        ],
+    ),
     "electron_matched_jet_pt": h.Histogram(
         [
             h.Axis(hist.axis.Regular(50, 0, 800, name="electron_matched_jet_pt",
@@ -1012,11 +1137,95 @@ hist_defs = {
                    lambda objs, mask:  objs["electron_ljs"].matched_jet.pt),
         ],
     ),
+    "electron_matched_jet_chEmEF": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 1, name="electron_matched_jet_chEmEF",
+                   label="Electron Matched Jet Charged EM Fraction"),
+                   lambda objs, mask:  objs["electron_ljs"].matched_jet.chEmEF),
+        ],
+    ),
+    "electron_matched_jet_chFPV0EF": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 1, name="electron_matched_jet_chFPV0EF",
+                   label="Electron Matched Jet Charged EM (from PV==0) Fraction"),
+                   lambda objs, mask:  objs["electron_ljs"].matched_jet.chFPV0EF),
+        ],
+    ),
+    "electron_matched_jet_chHEF": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 1, name="electron_matched_jet_chHEF",
+                   label="Electron Matched Jet Charged Hadron Fraction"),
+                   lambda objs, mask:  objs["electron_ljs"].matched_jet.chHEF),
+        ],
+    ),
+    "electron_matched_jet_muEF": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 1, name="electron_matched_jet_muEF",
+                   label="Electron Matched Jet Muon Fraction"),
+                   lambda objs, mask:  objs["electron_ljs"].matched_jet.muEF),
+        ],
+    ),
+    "electron_matched_jet_neEmEF": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 1, name="electron_matched_jet_neEmEF",
+                   label="Electron Matched Jet Neutral EM Fraction"),
+                   lambda objs, mask:  objs["electron_ljs"].matched_jet.neEmEF),
+        ],
+    ),
+    "electron_matched_jet_neHEF": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 1, name="electron_matched_jet_neHEF",
+                   label="Electron Matched Jet Neutral Hadron Fraction"),
+                   lambda objs, mask:  objs["electron_ljs"].matched_jet.neHEF),
+        ],
+    ),
     "photon_matched_jet_pt": h.Histogram(
         [
             h.Axis(hist.axis.Regular(50, 0, 800, name="photon_matched_jet_pt",
                    label="Photon Matched Jet PT [GeV]"),
                    lambda objs, mask:  objs["photon_ljs"].matched_jet.pt),
+        ],
+    ),
+    "photon_matched_jet_chEmEF": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 1, name="photon_matched_jet_chEmEF",
+                   label="Photon Matched Jet Charged EM Fraction"),
+                   lambda objs, mask:  objs["photon_ljs"].matched_jet.chEmEF),
+        ],
+    ),
+    "photon_matched_jet_chFPV0EF": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 1, name="photon_matched_jet_chFPV0EF",
+                   label="Photon Matched Jet Charged EM (from PV==0) Fraction"),
+                   lambda objs, mask:  objs["photon_ljs"].matched_jet.chFPV0EF),
+        ],
+    ),
+    "photon_matched_jet_chHEF": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 1, name="photon_matched_jet_chHEF",
+                   label="Photon Matched Jet Charged Hadron Fraction"),
+                   lambda objs, mask:  objs["photon_ljs"].matched_jet.chHEF),
+        ],
+    ),
+    "photon_matched_jet_muEF": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 1, name="photon_matched_jet_muEF",
+                   label="Photon Matched Jet Muon Fraction"),
+                   lambda objs, mask:  objs["photon_ljs"].matched_jet.muEF),
+        ],
+    ),
+    "photon_matched_jet_neEmEF": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 1, name="photon_matched_jet_neEmEF",
+                   label="Photon Matched Jet Neutral EM Fraction"),
+                   lambda objs, mask:  objs["photon_ljs"].matched_jet.neEmEF),
+        ],
+    ),
+    "photon_matched_jet_neHEF": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 1, name="photon_matched_jet_neHEF",
+                   label="Photon Matched Jet Neutral Hadron Fraction"),
+                   lambda objs, mask:  objs["photon_ljs"].matched_jet.neHEF),
         ],
     ),
     "matched_jet_lepfraction": h.Histogram(
@@ -1116,6 +1325,13 @@ hist_defs = {
             h.Axis(hist.axis.Regular(50, 0, 0.4, name="photon_matched_jet_lj_dR",
                    label="dR(Photon-LJ, Photon EGM-Matched Jet)"),
                    lambda objs, mask: objs["photon_ljs"].dR_matched_jet),
+        ],
+    ), 
+    "dpt_matched_jet_lj": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 800, name="dpt_matched_jet_lj",
+                   label="|Matched Jet $p_{T}$ - LJ $p_{T}$|"),
+                   lambda objs, mask: abs(objs["ljs"].matched_jet.pt - objs["ljs"].pt)),
         ],
     ),
     # lj isolation
@@ -1217,37 +1433,313 @@ hist_defs = {
                    lambda objs, mask:  objs["photon_ljs"].isolation),
         ],
     ),
-    "lj_isolation_sum": h.Histogram(
+    # Journey for finding mother
+    "gen_id": h.Histogram(
         [
-            h.Axis(hist.axis.Regular(50, 0, 2, name="lj_isolation_sum",
-                   label="LJ1 Isolation + LJ2 Isolation"),
-                   lambda objs, mask:  (objs["ljs"][mask, 1].isolation + objs["ljs"][mask, 0].isolation)),
+            h.Axis(hist.axis.Regular(1000, 0, 1000, name="gen_id", label="Gen pdgID near LJ"),
+                   lambda objs, mask: abs(derived_objs["gen_matched_lj"](objs, 0.4).pdgId)),
         ],
-        evt_mask=lambda objs: ak.num(objs["ljs"]) > 1,
     ),
-    "dlj_isolation": h.Histogram(
+    "gen_id_mu": h.Histogram(
         [
-            h.Axis(hist.axis.Regular(50, 0, 2, name="lj_isolation",
-                   label="|LJ1 Isolation - LJ2 Isolation|"),
-                   lambda objs, mask:  abs(objs["ljs"][mask, 1].isolation - objs["ljs"][mask, 0].isolation)),
+            h.Axis(hist.axis.Regular(1000, 0, 1000, name="gen_id_mu", label="Gen pdgID near Mu-LJ"),
+                   lambda objs, mask: abs(derived_objs["gen_matched_mu_lj"](objs, 0.4).pdgId)),
         ],
-        evt_mask=lambda objs: ak.num(objs["ljs"]) > 1,
     ),
-    "lj_isolation_ratio1": h.Histogram(
+    "gen_id_egm": h.Histogram(
         [
-            h.Axis(hist.axis.Regular(50, 0, 10, name="lj_isolation_ratio1",
-                   label="LJ1 Isolation / LJ2 Isolation"),
-                   lambda objs, mask:  (objs["ljs"][mask, 0].isolation / objs["ljs"][mask, 1].isolation)),
+            h.Axis(hist.axis.Regular(1000, 0, 1000, name="gen_id_egm", label="Gen pdgID near EGM-LJ"),
+                   lambda objs, mask: abs(derived_objs["gen_matched_egm_lj"](objs, 0.4).pdgId)),
         ],
-        evt_mask=lambda objs: ak.num(objs["ljs"]) > 1,
     ),
-    "lj_isolation_ratio2": h.Histogram(
+    "fs_gen_id": h.Histogram(
         [
-            h.Axis(hist.axis.Regular(50, 0, 10, name="lj_isolation_ratio2",
-                   label="LJ2 Isolation / LJ1 Isolation"),
-                   lambda objs, mask:  (objs["ljs"][mask, 1].isolation / objs["ljs"][mask, 0].isolation)),
+            h.Axis(hist.axis.Regular(1000, 0, 1000, name="fs_gen_id", label="Final State Gen pdgID near LJ"),
+                   lambda objs, mask: abs(derived_objs["fs_gen_matched_lj"](objs, 0.4).pdgId)),
         ],
-        evt_mask=lambda objs: ak.num(objs["ljs"]) > 1,
+    ),
+    "fs_gen_id_mu": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(1000, 0, 1000, name="fs_gen_id_mu", label="Final State Gen pdgID near Mu-LJ"),
+                   lambda objs, mask: abs(derived_objs["fs_gen_matched_mu_lj"](objs, 0.4).pdgId)),
+        ],
+    ),
+    "fs_gen_id_egm": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(1000, 0, 1000, name="fs_gen_id_egm", label="Final State Gen pdgID near EGM-LJ"),
+                   lambda objs, mask: abs(derived_objs["fs_gen_matched_egm_lj"](objs, 0.4).pdgId)),
+        ],
+    ),
+    "gen_mother_id": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(1000, 0, 1000, name="gen_mother_id", label="Gen Mother pdgID near LJ"),
+                   lambda objs, mask: abs(derived_objs["gen_matched_lj"](objs, 0.4).distinctParent.pdgId)),
+        ],
+    ),
+    "gen_mother_id_mu": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(1000, 0, 1000, name="gen_mother_id_mu", label="Gen Mother pdgID near Mu-LJ"),
+                   lambda objs, mask: abs(derived_objs["gen_matched_mu_lj"](objs, 0.4).distinctParent.pdgId)),
+        ],
+    ),
+    "gen_mother_id_egm": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(1000, 0, 1000, name="gen_mother_id_egm", label="Gen Mother pdgID near EGM-LJ"),
+                   lambda objs, mask: abs(derived_objs["gen_matched_egm_lj"](objs, 0.4).distinctParent.pdgId)),
+        ],
+    ),
+    "fs_gen_mother_id": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(1000, 0, 1000, name="fs_gen_mother_id", label="Final State Gen Mother pdgID near LJ"),
+                   lambda objs, mask: abs(derived_objs["fs_gen_matched_lj"](objs, 0.4).distinctParent.pdgId)),
+        ],
+    ),
+    "fs_gen_mother_id_mu": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(1000, 0, 1000, name="fs_gen_mother_id_mu", label="Final State Gen Mother pdgID near Mu-LJ"),
+                   lambda objs, mask: abs(derived_objs["fs_gen_matched_mu_lj"](objs, 0.4).distinctParent.pdgId)),
+        ],
+    ),
+    "fs_gen_mother_id_egm": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(1000, 0, 1000, name="fs_gen_mother_id_egm", label="Final State Gen Mother pdgID near EGM-LJ"),
+                   lambda objs, mask: abs(derived_objs["fs_gen_matched_egm_lj"](objs, 0.4).distinctParent.pdgId)),
+        ],
+    ),
+    "fs_e_gen_mother_id": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(1000, 0, 1000, name="fs_e_gen_mother_id", label="Electron Mother pdgID near LJ"),
+                   lambda objs, mask: abs(pick_leptonlike_pdgid(derived_objs["fs_gen_matched_lj"](objs, 0.4))[0].distinctParent.pdgId)),
+        ],
+    ),
+    "fs_mu_gen_mother_id": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(1000, 0, 1000, name="fs_mu_gen_mother_id", label="Muon Mother pdgID near LJ"),
+                   lambda objs, mask: abs(pick_leptonlike_pdgid(derived_objs["fs_gen_matched_lj"](objs, 0.4))[1].distinctParent.pdgId)),
+        ],
+    ),
+    "fs_pho_gen_mother_id": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(1000, 0, 1000, name="fs_pho_gen_mother_id", label="Photon Mother pdgID near LJ"),
+                   lambda objs, mask: abs(pick_leptonlike_pdgid(derived_objs["fs_gen_matched_lj"](objs, 0.4))[2].distinctParent.pdgId)),
+        ],
+    ),
+    "gen_id_pfmuonlj": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(1000, 0, 1000, name="gen_id_pfmuonlj", label="Gen pdgID near PF Muon LJ"),
+                   lambda objs, mask: abs(derived_objs["gen_matched_pfmu_lj"](objs, 0.4).pdgId)),
+        ],
+    ),
+    "gen_id_electronlj": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(1000, 0, 1000, name="gen_id_electronlj", label="Gen pdgID near Electron LJ"),
+                   lambda objs, mask: abs(derived_objs["gen_matched_electron_lj"](objs, 0.4).pdgId)),
+        ],
+    ),
+    "gen_id_photonlj": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(1000, 0, 1000, name="gen_id_photonlj", label="Gen pdgID near Photon LJ"),
+                   lambda objs, mask: abs(derived_objs["gen_matched_photon_lj"](objs, 0.4).pdgId)),
+        ],
+    ),
+    "fs_gen_id_pfmuonlj": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(1000, 0, 1000, name="fs_gen_id_pfmuonlj", label="Final State Gen pdgID near PF Muon LJ"),
+                   lambda objs, mask: abs(derived_objs["fs_gen_matched_pfmu_lj"](objs, 0.4).pdgId)),
+        ],
+    ),
+    "fs_gen_id_electronlj": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(1000, 0, 1000, name="fs_gen_id_electronlj", label="Final State Gen pdgID near Electron LJ"),
+                   lambda objs, mask: abs(derived_objs["fs_gen_matched_electron_lj"](objs, 0.4).pdgId)),
+        ],
+    ),
+    "fs_gen_id_photonlj": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(1000, 0, 1000, name="fs_gen_id_photonlj", label="Final State Gen pdgID near Photon LJ"),
+                   lambda objs, mask: abs(derived_objs["fs_gen_matched_photon_lj"](objs, 0.4).pdgId)),
+        ],
+    ),
+    "gen_mother_id_pfmuonlj": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(1000, 0, 1000, name="gen_id_pfmuonlj", label="Gen Mother pdgID near PF Muon LJ"),
+                   lambda objs, mask: abs(derived_objs["gen_matched_pfmu_lj"](objs, 0.4).distinctParent.pdgId)),
+        ],
+    ),
+    "gen_mother_id_electronlj": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(1000, 0, 1000, name="gen_id_electronlj", label="Gen Mother pdgID near Electron LJ"),
+                   lambda objs, mask: abs(derived_objs["gen_matched_electron_lj"](objs, 0.4).distinctParent.pdgId)),
+        ],
+    ),
+    "gen_mother_id_photonlj": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(1000, 0, 1000, name="gen_id_photonlj", label="Gen Mother pdgID near Photon LJ"),
+                   lambda objs, mask: abs(derived_objs["gen_matched_photon_lj"](objs, 0.4).distinctParent.pdgId)),
+        ],
+    ),
+    "fs_gen_mother_id_pfmuonlj": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(1000, 0, 1000, name="fs_gen_mother_id_pfmuonlj", label="Final State Gen Mother pdgID near PF Muon LJ"),
+                   lambda objs, mask: abs(derived_objs["fs_gen_matched_pfmu_lj"](objs, 0.4).distinctParent.pdgId)),
+        ],
+    ),
+    "fs_gen_mother_id_electronlj": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(1000, 0, 1000, name="fs_gen_mother_id_electronlj", label="Final State Gen Mother pdgID near Electron LJ"),
+                   lambda objs, mask: abs(derived_objs["fs_gen_matched_electron_lj"](objs, 0.4).distinctParent.pdgId)),
+        ],
+    ),
+    "fs_gen_mother_id_photonlj": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(1000, 0, 1000, name="fs_gen_mother_id_photonlj", label="Final State Gen Mother pdgID near Photon LJ"),
+                   lambda objs, mask: abs(derived_objs["fs_gen_matched_photon_lj"](objs, 0.4).distinctParent.pdgId)),
+        ],
+    ),
+    # Energy transfer
+    "e_mother_all_Legm": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 700, name="e_mother_all_Legm", label=r"Gen e PT (L EGM LJ, Mother: Inclusive)"),
+                   lambda objs, mask: pick_e_mother_category(derived_objs["fs_gen_matched_Legm_lj"](objs, 0.4))[0][:,:].sum().pt),
+        ],
+    ),
+    "e_mother_all_SLegm": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 700, name="e_mother_all_SLegm", label=r"Gen e PT (SL EGM LJ, Mother: Inclusive)"),
+                   lambda objs, mask: pick_e_mother_category(derived_objs["fs_gen_matched_SLegm_lj"](objs, 0.4))[0][:,:].sum().pt),
+        ],
+    ),
+    "e_mother_all_Lmu": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 700, name="e_mother_all_Lmu", label=r"Gen e PT (L Mu LJ, Mother: Inclusive)"),
+                   lambda objs, mask: pick_e_mother_category(derived_objs["fs_gen_matched_Lmu_lj"](objs, 0.4))[0][:,:].sum().pt),
+        ],
+    ),
+    "e_mother_all_SLmu": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 700, name="e_mother_all_SLmu", label=r"Gen e PT (SL Mu LJ, Mother: Inclusive)"),
+                   lambda objs, mask: pick_e_mother_category(derived_objs["fs_gen_matched_SLmu_lj"](objs, 0.4))[0][:,:].sum().pt),
+        ],
+    ),
+    "e_mother_dp_Legm": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 700, name="e_mother_dp_Legm", label=r"Gen e PT (L EGM LJ, Mother: DP)"),
+                   lambda objs, mask: pick_e_mother_category(derived_objs["fs_gen_matched_Legm_lj"](objs, 0.4))[1][:,:].sum().pt),
+        ],
+    ),
+    "e_mother_dp_SLegm": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 700, name="e_mother_dp_SLegm", label=r"Gen e PT (SL EGM LJ, Mother: DP)"),
+                   lambda objs, mask: pick_e_mother_category(derived_objs["fs_gen_matched_SLegm_lj"](objs, 0.4))[1][:,:].sum().pt),
+        ],
+    ),
+    "e_mother_dp_Lmu": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 700, name="e_mother_dp_Lmu", label=r"Gen e PT (L Mu LJ, Mother: DP)"),
+                   lambda objs, mask: pick_e_mother_category(derived_objs["fs_gen_matched_Lmu_lj"](objs, 0.4))[1][:,:].sum().pt),
+        ],
+    ),
+    "e_mother_dp_SLmu": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 700, name="e_mother_dp_SLmu", label=r"Gen e PT (SL Mu LJ, Mother: DP)"),
+                   lambda objs, mask: pick_e_mother_category(derived_objs["fs_gen_matched_SLmu_lj"](objs, 0.4))[1][:,:].sum().pt),
+        ],
+    ),
+    "e_mother_W_Legm": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 700, name="e_mother_W_Legm", label=r"Gen e PT (L EGM LJ, Mother: W)"),
+                   lambda objs, mask: pick_e_mother_category(derived_objs["fs_gen_matched_Legm_lj"](objs, 0.4))[2][:,:].sum().pt),
+        ],
+    ),
+    "e_mother_W_SLegm": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 700, name="e_mother_W_SLegm", label=r"Gen e PT (SL EGM LJ, Mother: W)"),
+                   lambda objs, mask: pick_e_mother_category(derived_objs["fs_gen_matched_SLegm_lj"](objs, 0.4))[2][:,:].sum().pt),
+        ],
+    ),
+    "e_mother_W_Lmu": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 700, name="e_mother_W_Lmu", label=r"Gen e PT (L Mu LJ, Mother: W)"),
+                   lambda objs, mask: pick_e_mother_category(derived_objs["fs_gen_matched_Lmu_lj"](objs, 0.4))[2][:,:].sum().pt),
+        ],
+    ),
+    "e_mother_W_SLmu": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 700, name="e_mother_dp_SLmu", label=r"Gen e PT (SL Mu LJ, Mother: W)"),
+                   lambda objs, mask: pick_e_mother_category(derived_objs["fs_gen_matched_SLmu_lj"](objs, 0.4))[2][:,:].sum().pt),
+        ],
+    ),
+    "mu_mother_all_Legm": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 700, name="e_mother_all_Legm", label=r"Gen $\mu$ PT (L EGM LJ, Mother: Inclusive)"),
+                   lambda objs, mask: pick_mu_mother_category(derived_objs["fs_gen_matched_Legm_lj"](objs, 0.4))[0][:,:].sum().pt),
+        ],
+    ),
+    "mu_mother_all_SLegm": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 700, name="e_mother_all_SLegm", label=r"Gen $\mu$ PT (SL EGM LJ, Mother: Inclusive)"),
+                   lambda objs, mask: pick_mu_mother_category(derived_objs["fs_gen_matched_SLegm_lj"](objs, 0.4))[0][:,:].sum().pt),
+        ],
+    ),
+    "mu_mother_all_Lmu": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 700, name="e_mother_all_Lmu", label=r"Gen $\mu$ PT (L Mu LJ, Mother: Inclusive)"),
+                   lambda objs, mask: pick_mu_mother_category(derived_objs["fs_gen_matched_Lmu_lj"](objs, 0.4))[0][:,:].sum().pt),
+        ],
+    ),
+    "mu_mother_all_SLmu": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 700, name="e_mother_all_SLmu", label=r"Gen $\mu$ PT (SL Mu LJ, Mother: Inclusive)"),
+                   lambda objs, mask: pick_mu_mother_category(derived_objs["fs_gen_matched_SLmu_lj"](objs, 0.4))[0][:,:].sum().pt),
+        ],
+    ),
+    "mu_mother_dp_Legm": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 700, name="e_mother_all_Legm", label=r"Gen $\mu$ PT (L EGM LJ, Mother: DP)"),
+                   lambda objs, mask: pick_mu_mother_category(derived_objs["fs_gen_matched_Legm_lj"](objs, 0.4))[1][:,:].sum().pt),
+        ],
+    ),
+    "mu_mother_dp_SLegm": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 700, name="e_mother_all_SLegm", label=r"Gen $\mu$ PT (SL EGM LJ, Mother: DP)"),
+                   lambda objs, mask: pick_mu_mother_category(derived_objs["fs_gen_matched_SLegm_lj"](objs, 0.4))[1][:,:].sum().pt),
+        ],
+    ),
+    "mu_mother_dp_Lmu": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 700, name="e_mother_all_Lmu", label=r"Gen $\mu$ PT (L Mu LJ, Mother: DP)"),
+                   lambda objs, mask: pick_mu_mother_category(derived_objs["fs_gen_matched_Lmu_lj"](objs, 0.4))[1][:,:].sum().pt),
+        ],
+    ),
+    "mu_mother_dp_SLmu": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 700, name="e_mother_all_SLmu", label=r"Gen $\mu$ PT (SL Mu LJ, Mother: DP)"),
+                   lambda objs, mask: pick_mu_mother_category(derived_objs["fs_gen_matched_SLmu_lj"](objs, 0.4))[1][:,:].sum().pt),
+        ],
+    ),
+    "mu_mother_Z_Legm": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 700, name="e_mother_all_Legm", label=r"Gen $\mu$ PT (L EGM LJ, Mother: Z)"),
+                   lambda objs, mask: pick_mu_mother_category(derived_objs["fs_gen_matched_Legm_lj"](objs, 0.4))[2][:,:].sum().pt),
+        ],
+    ),
+    "mu_mother_Z_SLegm": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 700, name="e_mother_all_SLegm", label=r"Gen $\mu$ PT (SL EGM LJ, Mother: Z)"),
+                   lambda objs, mask: pick_mu_mother_category(derived_objs["fs_gen_matched_SLegm_lj"](objs, 0.4))[2][:,:].sum().pt),
+        ],
+    ),
+    "mu_mother_Z_Lmu": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 700, name="e_mother_all_Lmu", label=r"Gen $\mu$ PT (L Mu LJ, Mother: Z)"),
+                   lambda objs, mask: pick_mu_mother_category(derived_objs["fs_gen_matched_Lmu_lj"](objs, 0.4))[2][:,:].sum().pt),
+        ],
+    ),
+    "mu_mother_Z_SLmu": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 700, name="e_mother_all_SLmu", label=r"Gen $\mu$ PT (SL Mu LJ, Mother: Z)"),
+                   lambda objs, mask: pick_mu_mother_category(derived_objs["fs_gen_matched_SLmu_lj"](objs, 0.4))[2][:,:].sum().pt),
+        ],
     ),
     # ABCD plane
     "lj_lj_absdphi_invmass": h.Histogram(
