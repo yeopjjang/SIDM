@@ -199,9 +199,11 @@ def pick_e_mother_category(obj):
     
     mask_dp = (abs(mother) == 32)
     mask_W = (abs(mother) == 24)
+    mask_D = (mother == 411) | (mother == 421) | (mother == 423) | (mother == 431)
+    mask_B = (mother == 511) | (mother == 521) | (mother == 531) | (mother == 541)
 
-    m_dp, m_W = obj[mask_dp], obj[mask_W]
-    return obj, m_dp, m_W
+    m_dp, m_W, m_D, m_B = obj[mask_dp], obj[mask_W], obj[mask_D], obj[mask_B]
+    return obj, m_dp, m_W, m_D, m_B
 
 def pick_mu_mother_category(obj):
     mu_mask = (abs(obj.pdgId) == 13)
@@ -228,9 +230,10 @@ def pick_pho_mother_category(obj):
     mask_Z = (abs(mother) == 23)
     mask_pion = (mother == 111) | (mother == 211)
     mask_qg = (mother == 1) | (mother == 2) | (mother == 3) | (mother == 4) | (mother == 5) | (mother == 6) | (mother == 9) | (mother == 21)
+    mask_D = (mother == 411) | (mother == 421) | (mother == 423) | (mother == 431)
     
-    m_e, m_mu, m_Z, m_pion, m_qg = obj[mask_e], obj[mask_mu], obj[mask_Z], obj[mask_pion], obj[mask_qg]
-    return obj, m_e, m_mu, m_Z, m_pion, m_qg
+    m_e, m_mu, m_Z, m_pion, m_qg, m_D = obj[mask_e], obj[mask_mu], obj[mask_Z], obj[mask_pion], obj[mask_qg], obj[mask_D]
+    return obj, m_e, m_mu, m_Z, m_pion, m_qg, m_D
 
 def drop_none(obj):
     """Remove None entries from an array (not available in Awkward 1)"""
