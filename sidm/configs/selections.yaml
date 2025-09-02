@@ -90,226 +90,87 @@ base_ljObjCut: &base_ljObjCut
   evt_cuts:
     - *evt_baseNoLj
     
-###################### Cross Cleaning Study
+# Cross Cleaning Studies
 baseNoLj_basic: &baseNoLj_basic
   obj_cuts: 
     <<: *obj_baseNoLjNoLjsource
     <<: *obj_ljsource_cuts
+  postLj_obj_cuts:
+    ljs: 
+      - "pT > 30 GeV"
+      - "|eta| < 2.4"
   evt_cuts: 
     - *evt_baseNoLjNoljsource
 
-baseNoLj_DP_matching: &baseNoLj_DP_matching
+baseNoLj_seg_veto_charge: &baseNoLj_seg_veto_charge
   obj_cuts: 
     <<: *obj_baseNoLjNoLjsource
-    electrons: 
-      - "pT > 10 GeV"
-      - "|eta| < 2.4"
-      - 'MVANonIsoWPL'
-    muons: 
-      - "looseID"
-      - "pT > 5 GeV"
-      - "|eta| < 2.4"
-      - "dR(mu, A) < 0.5" 
-      - "dR(mu, A) < 0.5 nested"
-    photons:
-      - "pT > 20 GeV"
-      - "|eta| < 2.5"
-      - 'Custom Cutbased'
-      - "pixelSeed"
-      - 'Photon DR Veto 0p025'
-    dsaMuons: 
-      - "pT > 10 GeV"
-      - "|eta| < 2.4"
-      - "displaced ID"
-      - "dR(mu, A) < 0.5"  
-      - "dR(mu, A) < 0.5 nested"
-  evt_cuts: 
-    - *evt_baseNoLjNoljsource
-
-baseNoLj_DP_matching_dR_cut: &baseNoLj_DP_matching_dR_cut
-  obj_cuts: 
-    <<: *obj_baseNoLjNoLjsource
-    electrons:
-      - "pT > 10 GeV"
-      - "|eta| < 2.4"
-      - 'MVANonIsoWPL'
-    muons: 
-      - "looseID"
-      - "pT > 5 GeV"
-      - "|eta| < 2.4"
-      - "dR(mu, A) < 0.5" 
-    photons:
-      - "pT > 20 GeV"
-      - "|eta| < 2.5"
-      - 'Custom Cutbased'
-      - "pixelSeed"
-      - 'Photon DR Veto 0p025'
-    dsaMuons:
-      - "pT > 10 GeV"
-      - "|eta| < 2.4"
-      - "displaced ID"
-      - "dR(mu, A) < 0.5"  
-  preLj_obj_cuts:
-    dsaMuons:
-      - "dR(dsa, pf) > 0.01"
-  evt_cuts: 
-    - *evt_baseNoLjNoljsource
-
-baseNoLj_DP_matching_seg_veto: &baseNoLj_DP_matching_seg_veto
-  obj_cuts: 
-    <<: *obj_baseNoLjNoLjsource
-    electrons: 
-      - "pT > 10 GeV"
-      - "|eta| < 2.4"
-      - 'MVANonIsoWPL'
-    muons: 
-      - "looseID"
-      - "pT > 5 GeV"
-      - "|eta| < 2.4"
-      - "dR(mu, A) < 0.5"
-      - "dR(mu, A) < 0.5 nested"
-    photons:
-      - "pT > 20 GeV"
-      - "|eta| < 2.5"
-      - 'Custom Cutbased'
-      - "pixelSeed"
-      - 'Photon DR Veto 0p025'
-    dsaMuons: 
-      - "pT > 10 GeV"
-      - "|eta| < 2.4"
-      - "displaced ID"
-      - "dR(mu, A) < 0.5" 
-      - "dR(mu, A) < 0.5 nested"
-  preLj_obj_cuts:
-    dsaMuons:
-      - "segmatch veto"
-  evt_cuts: 
-    - *evt_baseNoLjNoljsource
-
-baseNoLj_DP_matching_seg_veto_charge: &baseNoLj_DP_matching_seg_veto_charge
-  obj_cuts: 
-    <<: *obj_baseNoLjNoLjsource
-    electrons: 
-      - "pT > 10 GeV"
-      - "|eta| < 2.4"
-      - 'MVANonIsoWPL'
-    muons: 
-      - "looseID"
-      - "pT > 5 GeV"
-      - "|eta| < 2.4"
-      - "dR(mu, A) < 0.5"
-      - "dR(mu, A) < 0.5 nested"
-    photons:
-      - "pT > 20 GeV"
-      - "|eta| < 2.5"
-      - 'Custom Cutbased'
-      - "pixelSeed"
-      - 'Photon DR Veto 0p025'
-    dsaMuons: 
-      - "pT > 10 GeV"
-      - "|eta| < 2.4"
-      - "displaced ID"
-      - "dR(mu, A) < 0.5" 
-      - "dR(mu, A) < 0.5 nested"
+    <<: *obj_ljsource_cuts
   preLj_obj_cuts:
     dsaMuons:
       - "segmatch veto + charge"
+  postLj_obj_cuts:
+    ljs: 
+      - "pT > 30 GeV"
+      - "|eta| < 2.4"
   evt_cuts: 
     - *evt_baseNoLjNoljsource
 
-baseNoLj_DP_matching_seg_veto_dRouter: &baseNoLj_DP_matching_seg_veto_dRouter
+baseNoLj_seg_veto_dRouter: &baseNoLj_seg_veto_dRouter
   obj_cuts: 
     <<: *obj_baseNoLjNoLjsource
-    electrons: 
-      - "pT > 10 GeV"
-      - "|eta| < 2.4"
-      - 'MVANonIsoWPL'
-    muons: 
-      - "looseID"
-      - "pT > 5 GeV"
-      - "|eta| < 2.4"
-      - "dR(mu, A) < 0.5"
-      - "dR(mu, A) < 0.5 nested"
-    photons:
-      - "pT > 20 GeV"
-      - "|eta| < 2.5"
-      - 'Custom Cutbased'
-      - "pixelSeed"
-      - 'Photon DR Veto 0p025'
-    dsaMuons: 
-      - "pT > 10 GeV"
-      - "|eta| < 2.4"
-      - "displaced ID"
-      - "dR(mu, A) < 0.5" 
-      - "dR(mu, A) < 0.5 nested"
+    <<: *obj_ljsource_cuts
   preLj_obj_cuts:
     dsaMuons:
       - "segmatch veto + dR outer"
+  postLj_obj_cuts:
+    ljs: 
+      - "pT > 30 GeV"
+      - "|eta| < 2.4"
   evt_cuts: 
     - *evt_baseNoLjNoljsource
 
-baseNoLj_DP_matching_seg_veto_numseg: &baseNoLj_DP_matching_seg_veto_numseg
+baseNoLj_seg_veto_numseg: &baseNoLj_seg_veto_numseg
   obj_cuts: 
     <<: *obj_baseNoLjNoLjsource
-    electrons: 
-      - "pT > 10 GeV"
-      - "|eta| < 2.4"
-      - 'MVANonIsoWPL'
-    muons: 
-      - "looseID"
-      - "pT > 5 GeV"
-      - "|eta| < 2.4"
-      - "dR(mu, A) < 0.5"
-      - "dR(mu, A) < 0.5 nested"
-    photons:
-      - "pT > 20 GeV"
-      - "|eta| < 2.5"
-      - 'Custom Cutbased'
-      - "pixelSeed"
-      - 'Photon DR Veto 0p025'
-    dsaMuons: 
-      - "pT > 10 GeV"
-      - "|eta| < 2.4"
-      - "displaced ID"
-      - "dR(mu, A) < 0.5" 
-      - "dR(mu, A) < 0.5 nested"
+    <<: *obj_ljsource_cuts
   preLj_obj_cuts:
     dsaMuons:
       - "segmatch veto + num seg"
+  postLj_obj_cuts:
+    ljs: 
+      - "pT > 30 GeV"
+      - "|eta| < 2.4"
   evt_cuts: 
     - *evt_baseNoLjNoljsource
 
-baseNoLj_DP_matching_all: &baseNoLj_DP_matching_all
+baseNoLj_wocharge: &baseNoLj_wocharge
   obj_cuts: 
     <<: *obj_baseNoLjNoLjsource
-    electrons: 
-      - "pT > 10 GeV"
+    <<: *obj_ljsource_cuts
+  preLj_obj_cuts:
+    dsaMuons:
+      - "segmatch veto + dR outer + num seg"
+  postLj_obj_cuts:
+    ljs: 
+      - "pT > 30 GeV"
       - "|eta| < 2.4"
-      - 'MVANonIsoWPL'
-    muons: 
-      - "looseID"
-      - "pT > 5 GeV"
-      - "|eta| < 2.4"
-      - "dR(mu, A) < 0.5"
-      - "dR(mu, A) < 0.5 nested"
-    photons:
-      - "pT > 20 GeV"
-      - "|eta| < 2.5"
-      - 'Custom Cutbased'
-      - "pixelSeed"
-      - 'Photon DR Veto 0p025'
-    dsaMuons: 
-      - "pT > 10 GeV"
-      - "|eta| < 2.4"
-      - "displaced ID"
-      - "dR(mu, A) < 0.5" 
-      - "dR(mu, A) < 0.5 nested"
+  evt_cuts: 
+    - *evt_baseNoLjNoljsource
+    
+baseNoLj_all: &baseNoLj_all
+  obj_cuts: 
+    <<: *obj_baseNoLjNoLjsource
+    <<: *obj_ljsource_cuts
   preLj_obj_cuts:
     dsaMuons:
       - "all"
+  postLj_obj_cuts:
+    ljs: 
+      - "pT > 30 GeV"
+      - "|eta| < 2.4"
   evt_cuts: 
     - *evt_baseNoLjNoljsource
-#####################
 
 # add >=2 LJ requirement
 base: &base
