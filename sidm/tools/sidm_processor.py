@@ -196,8 +196,11 @@ class SidmProcessor(processor.ProcessorABC):
         unsafe_fields = ['muonIdxG','dsaIdxG','good_matched_muons','good_matched_dsa_muons']
         
         all_fields = list(set().union(*fields))
+        # for field in unsafe_fields:
+        #     all_fields.remove(field)
         for field in unsafe_fields:
-            all_fields.remove(field)
+            if field in all_fields:
+                all_fields.remove(field)
         
         muon_inputs = self.make_vector(objs, "muons", all_fields,  type_id=3)
         dsa_inputs = self.make_vector(objs, "dsaMuons", all_fields, type_id=8, mass=0.106)
