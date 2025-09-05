@@ -15,6 +15,28 @@ from sidm import BASE_DIR
 from sidm.tools import selection, cutflow, utilities
 from sidm.definitions.hists import hist_defs, counter_defs
 from sidm.definitions.objects import preLj_objs, postLj_objs
+import coffea.nanoevents.transforms as tr
+
+def _patched_local2global(stack):
+    """
+    Original: index,target_offsets,!local2global
+    Turn jagged local index into global index
+    """
+    # 원본과 동일한 로직
+    target_offsets = ak.Array(stack.pop())
+    index = ak.Array(stack.pop())
+    index = index.mask[index >= 0] + target_offsets[:-1]
+    index = index.mask[index < target_offsets[1:]]
+
+    out = ak.flatten(ak.fill_none(index, -1), axis=None)
+    # 핵심: 무조건 int64로 강제 캐스팅 (체크 제거)
+    out = ak.values_astype(out, np.int64)
+
+    stack.append(out)
+
+# 실제로 갈아끼우기
+tr.local2global = _patched_local2global
+# ---- end monkeypatch ----
 
 class SidmProcessor(processor.ProcessorABC):
     """Class to apply selections, make histograms, and make cutflows
@@ -196,11 +218,8 @@ class SidmProcessor(processor.ProcessorABC):
         unsafe_fields = ['muonIdxG','dsaIdxG','good_matched_muons','good_matched_dsa_muons']
         
         all_fields = list(set().union(*fields))
-        # for field in unsafe_fields:
-        #     all_fields.remove(field)
         for field in unsafe_fields:
-            if field in all_fields:
-                all_fields.remove(field)
+            all_fields.remove(field)
         
         muon_inputs = self.make_vector(objs, "muons", all_fields,  type_id=3)
         dsa_inputs = self.make_vector(objs, "dsaMuons", all_fields, type_id=8, mass=0.106)
