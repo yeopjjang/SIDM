@@ -22,21 +22,16 @@ def _patched_local2global(stack):
     Original: index,target_offsets,!local2global
     Turn jagged local index into global index
     """
-    # 원본과 동일한 로직
     target_offsets = ak.Array(stack.pop())
     index = ak.Array(stack.pop())
     index = index.mask[index >= 0] + target_offsets[:-1]
     index = index.mask[index < target_offsets[1:]]
 
     out = ak.flatten(ak.fill_none(index, -1), axis=None)
-    # 핵심: 무조건 int64로 강제 캐스팅 (체크 제거)
     out = ak.values_astype(out, np.int64)
 
     stack.append(out)
-
-# 실제로 갈아끼우기
 tr.local2global = _patched_local2global
-# ---- end monkeypatch ----
 
 class SidmProcessor(processor.ProcessorABC):
     """Class to apply selections, make histograms, and make cutflows
