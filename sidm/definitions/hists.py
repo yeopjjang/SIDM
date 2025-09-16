@@ -28,10 +28,6 @@ counter_defs = {
     "Gen As to electrons": lambda objs: ak.count(objs["genAs_toE"].pt),
     "Matched gen As to muons": lambda objs: ak.count(derived_objs["genAs_toMu_matched_lj"](objs, 0.4).pt),
     "Matched gen As to electrons": lambda objs: ak.count(derived_objs["genAs_toE_matched_lj"](objs, 0.4).pt),
-
-    # "LJ": lambda objs: objs["ljs"],
-    # "mLJ": lambda objs: objs["mu_ljs"],
-    # "eLJ": lambda objs: objs["egm_ljs"],
 }
 
 
@@ -1288,13 +1284,21 @@ hist_defs = {
         ],
         evt_mask=lambda objs: (ak.num(objs["mu_ljs"]) > 0) & (ak.num(objs["egm_ljs"]) > 0),
     ),
-    "lj_lj_invmass_nosel_2": h.Histogram(
+    "lj_lj_invmass_nosel_2mu2e": h.Histogram(
         [
             h.Axis(hist.axis.Regular(100, 0, 1200, name="ljlj_mass",
                                      label=r"Invariant Mass ($LJ_{0}$, $LJ_{1}$)"),
                    lambda objs, mask: (objs["mu_ljs"][mask,:1] + objs["egm_ljs"][mask,:1]).mass),
         ],
         evt_mask=lambda objs: (ak.num(objs["mu_ljs"]) > 0) & (ak.num(objs["egm_ljs"]) > 0),
+    ),
+    "lj_lj_invmass_nosel_4mu": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(100, 0, 1200, name="ljlj_mass",
+                                     label=r"Invariant Mass ($LJ_{0}$, $LJ_{1}$)"),
+                   lambda objs, mask: objs["mu_ljs"][mask, :2].sum().mass),
+        ],
+        evt_mask=lambda objs: (ak.num(objs["mu_ljs"]) > 1),
     ),
     "lj_lj_invmass_noDSA": h.Histogram(
         [
@@ -1304,7 +1308,7 @@ hist_defs = {
         ],
         evt_mask=lambda objs: (ak.num(objs["mu_ljs"]) > 0) & (ak.num(objs["egm_ljs"]) > 0)  & (ak.any(objs["mu_ljs"][:,:1].dsaMu_n == 0, axis=1)),
     ),
-    "lj_lj_invmass_noDSA_2": h.Histogram(
+    "lj_lj_invmass_noDSA_2mu2e": h.Histogram(
         [
             h.Axis(hist.axis.Regular(100, 0, 1200, name="ljlj_mass",
                                      label=r"Invariant Mass ($LJ_{0}$, $LJ_{1}$)"),
@@ -1320,7 +1324,7 @@ hist_defs = {
         ],
         evt_mask=lambda objs: (ak.num(objs["mu_ljs"]) > 0) & (ak.num(objs["egm_ljs"]) > 0)  & (ak.any(objs["mu_ljs"][:,:1].dsaMu_n == 1, axis=1)),
     ),
-    "lj_lj_invmass_oneDSA_2": h.Histogram(
+    "lj_lj_invmass_oneDSA_2mu2e": h.Histogram(
         [
             h.Axis(hist.axis.Regular(100, 0, 1200, name="ljlj_mass",
                                      label=r"Invariant Mass ($LJ_{0}$, $LJ_{1}$)"),
@@ -1336,7 +1340,7 @@ hist_defs = {
         ],
         evt_mask=lambda objs: (ak.num(objs["mu_ljs"]) > 0) & (ak.num(objs["egm_ljs"]) > 0)  & (ak.any(objs["mu_ljs"][:,:1].dsaMu_n == 2, axis=1)),
     ),
-    "lj_lj_invmass_twoDSA_2": h.Histogram(
+    "lj_lj_invmass_twoDSA_2mu2e": h.Histogram(
         [
             h.Axis(hist.axis.Regular(100, 0, 1200, name="ljlj_mass",
                                      label=r"Invariant Mass ($LJ_{0}$, $LJ_{1}$)"),
@@ -1352,7 +1356,7 @@ hist_defs = {
         ],
         evt_mask=lambda objs: (ak.num(objs["mu_ljs"]) > 0) & (ak.num(objs["egm_ljs"]) > 0)  & (ak.any(objs["mu_ljs"][:,:1].pfMu_n == 0, axis=1)),
     ),
-    "lj_lj_invmass_noPF_2": h.Histogram(
+    "lj_lj_invmass_noPF_2mu2e": h.Histogram(
         [
             h.Axis(hist.axis.Regular(100, 0, 1200, name="ljlj_mass",
                                      label=r"Invariant Mass ($LJ_{0}$, $LJ_{1}$)"),
@@ -1368,7 +1372,7 @@ hist_defs = {
         ],
         evt_mask=lambda objs: (ak.num(objs["mu_ljs"]) > 0) & (ak.num(objs["egm_ljs"]) > 0)  & (ak.any(objs["mu_ljs"][:,:1].pfMu_n == 0, axis=1)) & (ak.any(objs["mu_ljs"][:,:1].dsaMu_n == 0, axis=1)),
     ),
-    "lj_lj_invmass_noPF_noDSA_2": h.Histogram(
+    "lj_lj_invmass_noPF_noDSA_2mu2e": h.Histogram(
         [
             h.Axis(hist.axis.Regular(100, 0, 1200, name="ljlj_mass",
                                      label=r"Invariant Mass ($LJ_{0}$, $LJ_{1}$)"),
@@ -1384,7 +1388,7 @@ hist_defs = {
         ],
         evt_mask=lambda objs: (ak.num(objs["mu_ljs"]) > 0) & (ak.num(objs["egm_ljs"]) > 0)  & (ak.any(objs["mu_ljs"][:,:1].pfMu_n == 0, axis=1)) & (ak.any(objs["mu_ljs"][:,:1].dsaMu_n == 1, axis=1)),
     ),
-    "lj_lj_invmass_noPF_oneDSA_2": h.Histogram(
+    "lj_lj_invmass_noPF_oneDSA_2mu2e": h.Histogram(
         [
             h.Axis(hist.axis.Regular(100, 0, 1200, name="ljlj_mass",
                                      label=r"Invariant Mass ($LJ_{0}$, $LJ_{1}$)"),
@@ -1400,7 +1404,7 @@ hist_defs = {
         ],
         evt_mask=lambda objs: (ak.num(objs["mu_ljs"]) > 0) & (ak.num(objs["egm_ljs"]) > 0)  & (ak.any(objs["mu_ljs"][:,:1].pfMu_n == 0, axis=1)) & (ak.any(objs["mu_ljs"][:,:1].dsaMu_n == 2, axis=1)),
     ),
-    "lj_lj_invmass_noPF_twoDSA_2": h.Histogram(
+    "lj_lj_invmass_noPF_twoDSA_2mu2e": h.Histogram(
         [
             h.Axis(hist.axis.Regular(100, 0, 1200, name="ljlj_mass",
                                      label=r"Invariant Mass ($LJ_{0}$, $LJ_{1}$)"),
@@ -1416,7 +1420,7 @@ hist_defs = {
         ],
         evt_mask=lambda objs: (ak.num(objs["mu_ljs"]) > 0) & (ak.num(objs["egm_ljs"]) > 0)  & (ak.any(objs["mu_ljs"][:,:1].pfMu_n == 1, axis=1)),
     ),
-    "lj_lj_invmass_onePF_2": h.Histogram(
+    "lj_lj_invmass_onePF_2mu2e": h.Histogram(
         [
             h.Axis(hist.axis.Regular(100, 0, 1200, name="ljlj_mass",
                                      label=r"Invariant Mass ($LJ_{0}$, $LJ_{1}$)"),
@@ -1432,7 +1436,7 @@ hist_defs = {
         ],
         evt_mask=lambda objs: (ak.num(objs["mu_ljs"]) > 0) & (ak.num(objs["egm_ljs"]) > 0)  & (ak.any(objs["mu_ljs"][:,:1].pfMu_n == 1, axis=1)) & (ak.any(objs["mu_ljs"][:,:1].dsaMu_n == 0, axis=1)),
     ),
-    "lj_lj_invmass_onePF_noDSA_2": h.Histogram(
+    "lj_lj_invmass_onePF_noDSA_2mu2e": h.Histogram(
         [
             h.Axis(hist.axis.Regular(100, 0, 1200, name="ljlj_mass",
                                      label=r"Invariant Mass ($LJ_{0}$, $LJ_{1}$)"),
@@ -1448,7 +1452,7 @@ hist_defs = {
         ],
         evt_mask=lambda objs: (ak.num(objs["mu_ljs"]) > 0) & (ak.num(objs["egm_ljs"]) > 0)  & (ak.any(objs["mu_ljs"][:,:1].pfMu_n == 1, axis=1)) & (ak.any(objs["mu_ljs"][:,:1].dsaMu_n == 1, axis=1)),
     ),
-    "lj_lj_invmass_onePF_oneDSA_2": h.Histogram(
+    "lj_lj_invmass_onePF_oneDSA_2mu2e": h.Histogram(
         [
             h.Axis(hist.axis.Regular(100, 0, 1200, name="ljlj_mass",
                                      label=r"Invariant Mass ($LJ_{0}$, $LJ_{1}$)"),
@@ -1464,7 +1468,7 @@ hist_defs = {
         ],
         evt_mask=lambda objs: (ak.num(objs["mu_ljs"]) > 0) & (ak.num(objs["egm_ljs"]) > 0)  & (ak.any(objs["mu_ljs"][:,:1].pfMu_n == 1, axis=1)) & (ak.any(objs["mu_ljs"][:,:1].dsaMu_n == 2, axis=1)),
     ),
-    "lj_lj_invmass_onePF_twoDSA_2": h.Histogram(
+    "lj_lj_invmass_onePF_twoDSA_2mu2e": h.Histogram(
         [
             h.Axis(hist.axis.Regular(100, 0, 1200, name="ljlj_mass",
                                      label=r"Invariant Mass ($LJ_{0}$, $LJ_{1}$)"),
@@ -1480,7 +1484,7 @@ hist_defs = {
         ],
         evt_mask=lambda objs: (ak.num(objs["mu_ljs"]) > 0) & (ak.num(objs["egm_ljs"]) > 0)  & (ak.any(objs["mu_ljs"][:,:1].pfMu_n == 2, axis=1)),
     ),
-    "lj_lj_invmass_twoPF_2": h.Histogram(
+    "lj_lj_invmass_twoPF_2mu2e": h.Histogram(
         [
             h.Axis(hist.axis.Regular(100, 0, 1200, name="ljlj_mass",
                                      label=r"Invariant Mass ($LJ_{0}$, $LJ_{1}$)"),
@@ -1496,7 +1500,7 @@ hist_defs = {
         ],
         evt_mask=lambda objs: (ak.num(objs["mu_ljs"]) > 0) & (ak.num(objs["egm_ljs"]) > 0)  & (ak.any(objs["mu_ljs"][:,:1].pfMu_n == 2, axis=1)) & (ak.any(objs["mu_ljs"][:,:1].dsaMu_n == 0, axis=1)),
     ),
-    "lj_lj_invmass_twoPF_noDSA_2": h.Histogram(
+    "lj_lj_invmass_twoPF_noDSA_2mu2e": h.Histogram(
         [
             h.Axis(hist.axis.Regular(100, 0, 1200, name="ljlj_mass",
                                      label=r"Invariant Mass ($LJ_{0}$, $LJ_{1}$)"),
@@ -1512,7 +1516,7 @@ hist_defs = {
         ],
         evt_mask=lambda objs: (ak.num(objs["mu_ljs"]) > 0) & (ak.num(objs["egm_ljs"]) > 0)  & (ak.any(objs["mu_ljs"][:,:1].pfMu_n == 2, axis=1)) & (ak.any(objs["mu_ljs"][:,:1].dsaMu_n == 1, axis=1)),
     ),
-    "lj_lj_invmass_twoPF_oneDSA_2": h.Histogram(
+    "lj_lj_invmass_twoPF_oneDSA_2mu2e": h.Histogram(
         [
             h.Axis(hist.axis.Regular(100, 0, 1200, name="ljlj_mass",
                                      label=r"Invariant Mass ($LJ_{0}$, $LJ_{1}$)"),
@@ -1528,7 +1532,7 @@ hist_defs = {
         ],
         evt_mask=lambda objs: (ak.num(objs["mu_ljs"]) > 0) & (ak.num(objs["egm_ljs"]) > 0)  & (ak.any(objs["mu_ljs"][:,:1].pfMu_n == 2, axis=1)) & (ak.any(objs["mu_ljs"][:,:1].dsaMu_n == 2, axis=1)),
     ),
-    "lj_lj_invmass_twoPF_twoDSA_2": h.Histogram(
+    "lj_lj_invmass_twoPF_twoDSA_2mu2e": h.Histogram(
         [
             h.Axis(hist.axis.Regular(100, 0, 1200, name="ljlj_mass",
                                      label=r"Invariant Mass ($LJ_{0}$, $LJ_{1}$)"),

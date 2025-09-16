@@ -1,6 +1,6 @@
 # TTJets, DY-->MuMU, and QCD backgrounds
 skimmed_llpNanoAOD_v2:
-  path: root://xcache//store/group/lpcmetx/SIDM/Backgrounds/2018_v2/Skims/
+  path: root://xcache//store/group/lpcmetx/SIDM/Backgrounds/2018_v2/Skims/  
   samples:
     DYJetsToMuMu_M10to50:
       files:
