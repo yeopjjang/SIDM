@@ -100,7 +100,8 @@ baseNoLj_basic: &baseNoLj_basic
       - "pT > 30 GeV"
       - "|eta| < 2.4"
   evt_cuts: 
-    - *evt_baseNoLjNoljsource
+    - *evt_baseNoLj
+    - ">=2 LJs"
 
 baseNoLj_seg_veto_charge: &baseNoLj_seg_veto_charge
   obj_cuts: 
@@ -179,6 +180,17 @@ base: &base
   postLj_obj_cuts:
     <<: *base_postLj_obj_cuts
   evt_cuts: &evt_base
+    - *evt_baseNoLj
+    - ">=2 LJs"
+
+base_preCC: &base_preCC
+  obj_cuts:
+    <<: *obj_baseNoLj
+    dsaMuons:
+    - "dR(dsa, pf) > 0.2"
+  postLj_obj_cuts:
+    <<: *base_postLj_obj_cuts
+  evt_cuts:
     - *evt_baseNoLj
     - ">=2 LJs"
 
