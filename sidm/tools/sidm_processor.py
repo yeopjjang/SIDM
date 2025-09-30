@@ -286,7 +286,10 @@ class SidmProcessor(processor.ProcessorABC):
 
         # LJ isolation
         ljs["matched_jet"] = ljs.nearest(objs["jets"], threshold=0.4)       
-        ljs["isolation"] = ak.fill_none((ljs["matched_jet"].energy / ljs.energy) * (1 - (ljs["matched_jet"].chEmEF + ljs["matched_jet"].neEmEF + ljs["matched_jet"].muEF)), 0)
+        ljs["lepton_fraction"] =  ljs["matched_jet"].chEmEF + ljs["matched_jet"].neEmEF + ljs["matched_jet"].muEF
+        ljs["isolation"] = ak.fill_none((ljs["matched_jet"].energy / ljs.energy) * (1 - (ljs["lepton_fraction"])), 0)
+        ljs["dR_matched_jet"] = ljs.delta_r(ljs["matched_jet"])
+        # todo: add LJ displacement
         
         # todo: add LJ displacement
 

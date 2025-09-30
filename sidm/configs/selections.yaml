@@ -206,6 +206,34 @@ base_CC: &base_CC
     - *evt_baseNoLj
     - ">=2 LJs"
 
+base_CC_isosel: &base_CC_isosel
+  obj_cuts:
+    <<: *obj_baseNoLj
+  preLj_obj_cuts:
+    dsaMuons:
+      - "all"
+  postLj_obj_cuts:
+    <<: *base_postLj_obj_cuts
+    ljs: 
+      - "iso < 0.2"
+  evt_cuts:
+    - *evt_baseNoLj
+    - ">=2 LJs"
+    
+base_CC_nonisosel: &base_CC_nonisosel
+  obj_cuts:
+    <<: *obj_baseNoLj
+  preLj_obj_cuts:
+    dsaMuons:
+      - "all"
+  postLj_obj_cuts:
+    <<: *base_postLj_obj_cuts
+    ljs: 
+      - "iso >= 0.2"
+  evt_cuts:
+    - *evt_baseNoLj
+    - ">=2 LJs"
+
 4mu: &4mu
   <<: *base
   evt_cuts: &evt_4mu

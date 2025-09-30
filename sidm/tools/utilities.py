@@ -94,6 +94,56 @@ def lj_combination_dR(obj):
     max_dR = ak.max(dR_general(pair["lj1"], pair["lj2"]), axis=1)
     return dR, min_dR, max_dR
 
+def pick_leptonlike_pdgid(obj):
+    mask_e = (abs(obj.pdgId) == 11)
+    mask_mu = (abs(obj.pdgId) == 13)
+    mask_pho = (abs(obj.pdgId) == 22)
+
+    e, mu, pho = obj[mask_e], obj[mask_mu], obj[mask_pho]
+    return e, mu, pho
+
+def pick_e_mother_category(obj):
+    e_mask = (abs(obj.pdgId) == 11)
+    obj = obj[e_mask]
+    mother = obj.distinctParent.pdgId
+    
+    mask_dp = (abs(mother) == 32)
+    mask_W = (abs(mother) == 24)
+    mask_DB = (mother == 411) | (mother == 421) | (mother == 423) | (mother == 431) | (mother == 511) | (mother == 521) | (mother == 531) | (mother == 541)
+    mask_pion = (mother == 111) | (mother == 211)
+
+    m_dp, m_W, m_DB, m_pion = obj[mask_dp], obj[mask_W], obj[mask_DB], obj[mask_pion]
+    return obj, m_dp, m_W, m_DB, m_pion
+
+def pick_mu_mother_category(obj):
+    mu_mask = (abs(obj.pdgId) == 13)
+    obj = obj[mu_mask]
+    mother = abs(obj.distinctParent.pdgId)
+    
+    mask_dp = (mother == 32)
+    mask_Z = (mother == 23)
+    mask_D = (mother == 411) | (mother == 421) | (mother == 423) | (mother == 431)
+    mask_B = (mother == 511) | (mother == 521) | (mother == 531) | (mother == 541)
+    mask_qg = (mother == 1) | (mother == 2) | (mother == 3) | (mother == 4) | (mother == 5) | (mother == 6) | (mother == 9) | (mother == 21)
+    mask_pion = (mother == 111) | (mother == 211)
+    
+    m_dp, m_Z, m_D, m_B, m_qg, m_pion = obj[mask_dp], obj[mask_Z], obj[mask_D], obj[mask_B], obj[mask_qg], obj[mask_pion]
+    return obj, m_dp, m_Z, m_D, m_B, m_qg, m_pion
+
+def pick_pho_mother_category(obj):
+    pho_mask = (abs(obj.pdgId) == 22)
+    obj = obj[pho_mask]
+    mother = obj.distinctParent.pdgId
+    
+    mask_e = (abs(mother) == 11)
+    mask_mu = (abs(mother) == 13)
+    mask_Z = (abs(mother) == 23)
+    mask_pion = (mother == 111) | (mother == 211)
+    mask_qg = (mother == 1) | (mother == 2) | (mother == 3) | (mother == 4) | (mother == 5) | (mother == 6) | (mother == 9) | (mother == 21)
+    
+    m_e, m_mu, m_Z, m_pion, m_qg = obj[mask_e], obj[mask_mu], obj[mask_Z], obj[mask_pion], obj[mask_qg]
+    return obj, m_e, m_mu, m_Z, m_pion, m_qg
+
 def rho(obj, ref=None, use_v=False):
     """Return transverse distance between object and reference (default reference is 0,0)"""
     if use_v:
