@@ -183,7 +183,7 @@ dsaMuon_lj_base: &dsaMuon_lj_base
   - "dsaMuon_lj_dR_lowRange"
 
 lj_lj_base: &lj_lj_base
-  - "lj_lj_absdphi"
+  # - "lj_lj_absdphi"
   - "lj_lj_invmass"
   - "lj_lj_invmass_lowRange"
   - "lj_lj_absdR"
@@ -279,6 +279,8 @@ isolation_base: &isolation_base
   - "electron_lj_isolation_zoom"
   - "photon_lj_isolation"
   - "photon_lj_isolation_zoom"
+
+  - "lj_lj_absdphi"
 
 energy_transfer_base: &energy_transfer_base
   - "e_mother_all_Legm"
