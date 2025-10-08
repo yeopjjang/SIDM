@@ -282,6 +282,13 @@ isolation_base: &isolation_base
 
   - "lj_lj_absdphi"
 
+mother_tracking_base: &mother_tracking_base
+  - "fs_gen_id"
+  - "fs_gen_mother_id"
+  - "fs_e_gen_mother_id"
+  - "fs_mu_gen_mother_id"
+  - "fs_pho_gen_mother_id"
+
 energy_transfer_base: &energy_transfer_base
   - "e_mother_all_Legm"
   - "e_mother_all_SLegm"
