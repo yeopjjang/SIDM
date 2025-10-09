@@ -214,7 +214,10 @@ class SidmProcessor(processor.ProcessorABC):
 
         all_fields = list(set().union(*fields))
         for field in unsafe_fields:
-            all_fields.remove(field)
+            try:
+                all_fields.remove(field)
+            except ValueError:
+                continue
 
         muon_inputs = self.make_vector(objs, "muons", all_fields,  type_id=3)
         dsa_inputs = self.make_vector(objs, "dsaMuons", all_fields, type_id=8, mass=0.106)
