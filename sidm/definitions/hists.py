@@ -1,6 +1,4 @@
-""" CLEAN BRANCH!!
-
-Define all available histograms
+"""Define all available histograms
 
 All hists are defined as Histogram objects whose axes are given as a list of Axis objects, which
 bundle a hist.axis with a function that defines how the axis will be filled. The underlying
