@@ -319,12 +319,12 @@ def get_lumi(year, cfg="run_periods.yaml"):
     lumi_menu = load_yaml(f"{BASE_DIR}/configs/" + cfg)
     return lumi_menu[year]["lumi"]
 
-def get_lumixs_weight(dataset, year, n_evts):
+def get_lumixs_weight(dataset, year, sum_weights):
     """Get weights to scale n_evts to lumi*xs"""
-    # n_evts: actual number of events processed
+    # n_evts: sum of weights from processed events
     lumi = get_lumi(year)
     xs = get_xs(dataset)
-    return lumi*xs/n_evts
+    return lumi*xs/sum_weights
 
 def check_variablePhoton(value, min_val=0b01):
     """
@@ -377,3 +377,8 @@ def returnBitMapTArrayPhoton(bitMap, var1, var2):
                 temp.append(False)
         tList.append(temp)
     return ak.Array(tList)
+
+def numClose(self, other, r):
+    distance = other.metric_table(self)
+    close = ak.count(distance[distance < r], axis=1)
+    return close
