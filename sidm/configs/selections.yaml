@@ -173,6 +173,36 @@ baseNoLj_all: &baseNoLj_all
   evt_cuts: 
     - *evt_baseNoLjNoljsource
 
+testsetone: &testsetone
+  obj_cuts: 
+    <<: *obj_baseNoLjNoLjsource
+    <<: *obj_ljsource_cuts
+  preLj_obj_cuts:
+    dsaMuons:
+      - "all"
+  postLj_obj_cuts:
+    ljs: 
+      - "pT > 30 GeV"
+      - "|eta| < 2.4"
+      - "mu_charge == 0"
+  evt_cuts: 
+    - *evt_baseNoLjNoljsource
+
+testsettwo: &testsettwo
+  obj_cuts: 
+    <<: *obj_baseNoLjNoLjsource
+    <<: *obj_ljsource_cuts
+  preLj_obj_cuts:
+    dsaMuons:
+      - "all"
+  postLj_obj_cuts:
+    ljs: 
+      - "pT > 30 GeV"
+      - "|eta| < 2.4"
+  evt_cuts: 
+    - *evt_baseNoLjNoljsource
+    - ">=2 LJs"
+
 # add >=2 LJ requirement  
 base: &base
   obj_cuts: &obj_base
@@ -1050,3 +1080,22 @@ baseNoLj_A_mumu_matched_lj_noPfMatch_highLjPt: &baseNoLj_A_mumu_matched_lj_noPfM
   evt_cuts:
     - *evt_pv_cuts
     - "genAs_toMu_matched_muLj"
+
+noLj2dsamu: &noLj2dsamu
+  obj_cuts: 
+    <<: *obj_baseNoLj
+    genAs_toMu:
+      - ">= 2 close dsaMu"
+  evt_cuts: 
+    - *evt_baseNoLj
+
+noLj2dsamuCC: &noLj2dsamuCC
+  obj_cuts:
+    <<: *obj_baseNoLj
+    genAs_toMu:
+      - ">= 2 close dsaMu"
+  preLj_obj_cuts:
+    dsaMuons:
+      - "all"
+  evt_cuts: 
+    - *evt_baseNoLj

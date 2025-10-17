@@ -4,7 +4,7 @@
 import awkward as ak
 # local
 from sidm.definitions.objects import derived_objs
-from sidm.tools.utilities import dR, lxy, rho, check_bits, returnBitMapTArrayPhoton, dR_outer
+from sidm.tools.utilities import dR, lxy, rho, check_bits, returnBitMapTArrayPhoton, dR_outer, numClose
 
 obj_cut_defs = {
     "pvs": {
@@ -34,6 +34,10 @@ obj_cut_defs = {
         "pfDsaMuLj": lambda objs: (ak.num(objs["ljs"].pfMuons) > 0) & (ak.num(objs["ljs"].dsaMuons) > 0),
         "iso < 0.2": lambda objs: objs["ljs"].isolation < 0.2,
         "iso >= 0.2": lambda objs: objs["ljs"].isolation >= 0.2,
+        "L iso < 0.2": lambda objs: objs["ljs"][:,0:1].isolation < 0.2,
+        "SL iso < 0.2": lambda objs: objs["ljs"][:,1:2].isolation < 0.2,   
+        "BOTH": lambda objs: objs["ljs"][:,0:2].isolation < 0.2, 
+        
     },
     "egm_ljs": {
         "eLj": lambda objs: (objs["egm_ljs"].electron_n > 0) & (objs["egm_ljs"].photon_n == 0),
@@ -91,6 +95,7 @@ obj_cut_defs = {
         "lxy <= 400 cm": lambda objs: lxy(objs["genAs_toMu"]) <= 400,
         "pT > 30 GeV": lambda objs: objs["genAs_toMu"].pt > 30,
         "pT < 300 GeV": lambda objs: objs["genAs_toMu"].pt < 300,
+        ">= 2 close dsaMu": lambda objs: numClose(objs["genAs_toMu"], objs["dsaMuons"], 0.4) >= 2,
     },
     "genAs_toE": {
         "dR(A, LJ) < 0.2": lambda objs: dR(objs["genAs_toE"], objs["ljs"]) < 0.2,
@@ -180,6 +185,14 @@ obj_cut_defs = {
         "dR(mu, A) < 0.5": lambda objs, dsa: dR(dsa, objs["genAs_toMu"]) < 0.5,
         "dR(mu, A) < 0.5 nested": lambda objs, dsa: dR(dsa, objs["genAs_toMu"][:,:,None]) < 0.5,   
         "dR(dsa, pf) > 0.2": lambda objs, dsa: dR(dsa, objs["muons"]) > 0.2,
+        # "segmatch veto": lambda objs: ak.all((objs["dsaMuons"].good_matched_muons.numMatch < 1) | (ak.is_none(objs["dsaMuons"].good_matched_muons, axis=2)), axis=2),
+        # "segmatch veto + charge": lambda objs: ak.all((objs["dsaMuons"].good_matched_muons.numMatch < 1) | (objs["dsaMuons"].charge[:,:,None] != objs["dsaMuons"].good_matched_muons.charge) | (ak.is_none(objs["dsaMuons"].good_matched_muons, axis=2)), axis=2),
+        # "segmatch veto + dR outer": lambda objs: ak.all((objs["dsaMuons"].good_matched_muons.numMatch < 1) | (dR_outer(objs["dsaMuons"][:,:,None], objs["dsaMuons"].good_matched_muons) > 0.1) | (ak.is_none(objs["dsaMuons"].good_matched_muons, axis=2)), axis=2),
+        # "segmatch veto + num seg": lambda objs: ak.all((objs["dsaMuons"].good_matched_muons.numMatch < 1) | (objs["dsaMuons"].good_matched_muons.numMatch/(objs["dsaMuons"].nSegments[:,:,None]) < 0.34) | (ak.is_none(objs["dsaMuons"].good_matched_muons, axis=2)), axis=2),
+        # "segmatch veto + dR outer + num seg": lambda objs: ak.all((objs["dsaMuons"].good_matched_muons.numMatch < 1) | (dR_outer(objs["dsaMuons"][:,:,None], objs["dsaMuons"].good_matched_muons) > 0.1) |
+        #                             (objs["dsaMuons"].good_matched_muons.numMatch/(objs["dsaMuons"].nSegments[:,:,None]) < 0.34) | (ak.is_none(objs["dsaMuons"].good_matched_muons, axis=2)), axis=2),
+        # "all": lambda objs: ak.all((objs["dsaMuons"].good_matched_muons.numMatch < 1) | (objs["dsaMuons"].charge[:,:,None] != objs["dsaMuons"].good_matched_muons.charge) | (dR_outer(objs["dsaMuons"][:,:,None], objs["dsaMuons"].good_matched_muons) > 0.1) |
+        #                             (objs["dsaMuons"].good_matched_muons.numMatch/(objs["dsaMuons"].nSegments[:,:,None]) < 0.34) | (ak.is_none(objs["dsaMuons"].good_matched_muons, axis=2)), axis=2),
     },
 }
 
@@ -225,4 +238,5 @@ evt_cut_defs = {
     "50 GeV <= GenMu0_pT <= 60 GeV": lambda objs : (objs["genMus"][:, 0].pt >=50) & (objs["genMus"][:, 0].pt <=60),
     "genMus": lambda objs: ak.num(objs["genMus"]) > 1,
     "dR(Mu_0, Mu_1) > 0.03": lambda objs: objs["genMus"][:,0].delta_r(objs["genMus"][:,1]) > 0.03,
+    "BOTH": lambda objs: objs["ljs"][:,0:2].isolation < 0.2, 
 }
