@@ -2370,28 +2370,28 @@ hist_defs = {
     ),
     "mu_m_mother_all_Legm": h.Histogram(
         [
-            h.Axis(hist.axis.Regular(100, 0, 1000, name="mu_mother_all_Legm", label=r"Gen $\mu$ Mass (L EGM LJ, Mother: Inclusive)"),
+            h.Axis(hist.axis.Regular(100, 0, 200, name="mu_mother_all_Legm", label=r"Gen $\mu$ Mass (L EGM LJ, Mother: Inclusive)"),
                    lambda objs, mask: pick_mu_mother_category(derived_objs["fs_gen_matched_Legm_lj"](objs, 0.4))[0][mask,:].sum().mass),
         ],
         evt_mask=lambda objs: pick_mu_mother_category(derived_objs["fs_gen_matched_Legm_lj"](objs, 0.4))[0][:,:].sum().mass > 0,
     ),
     "mu_m_mother_all_SLegm": h.Histogram(
         [
-            h.Axis(hist.axis.Regular(100, 0, 1000, name="mu_mother_all_SLegm", label=r"Gen $\mu$ Mass (SL EGM LJ, Mother: Inclusive)"),
+            h.Axis(hist.axis.Regular(100, 0, 200, name="mu_mother_all_SLegm", label=r"Gen $\mu$ Mass (SL EGM LJ, Mother: Inclusive)"),
                    lambda objs, mask: pick_mu_mother_category(derived_objs["fs_gen_matched_SLegm_lj"](objs, 0.4))[0][mask,:].sum().mass),
         ],
         evt_mask=lambda objs: pick_mu_mother_category(derived_objs["fs_gen_matched_SLegm_lj"](objs, 0.4))[0][:,:].sum().mass > 0,
     ),
     "mu_m_mother_all_Lmu": h.Histogram(
         [
-            h.Axis(hist.axis.Regular(100, 0, 1000, name="mu_mother_all_Lmu", label=r"Gen $\mu$ Mass (L Mu LJ, Mother: Inclusive)"),
+            h.Axis(hist.axis.Regular(100, 0, 200, name="mu_mother_all_Lmu", label=r"Gen $\mu$ Mass (L Mu LJ, Mother: Inclusive)"),
                    lambda objs, mask: pick_mu_mother_category(derived_objs["fs_gen_matched_Lmu_lj"](objs, 0.4))[0][mask,:].sum().mass),
         ],
         evt_mask=lambda objs: pick_mu_mother_category(derived_objs["fs_gen_matched_Lmu_lj"](objs, 0.4))[0][:,:].sum().mass > 0,
     ),
     "mu_m_mother_all_SLmu": h.Histogram(
         [
-            h.Axis(hist.axis.Regular(100, 0, 1000, name="mu_mother_all_SLmu", label=r"Gen $\mu$ Mass (SL Mu LJ, Mother: Inclusive)"),
+            h.Axis(hist.axis.Regular(100, 0, 200, name="mu_mother_all_SLmu", label=r"Gen $\mu$ Mass (SL Mu LJ, Mother: Inclusive)"),
                    lambda objs, mask: pick_mu_mother_category(derived_objs["fs_gen_matched_SLmu_lj"](objs, 0.4))[0][mask,:].sum().mass),
         ],
         evt_mask=lambda objs: pick_mu_mother_category(derived_objs["fs_gen_matched_SLmu_lj"](objs, 0.4))[0][:,:].sum().mass > 0,
