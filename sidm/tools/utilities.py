@@ -109,8 +109,8 @@ def pick_e_mother_category(obj):
     
     mask_dp = (abs(mother) == 32)
     mask_W = (abs(mother) == 24)
-    mask_DB = (mother == 411) | (mother == 421) | (mother == 423) | (mother == 431) | (mother == 511) | (mother == 521) | (mother == 531) | (mother == 541)
-    mask_pion = (mother == 111) | (mother == 211)
+    mask_DB = (abs(mother) == 411) | (abs(mother) == 421) | (abs(mother) == 423) | (abs(mother) == 431) | (abs(mother) == 511) | (abs(mother) == 521) | (abs(mother) == 531) | (abs(mother) == 541)
+    mask_pion = (abs(mother) == 111) | (abs(mother) == 211)
 
     m_dp, m_W, m_DB, m_pion = obj[mask_dp], obj[mask_W], obj[mask_DB], obj[mask_pion]
     return obj, m_dp, m_W, m_DB, m_pion
@@ -120,12 +120,12 @@ def pick_mu_mother_category(obj):
     obj = obj[mu_mask]
     mother = abs(obj.distinctParent.pdgId)
     
-    mask_dp = (mother == 32)
-    mask_Z = (mother == 23)
-    mask_D = (mother == 411) | (mother == 421) | (mother == 423) | (mother == 431)
-    mask_B = (mother == 511) | (mother == 521) | (mother == 531) | (mother == 541)
-    mask_qg = (mother == 1) | (mother == 2) | (mother == 3) | (mother == 4) | (mother == 5) | (mother == 6) | (mother == 9) | (mother == 21)
-    mask_pion = (mother == 111) | (mother == 211)
+    mask_dp = (abs(mother) == 32)
+    mask_Z = (abs(mother) == 23)
+    mask_D = (abs(mother) == 411) | (abs(mother) == 421) | (abs(mother) == 423) | (abs(mother) == 431)
+    mask_B = (abs(mother) == 511) | (abs(mother) == 521) | (abs(mother) == 531) | (abs(mother) == 541)
+    mask_qg = (abs(mother) == 1) | (abs(mother) == 2) | (abs(mother) == 3) | (abs(mother) == 4) | (abs(mother) == 5) | (abs(mother) == 6) | (abs(mother) == 9) | (abs(mother) == 21)
+    mask_pion = (abs(mother) == 111) | (abs(mother) == 211)
     
     m_dp, m_Z, m_D, m_B, m_qg, m_pion = obj[mask_dp], obj[mask_Z], obj[mask_D], obj[mask_B], obj[mask_qg], obj[mask_pion]
     return obj, m_dp, m_Z, m_D, m_B, m_qg, m_pion
@@ -138,11 +138,28 @@ def pick_pho_mother_category(obj):
     mask_e = (abs(mother) == 11)
     mask_mu = (abs(mother) == 13)
     mask_Z = (abs(mother) == 23)
-    mask_pion = (mother == 111) | (mother == 211)
-    mask_qg = (mother == 1) | (mother == 2) | (mother == 3) | (mother == 4) | (mother == 5) | (mother == 6) | (mother == 9) | (mother == 21)
+    mask_pion = (abs(mother) == 111) | (abs(mother) == 211)
+    mask_qg = (abs(mother) == 1) | (abs(mother) == 2) | (abs(mother) == 3) | (abs(mother) == 4) | (abs(mother) == 5) | (abs(mother) == 6) | (abs(mother) == 9) | (abs(mother) == 21)
     
     m_e, m_mu, m_Z, m_pion, m_qg = obj[mask_e], obj[mask_mu], obj[mask_Z], obj[mask_pion], obj[mask_qg]
     return obj, m_e, m_mu, m_Z, m_pion, m_qg
+
+def pick_all_mother_category(obj):
+    all_mask = (abs(obj.pdgId) == 11) | (abs(obj.pdgId) == 13) | (abs(obj.pdgId) == 22)
+    obj = obj[all_mask]
+    mother = obj.distinctParent.pdgId
+
+    mask_dp = (abs(mother) == 32)
+    mask_W = (abs(mother) == 24)
+    mask_Z = (abs(mother) == 23)
+    mask_DB = (abs(mother) == 411) | (abs(mother) == 421) | (abs(mother) == 423) | (abs(mother) == 431) | (abs(mother) == 511) | (abs(mother) == 521) | (abs(mother) == 531) | (abs(mother) == 541)
+    mask_qg = (abs(mother) == 1) | (abs(mother) == 2) | (abs(mother) == 3) | (abs(mother) == 4) | (abs(mother) == 5) | (abs(mother) == 6) | (abs(mother) == 9) | (abs(mother) == 21)
+    mask_pion = (abs(mother) == 111) | (abs(mother) == 211)
+    mask_e = (abs(mother) == 11)
+    mask_mu = (abs(mother) == 13)
+    
+    m_dp, m_W, m_Z, m_DB, m_qg, m_pi, m_e, m_mu = obj[mask_dp], obj[mask_W], obj[mask_Z], obj[mask_DB], obj[mask_qg], obj[mask_pion], obj[mask_e], obj[mask_mu]
+    return obj, m_dp, m_W, m_Z, m_DB, m_qg, m_pi, m_e, m_mu
 
 def rho(obj, ref=None, use_v=False):
     """Return transverse distance between object and reference (default reference is 0,0)"""

@@ -96,6 +96,7 @@ class JaggedSelection:
                     print(f"Applying {obj} {cut}")
                 try:
                     sel_objs[obj] = sel_objs[obj][preLj_obj_cut_defs[obj][cut](sel_objs)]
+                    # sel_objs[obj] = sel_objs[obj][obj_cut_defs[obj][cut](sel_objs)]
                 except Exception as e:
                     print(f"\n Error applying cut '{cut}' for object '{obj}'")
                     traceback.print_exc()
