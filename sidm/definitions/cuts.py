@@ -36,7 +36,9 @@ obj_cut_defs = {
         "iso >= 0.2": lambda objs: objs["ljs"].isolation >= 0.2,
         "L iso < 0.2": lambda objs: objs["ljs"][:,0:1].isolation < 0.2,
         "SL iso < 0.2": lambda objs: objs["ljs"][:,1:2].isolation < 0.2,   
-        "BOTH": lambda objs: objs["ljs"][:,0:2].isolation < 0.2, 
+        "mu_charge == 0 modified": lambda objs: ak.sum(objs["ljs"][:, :2].muons.charge, axis= -1) == 0,
+        "mu >= 2": lambda objs: objs["ljs"].muon_n >= 2,
+        "mu >= 2 modified": lambda objs: objs["ljs"][:, :2].muon_n >= 2,
         
     },
     "egm_ljs": {

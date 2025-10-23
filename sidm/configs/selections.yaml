@@ -217,6 +217,51 @@ test_onlychargecut: &test_onlychargecut
   evt_cuts: 
     - *evt_baseNoLj
 
+test_modified_chargecut: &test_modified_chargecut
+  obj_cuts: 
+    <<: *obj_baseNoLjNoLjsource
+    <<: *obj_ljsource_cuts
+  preLj_obj_cuts:
+    dsaMuons:
+      - "all"
+  postLj_obj_cuts:
+    ljs: 
+      - "pT > 30 GeV"
+      - "|eta| < 2.4"
+      - "mu_charge == 0 modified"
+  evt_cuts: 
+    - *evt_baseNoLj
+
+test_muonnum: &test_muonnum
+  obj_cuts: 
+    <<: *obj_baseNoLjNoLjsource
+    <<: *obj_ljsource_cuts
+  preLj_obj_cuts:
+    dsaMuons:
+      - "all"
+  postLj_obj_cuts:
+    ljs: 
+      - "pT > 30 GeV"
+      - "|eta| < 2.4"
+      - "mu >= 2"
+  evt_cuts: 
+    - *evt_baseNoLj
+
+test_modified_muonnum: &test_modified_muonnum
+  obj_cuts: 
+    <<: *obj_baseNoLjNoLjsource
+    <<: *obj_ljsource_cuts
+  preLj_obj_cuts:
+    dsaMuons:
+      - "all"
+  postLj_obj_cuts:
+    ljs: 
+      - "pT > 30 GeV"
+      - "|eta| < 2.4"
+      - "mu >= 2 modified"
+  evt_cuts: 
+    - *evt_baseNoLj
+
 # add >=2 LJ requirement  
 base: &base
   obj_cuts: &obj_base
