@@ -216,6 +216,7 @@ test_onlychargecut: &test_onlychargecut
       - "mu_charge == 0"
   evt_cuts: 
     - *evt_baseNoLj
+    - ">=2 LJs"
 
 test_modified_chargecut: &test_modified_chargecut
   obj_cuts: 
@@ -231,6 +232,7 @@ test_modified_chargecut: &test_modified_chargecut
       - "mu_charge == 0 modified"
   evt_cuts: 
     - *evt_baseNoLj
+    - ">=2 LJs"
 
 test_muonnum: &test_muonnum
   obj_cuts: 
@@ -246,6 +248,7 @@ test_muonnum: &test_muonnum
       - "mu >= 2"
   evt_cuts: 
     - *evt_baseNoLj
+    - ">=2 LJs"
 
 test_modified_muonnum: &test_modified_muonnum
   obj_cuts: 
@@ -261,6 +264,7 @@ test_modified_muonnum: &test_modified_muonnum
       - "mu >= 2 modified"
   evt_cuts: 
     - *evt_baseNoLj
+    - ">=2 LJs"
 
 # add >=2 LJ requirement  
 base: &base
