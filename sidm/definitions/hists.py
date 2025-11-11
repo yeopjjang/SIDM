@@ -28,6 +28,8 @@ counter_defs = {
     "Gen As to electrons": lambda objs: ak.count(objs["genAs_toE"].pt),
     "Matched gen As to muons": lambda objs: ak.count(derived_objs["genAs_toMu_matched_lj"](objs, 0.4).pt),
     "Matched gen As to electrons": lambda objs: ak.count(derived_objs["genAs_toE_matched_lj"](objs, 0.4).pt),
+
+    "test": lambda objs: objs["mu_ljs"],
 }
 
 
@@ -113,37 +115,37 @@ hist_defs = {
     "egm_lj_muon_n": h.Histogram(
         [
             h.Axis(hist.axis.Regular(10, 0, 10, name=r"Number of Muon (egm LJ)"),
-                   lambda objs, mask: ak.num(objs["egm_ljs"].muons)),
+                   lambda objs, mask: ak.num(objs["egm_ljs"].muons, axis=-1)),
         ],
     ),
     "egm_lj_electron_n": h.Histogram(
         [
             h.Axis(hist.axis.Regular(10, 0, 10, name=r"Number of Electron (egm LJ)"),
-                   lambda objs, mask: ak.num(objs["egm_ljs"].electrons)),
+                   lambda objs, mask: ak.num(objs["egm_ljs"].electrons, axis=-1)),
         ],
     ),
     "egm_lj_photon_n": h.Histogram(
         [
             h.Axis(hist.axis.Regular(10, 0, 10, name=r"Number of Photon (egm LJ)"),
-                   lambda objs, mask: ak.num(objs["egm_ljs"].photons)),
+                   lambda objs, mask: ak.num(objs["egm_ljs"].photons, axis=-1)),
         ],
     ),
     "mu_lj_muon_n": h.Histogram(
         [
             h.Axis(hist.axis.Regular(10, 0, 10, name=r"Number of Muon (Mu LJ)"),
-                   lambda objs, mask: ak.num(objs["mu_ljs"].muons)),
+                   lambda objs, mask: ak.num(objs["mu_ljs"].muons, axis=-1)),
         ],
     ),
     "mu_lj_electron_n": h.Histogram(
         [
             h.Axis(hist.axis.Regular(10, 0, 10, name=r"Number of Electron (Mu LJ)"),
-                   lambda objs, mask: ak.num(objs["mu_ljs"].electrons)),
+                   lambda objs, mask: ak.num(objs["mu_ljs"].electrons, axis=-1)),
         ],
     ),
     "mu_lj_photon_n": h.Histogram(
         [
             h.Axis(hist.axis.Regular(10, 0, 10, name=r"Number of Photon (Mu LJ)"),
-                   lambda objs, mask: ak.num(objs["mu_ljs"].photons)),
+                   lambda objs, mask: ak.num(objs["mu_ljs"].photons, axis=-1)),
         ],
     ),
     # pv
