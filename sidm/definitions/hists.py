@@ -91,6 +91,61 @@ def obj_eta_phi(obj, nbins_x=None, xmin=None, xmax=None, nbins_y=None, ymin=None
 
 # define histograms
 hist_defs = {
+    #test
+    "muon_chargesum_lj": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(12, -3, 3, name="dr", label="Muon Charge Sum in LJ"),
+                lambda objs, mask: ak.sum(objs["ljs"].muons.charge, axis= -1)),
+        ],
+    ),
+    "muon_chargesum_Ldp": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(12, -3, 3, name="dr", label="Muon Charge Sum near L DP"),
+                lambda objs, mask: ak.sum(pick_mu_mother_category(derived_objs["fs_gen_matched_Ldp"](objs, 0.4))[0][mask,:].pdgId/(-13), axis=-1)),
+        ],
+    ),
+    "muon_chargesum_SLdp": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(12, -3, 3, name="dr", label="Muon Charge Sum near SL DP"),
+                lambda objs, mask: ak.sum(pick_mu_mother_category(derived_objs["fs_gen_matched_SLdp"](objs, 0.4))[0][mask,:].pdgId/(-13), axis=-1)),
+        ],
+    ),
+    "egm_lj_muon_n": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(10, 0, 10, name=r"Number of Muon (egm LJ)"),
+                   lambda objs, mask: ak.num(objs["egm_ljs"].muons)),
+        ],
+    ),
+    "egm_lj_electron_n": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(10, 0, 10, name=r"Number of Electron (egm LJ)"),
+                   lambda objs, mask: ak.num(objs["egm_ljs"].electrons)),
+        ],
+    ),
+    "egm_lj_photon_n": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(10, 0, 10, name=r"Number of Photon (egm LJ)"),
+                   lambda objs, mask: ak.num(objs["egm_ljs"].photons)),
+        ],
+    ),
+    "mu_lj_muon_n": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(10, 0, 10, name=r"Number of Muon (Mu LJ)"),
+                   lambda objs, mask: ak.num(objs["mu_ljs"].muons)),
+        ],
+    ),
+    "mu_lj_electron_n": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(10, 0, 10, name=r"Number of Electron (Mu LJ)"),
+                   lambda objs, mask: ak.num(objs["mu_ljs"].electrons)),
+        ],
+    ),
+    "mu_lj_photon_n": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(10, 0, 10, name=r"Number of Photon (Mu LJ)"),
+                   lambda objs, mask: ak.num(objs["mu_ljs"].photons)),
+        ],
+    ),
     # pv
     "pv_n": obj_attr("pvs", "npvs", nbins=50, label="Number of PVs"),
     "pv_ndof": obj_attr("pvs", "ndof", nbins=25, xmax=100),
@@ -3547,6 +3602,63 @@ hist_defs = {
                    lambda objs, mask: pick_all_mother_category(derived_objs["fs_gen_matched_SLmu_lj"](objs, 0.4))[8][mask,:].sum().mass),
         ],
         evt_mask=lambda objs: pick_all_mother_category(derived_objs["fs_gen_matched_SLmu_lj"](objs, 0.4))[8][:,:].sum().mass > 0,
+    ),
+    # Gen Energy Transfer
+    "e_pt_mother_all_Ldp": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(100, 0, 1000, name="e_pt_mother_all_Ldp", label=r"Gen e PT (L DP, Mother: Inclusive)"),
+                   lambda objs, mask: pick_e_mother_category(derived_objs["fs_gen_matched_Ldp"](objs, 0.4))[0][mask,:].sum().pt),
+        ],
+        evt_mask=lambda objs: pick_e_mother_category(derived_objs["fs_gen_matched_Ldp"](objs, 0.4))[0][:,:].sum().pt > 0,
+    ),
+    "e_pt_mother_all_SLdp": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(100, 0, 1000, name="e_pt_mother_all_SLdp", label=r"Gen e PT (SL DP, Mother: Inclusive)"),
+                   lambda objs, mask: pick_e_mother_category(derived_objs["fs_gen_matched_SLdp"](objs, 0.4))[0][mask,:].sum().pt),
+        ],
+        evt_mask=lambda objs: pick_e_mother_category(derived_objs["fs_gen_matched_SLdp"](objs, 0.4))[0][:,:].sum().pt > 0,
+    ),
+    "mu_pt_mother_all_Ldp": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(100, 0, 1000, name="mu_pt_mother_all_Ldp", label=r"Gen $\mu$ PT (L DP, Mother: Inclusive)"),
+                   lambda objs, mask: pick_mu_mother_category(derived_objs["fs_gen_matched_Ldp"](objs, 0.4))[0][mask,:].sum().pt),
+        ],
+        evt_mask=lambda objs: pick_mu_mother_category(derived_objs["fs_gen_matched_Ldp"](objs, 0.4))[0][:,:].sum().pt > 0,
+    ),
+    "mu_pt_mother_all_SLdp": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(100, 0, 1000, name="mu_mother_all_SLegm", label=r"Gen $\mu$ PT (SL DP, Mother: Inclusive)"),
+                   lambda objs, mask: pick_mu_mother_category(derived_objs["fs_gen_matched_SLdp"](objs, 0.4))[0][mask,:].sum().pt),
+        ],
+        evt_mask=lambda objs: pick_mu_mother_category(derived_objs["fs_gen_matched_SLdp"](objs, 0.4))[0][:,:].sum().pt > 0,
+    ),
+    "all_pt_mother_all_Ldp": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(100, 0, 1000, name="all_pt_mother_all_Ldp", label=r"Gen Final State PT (L DP, Mother: Inclusive)"),
+                   lambda objs, mask: pick_all_mother_category(derived_objs["fs_gen_matched_Ldp"](objs, 0.4))[0][mask,:].sum().pt),
+        ],
+        evt_mask=lambda objs: pick_all_mother_category(derived_objs["fs_gen_matched_Ldp"](objs, 0.4))[0][:,:].sum().pt > 0,
+    ),
+    "all_pt_ratio_mother_all_Ldp": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(100, 0, 2, name="all_pt_mother_all_Ldp", label=r"Gen Final State PT / Leading DP PT"),
+                   lambda objs, mask: pick_all_mother_category(derived_objs["fs_gen_matched_Ldp"](objs, 0.4))[0][mask,:].sum().pt/objs["genAs"][:,0:1].pt),
+        ],
+        evt_mask=lambda objs: pick_all_mother_category(derived_objs["fs_gen_matched_Ldp"](objs, 0.4))[0][:,:].sum().pt > 0,
+    ),
+    "all_pt_mother_all_SLdp": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(100, 0, 1000, name="all_pt_mother_all_SLdp", label=r"Gen Final State PT (SL DP, Mother: Inclusive)"),
+                   lambda objs, mask: pick_all_mother_category(derived_objs["fs_gen_matched_SLdp"](objs, 0.4))[0][mask,:].sum().pt),
+        ],
+        evt_mask=lambda objs: pick_all_mother_category(derived_objs["fs_gen_matched_SLdp"](objs, 0.4))[0][:,:].sum().pt > 0,
+    ),
+    "all_pt_ratio_mother_all_SLdp": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(100, 0, 2, name="all_pt_mother_all_SLdp", label=r"Gen Final State PT / Subleading DP PT"),
+                   lambda objs, mask: pick_all_mother_category(derived_objs["fs_gen_matched_SLdp"](objs, 0.4))[0][mask,:].sum().pt/objs["genAs"][:,1:2].pt),
+        ],
+        evt_mask=lambda objs: pick_all_mother_category(derived_objs["fs_gen_matched_SLdp"](objs, 0.4))[0][:,:].sum().pt > 0,
     ),
     # Muon Cross-cleaning
     "genAs_toMu_lxy_nosel": h.Histogram(

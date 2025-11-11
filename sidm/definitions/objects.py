@@ -91,3 +91,6 @@ derived_objs["fs_gen_matched_egm_lj"]          = lambda objs, r: matched(objs["f
 derived_objs["fs_gen_matched_Legm_lj"]          = lambda objs, r: matched(objs["fs_gens"], objs["egm_ljs"][:,0:1], r)
 derived_objs["fs_gen_matched_SLegm_lj"]          = lambda objs, r: matched(objs["fs_gens"], objs["egm_ljs"][:,1:2], r)
 
+derived_objs["fs_gen_matched_Ldp"]          = lambda objs, r: matched(objs["fs_gens"], objs["genAs"][:,0:1], r)
+derived_objs["fs_gen_matched_SLdp"]          = lambda objs, r: matched(objs["fs_gens"], objs["genAs"][:,1:2], r)
+
