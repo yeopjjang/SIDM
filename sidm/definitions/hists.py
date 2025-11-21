@@ -362,7 +362,7 @@ hist_defs = {
     "muon_numOverlapSegments_goodMatchedDSAMuons": h.Histogram(
         [
             h.Axis(hist.axis.Regular(10,0, 10, name="muon_numOverlapSegments_matchedDSAMuons"),
-                   lambda objs, mask: objs["muons"].good_matched_dsa_muons[:,:,:1].numMatch),#Also works! idk if the result makes sense, but it runs
+                   lambda objs, mask: objs["muons"].matched_dsa_muons[:,:,:1].numMatch),#Also works! idk if the result makes sense, but it runs
         ],
     ),
 
@@ -418,7 +418,7 @@ hist_defs = {
     "dsaMuon_numOverlapSegments_goodMatchedMuons": h.Histogram(
         [
             h.Axis(hist.axis.Regular(10,0, 10, name="dsaMuon_numOverlapSegments_goodMatchedMuons"),
-                   lambda objs, mask: objs["dsaMuons"].good_matched_muons[:,:,:1].numMatch),#Also works! idk if the result makes sense, but it runs
+                   lambda objs, mask: objs["dsaMuons"].matched_muons[:,:,:1].numMatch),#Also works! idk if the result makes sense, but it runs
         ],
     ),
     
