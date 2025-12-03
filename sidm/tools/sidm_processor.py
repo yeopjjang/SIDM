@@ -159,7 +159,7 @@ class SidmProcessor(processor.ProcessorABC):
                 if self.unweighted_hist:
                     hist_weights =  ak.ones_like(hist_weights)
                 for h in hists.values():
-                    h.fill(sel_objs, hist_weights)
+                    h.fill(sel_objs, hist_weights, self.verbose)
 
                 # Fill counters
                 if lj_reco not in counters:
