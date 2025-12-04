@@ -60,10 +60,10 @@ class SidmProcessor(processor.ProcessorABC):
         self.unweighted_hist = unweighted_hist
         self.obj_defs = preLj_objs
         self.verbose = verbose
-        self.year = "2018" # fixme: may be better to store as event metadata
 
     def process(self, events):
         """Apply selections, make histograms and cutflow"""
+        is_data = events.metadata["is_data"]
         # create object collections
         # fixme: only include objs used in cuts or hists
         objs = {}
@@ -147,7 +147,10 @@ class SidmProcessor(processor.ProcessorABC):
                 sel_objs["lj_reco"] = lj_reco
 
                 # define event weights
-                evt_weights =  self.obj_defs["weight"](events)
+                if not is_data:
+                    evt_weights = self.obj_defs["weight"](events)
+                else:
+                    evt_weights = ak.broadcast_arrays(1.0, self.obj_defs["met"](events))[0]
 
                 # make cutflow
                 if lj_reco not in cutflows:
@@ -183,6 +186,9 @@ class SidmProcessor(processor.ProcessorABC):
             "metadata": {
                 "n_evts": events.metadata["entrystop"] - events.metadata["entrystart"],
                 "scaled_sum_weights": ak.sum(evt_weights)/events.metadata["skim_factor"],
+                # add sample metadata as set_accumulator to only keep unique values during accumulation
+                "year": processor.set_accumulator([events.metadata["year"]]),
+                "is_data": processor.set_accumulator([events.metadata["is_data"]]),
             },
         }
 
@@ -365,8 +371,18 @@ class SidmProcessor(processor.ProcessorABC):
         """Modify accumulator after process has run on all chunks"""
         # scale cutflow and hists according to lumi*xs
         for sample, output in accumulator.items():
+            if len(output["metadata"]["is_data"]) != 1 or len(output["metadata"]["year"]) != 1:
+                print(f"WARNING: {sample} has more than one value for is_data or year. Not scaling histograms or cutflows.")
+                continue
+
+            if output["metadata"]["is_data"].pop():
+                print(f"{sample} is data. Not scaling histograms or cutflows.")
+                continue
+
+            print(f"{sample} is simulation. Scaling histograms or cutflows according to lumi*xs.")
+            year = output["metadata"]["year"].pop()
             sum_weights = output["metadata"]["scaled_sum_weights"]
-            lumixs_weight = utilities.get_lumixs_weight(sample, self.year, sum_weights)
+            lumixs_weight = utilities.get_lumixs_weight(sample, year, sum_weights)
             for name in output["cutflow"]:
                 accumulator[sample]["cutflow"][name].scale(lumixs_weight)
             if not self.unweighted_hist:
