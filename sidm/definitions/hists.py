@@ -356,13 +356,13 @@ hist_defs = {
     "muon_numOverlapSegments_matchedDSAMuons": h.Histogram(
         [
             h.Axis(hist.axis.Regular(10,0, 10, name="muon_numOverlapSegments_matchedDSAMuons"),
-                   lambda objs, mask: objs["muons"].matched_dsa_muons[:,:,:1].numMatch),#Also works! idk if the result makes sense, but it runs
+                   lambda objs, mask: objs["muons"].good_matched_dsa_muons[:,:,:1].numMatch),#Also works! idk if the result makes sense, but it runs
         ],
     ),
     "muon_numOverlapSegments_goodMatchedDSAMuons": h.Histogram(
         [
             h.Axis(hist.axis.Regular(10,0, 10, name="muon_numOverlapSegments_matchedDSAMuons"),
-                   lambda objs, mask: objs["muons"].matched_dsa_muons[:,:,:1].numMatch),#Also works! idk if the result makes sense, but it runs
+                   lambda objs, mask: objs["muons"].good_matched_dsa_muons[:,:,:1].numMatch),#Also works! idk if the result makes sense, but it runs
         ],
     ),
 
@@ -412,13 +412,13 @@ hist_defs = {
     "dsaMuon_numOverlapSegments_matchedMuons": h.Histogram(
         [
             h.Axis(hist.axis.Regular(10,0, 10, name="dsaMuon_numOverlapSegments_matchedMuons"),
-                   lambda objs, mask: objs["dsaMuons"].matched_muons[:,:,:1].numMatch),#Also works! idk if the result makes sense, but it runs
+                   lambda objs, mask: objs["dsaMuons"].good_matched_muons[:,:,:1].numMatch),#Also works! idk if the result makes sense, but it runs
         ],
     ),
     "dsaMuon_numOverlapSegments_goodMatchedMuons": h.Histogram(
         [
             h.Axis(hist.axis.Regular(10,0, 10, name="dsaMuon_numOverlapSegments_goodMatchedMuons"),
-                   lambda objs, mask: objs["dsaMuons"].matched_muons[:,:,:1].numMatch),#Also works! idk if the result makes sense, but it runs
+                   lambda objs, mask: objs["dsaMuons"].good_matched_muons[:,:,:1].numMatch),#Also works! idk if the result makes sense, but it runs
         ],
     ),
     
@@ -2223,7 +2223,7 @@ hist_defs = {
             h.Axis(hist.axis.Regular(50, 0, 500, name="genAs_lxy"),
                    lambda objs, mask: lxy(derived_objs["genAs_toMu_matched_muLj"](objs, 0.4))),
             h.Axis(hist.axis.Regular(140, 0, 700, name="genAs_pt", label =r"$Z_d$ $p_T$"),
-                   lambda objs, mask: abs(derived_objs["genAs_toMu_matched_muLj"](objs, 0.4).pt)),
+                   lambda objs, mask: abs(derived_objs["genAs_toMu_good_atched_muLj"](objs, 0.4).pt)),
         ],
     ),
     "genAs_toMu_pt_MuMudR_highRange": h.Histogram(
