@@ -109,19 +109,14 @@ class SidmProcessor(processor.ProcessorABC):
             nested_selection = selection.NestedSelection(cuts["obj"], self.verbose)
 
             for lj_reco in self.lj_reco_choices:
-                # apply pre-LJ object selection
-                sel_objs = obj_selection.apply_obj_cuts(objs)
+                sel_objs = objs.copy()
 
                 # apply selections on matched_muons within the DSA muons and matched_dsa_muons within the PF muons
-                try:
-                    sel_objs["dsaMuons"]["good_matched_muons"] = nested_selection.apply_obj_cuts(sel_objs, sel_objs["dsaMuons"].matched_muons, "muons" )
-                    sel_objs["muons"]["good_matched_dsa_muons"] = nested_selection.apply_obj_cuts(sel_objs, sel_objs["muons"].matched_dsa_muons,"dsaMuons")
-                except Exception as e:
-                    print(f"Failed to apply selections to the nested matched muon collections. Error message: {e}")
+                sel_objs["dsaMuons"]["good_matched_muons"] = nested_selection.apply_obj_cuts(sel_objs, sel_objs["dsaMuons"].matched_muons, "muons")
+                sel_objs["muons"]["good_matched_dsa_muons"] = nested_selection.apply_obj_cuts(sel_objs, sel_objs["muons"].matched_dsa_muons, "dsaMuons")
 
-                # apply selections to muons which already contains good matched information
-                prelj_selection = selection.JaggedSelection(cuts["preLj_obj"], self.verbose)
-                sel_objs = prelj_selection.apply_obj_cuts_preLj(sel_objs)
+                # apply pre-LJ object selection
+                sel_objs = obj_selection.apply_obj_cuts(sel_objs)
 
                 # reconstruct lepton jets
                 sel_objs["ljs"] = self.build_lepton_jets(sel_objs, float(lj_reco))
@@ -217,7 +212,7 @@ class SidmProcessor(processor.ProcessorABC):
         collections = ["muons", "dsaMuons", "electrons", "photons"]
         fields = [objs[c].fields for c in collections]
 
-        unsafe_fields = ['muonIdxG','dsaIdxG','good_matched_muons','good_matched_dsa_muons']
+        unsafe_fields = ['muonIdxG','dsaIdxG','matched_muons','matched_dsa_muons','good_matched_muons','good_matched_dsa_muons']
 
         all_fields = list(set().union(*fields))
         for field in unsafe_fields:
