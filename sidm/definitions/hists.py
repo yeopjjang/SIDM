@@ -968,7 +968,7 @@ hist_defs = {
     "lj_lj_absdphi_4mu": h.Histogram(
         [
             h.Axis(hist.axis.Regular(100, 0, 2*math.pi, name=r"|$\Delta\phi$| ($LJ_{0}$, $LJ_{1}$)"),
-                   lambda objs, mask: abs(objs["mu_ljs"][mask, 1].phi - objs["egm_ljs"][mask, 0].phi)),
+                   lambda objs, mask: abs(objs["mu_ljs"][mask, 1].phi - objs["mu_ljs"][mask, 0].phi)),
         ],
         evt_mask=lambda objs: (ak.num(objs["mu_ljs"]) > 1),
     ),
