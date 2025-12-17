@@ -113,6 +113,21 @@ base_isosel: &base_isosel
     - *evt_baseNoLj
     - ">=2 LJs"
 
+base_isosel_test: &base_isosel_test
+  obj_cuts:
+    <<: *obj_baseNoLj
+  postLj_obj_cuts:
+    ljs:
+      - *lj_base
+    mu_ljs:
+      - "mu_lj_iso < 0.1"
+    egm_ljs:
+      - "egm_lj_iso < 0.2"
+  evt_cuts:
+    - *evt_baseNoLj
+    - ">=1 egm_ljs"
+    - ">=1 mu_ljs"
+
 4mu: &4mu
   <<: *base
   evt_cuts: &evt_4mu
