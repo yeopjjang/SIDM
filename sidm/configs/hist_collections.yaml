@@ -254,6 +254,10 @@ isolation_base: &isolation_base
   - "mu_leadinglj_isolation_zoom"
   - "mu_subleadinglj_isolation_zoom"
 
+  - "mj_lj_Eratio"
+  - "mu_mj_lj_Eratio"
+  - "egm_mj_lj_Eratio"
+
 mother_tracking_base: &mother_tracking_base
   - "fs_gen_id"
   - "fs_gen_mother_id"
