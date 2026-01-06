@@ -230,6 +230,55 @@ fraction_base: &fraction_base
   - "mu_matched_jet_hadfraction"
   - "egm_matched_jet_hadfraction"
 
+  - "matched_jet_chEmEF"
+  - "matched_jet_chFPV0EF"
+  - "matched_jet_chHEF"
+  - "matched_jet_muEF"
+  - "matched_jet_neEmEF"
+  - "matched_jet_neHEF"
+
+  - "mu_matched_jet_chEmEF"
+  - "mu_matched_jet_chFPV0EF"
+  - "mu_matched_jet_chHEF"
+  - "mu_matched_jet_muEF"
+  - "mu_matched_jet_neEmEF"
+  - "mu_matched_jet_neHEF"
+
+  - "pfmu_matched_jet_chEmEF"
+  - "pfmu_matched_jet_chFPV0EF"
+  - "pfmu_matched_jet_chHEF"
+  - "pfmu_matched_jet_muEF"
+  - "pfmu_matched_jet_neEmEF"
+  - "pfmu_matched_jet_neHEF"
+
+  - "dsamu_matched_jet_chEmEF"
+  - "dsamu_matched_jet_chFPV0EF"
+  - "dsamu_matched_jet_chHEF"
+  - "dsamu_matched_jet_muEF"
+  - "dsamu_matched_jet_neEmEF"
+  - "dsamu_matched_jet_neHEF"
+
+  - "egm_matched_jet_chEmEF"
+  - "egm_matched_jet_chFPV0EF"
+  - "egm_matched_jet_chHEF"
+  - "egm_matched_jet_muEF"
+  - "egm_matched_jet_neEmEF"
+  - "egm_matched_jet_neHEF"
+
+  - "electron_matched_jet_chEmEF"
+  - "electron_matched_jet_chFPV0EF"
+  - "electron_matched_jet_chHEF"
+  - "electron_matched_jet_muEF"
+  - "electron_matched_jet_neEmEF"
+  - "electron_matched_jet_neHEF"
+
+  - "photon_matched_jet_chEmEF"
+  - "photon_matched_jet_chFPV0EF"
+  - "photon_matched_jet_chHEF"
+  - "photon_matched_jet_muEF"
+  - "photon_matched_jet_neEmEF"
+  - "photon_matched_jet_neHEF"
+
 isolation_base: &isolation_base
   - "lj_isolation"
   - "lj_isolation_zoom"
@@ -308,6 +357,11 @@ muon_crosscleaning_base: &muon_crosscleaning_base
   - "lj_lj_absdphi"
   - "lj_lj_absdphi_2mu2e"
   - "lj_lj_absdphi_4mu"
+
+exo_2d_base: &exo_2d_base
+  - "mj_lj_Eratio_hadfrac"
+  - "mu_mj_lj_Eratio_hadfrac"
+  - "egm_mj_lj_Eratio_hadfrac"
 
 abcd_base: &abcd_base
   - "lj_lj_absdphi_invmass"
