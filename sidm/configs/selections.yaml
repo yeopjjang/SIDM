@@ -100,6 +100,122 @@ base: &base
     - *evt_baseNoLj
     - ">=2 LJs"
 
+base_CC: &base_CC
+  obj_cuts:
+    <<: *obj_baseNoLj
+  postLj_obj_cuts:
+    <<: *base_postLj_obj_cuts
+  evt_cuts: 
+    - *evt_baseNoLj
+    - ">=1 egm_ljs"
+    - ">=1 mu_ljs"
+
+base_CC_isosel: &base_CC_isosel
+  obj_cuts:
+    <<: *obj_baseNoLj
+  postLj_obj_cuts:
+    ljs:
+      - "pT > 30 GeV"
+      - "|eta| < 2.4"
+      - "mu_charge == 0"
+    mu_ljs:
+      - "mu_lj_iso < 0.1"
+    egm_ljs:
+      - "egm_lj_iso < 0.2"
+  evt_cuts:
+    - *evt_baseNoLj
+    - ">=1 egm_ljs"
+    - ">=1 mu_ljs"
+
+# Charge Test
+base_CC_nocharge: &base_CC_nocharge
+  obj_cuts:
+    electrons: 
+      - "pT > 10 GeV"
+      - "|eta| < 2.4"
+      - 'MVANonIsoWPL'
+    muons:
+      - "looseID"
+      - "pT > 5 GeV"
+      - "|eta| < 2.4"
+    photons:
+      - "pT > 20 GeV"
+      - "|eta| < 2.5"
+      - 'Custom Cutbased'
+      - "pixelSeed"
+      - 'Photon DR Veto 0p025'
+    dsaMuons:
+      - "pT > 10 GeV"
+      - "|eta| < 2.4"
+      - "displaced ID"
+      - "segmatch veto + dR outer + num seg" # cross-cleaning
+  postLj_obj_cuts:
+    <<: *base_postLj_obj_cuts
+  evt_cuts:
+    - *evt_baseNoLj
+    - ">=1 egm_ljs"
+    - ">=1 mu_ljs"
+
+chargetest_basic: &chargetest_basic
+  obj_cuts:
+    <<: *obj_baseNoLj
+  postLj_obj_cuts:
+    ljs:
+      - "pT > 30 GeV"
+      - "|eta| < 2.4"
+  evt_cuts:
+    - *evt_baseNoLj
+
+chargetest_onlycharge: &chargetest_onlycharge
+  obj_cuts:
+    <<: *obj_baseNoLj
+  postLj_obj_cuts:
+    ljs:
+      - "pT > 30 GeV"
+      - "|eta| < 2.4"
+      - "mu_charge == 0"
+  evt_cuts: 
+    - *evt_baseNoLj
+
+chargetest_only2LJ: &chargetest_only2LJ
+  obj_cuts:
+    <<: *obj_baseNoLj
+  postLj_obj_cuts:
+    ljs:
+      - "pT > 30 GeV"
+      - "|eta| < 2.4"
+  evt_cuts: 
+    - *evt_baseNoLj
+    - ">=1 egm_ljs"
+    - ">=1 mu_ljs"
+
+# Muon Num Test
+munumtest_onlynum: &munumtest_onlynum
+  obj_cuts:
+    <<: *obj_baseNoLj
+  postLj_obj_cuts:
+    ljs:
+      - "pT > 30 GeV"
+      - "|eta| < 2.4"
+    mu_ljs:
+      - "Mu >= 2"
+  evt_cuts: 
+    - *evt_baseNoLj
+
+munumtest_both: &munumtest_both
+  obj_cuts:
+    <<: *obj_baseNoLj
+  postLj_obj_cuts:
+    ljs:
+      - "pT > 30 GeV"
+      - "|eta| < 2.4"
+    mu_ljs:
+      - "Mu >= 2"
+  evt_cuts: 
+    - *evt_baseNoLj
+    - ">=1 egm_ljs"
+    - ">=1 mu_ljs"
+
 4mu: &4mu
   <<: *base
   evt_cuts: &evt_4mu

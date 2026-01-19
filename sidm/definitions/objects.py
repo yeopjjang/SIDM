@@ -54,6 +54,7 @@ preLj_objs["genAs_toMu"] = lambda evts: toPid(preLj_objs["genAs"](evts), 13)
 preLj_objs["genAs_toE"]  = lambda evts: toPid(preLj_objs["genAs"](evts), 11)
 preLj_objs["rho_PFIso"]  = lambda evts: evts.fixedGridRhoFastjetAll
 preLj_objs["jets"]       = lambda evts: evts.Jet
+preLj_objs["fs_gens"]    = lambda evts: evts.GenPart[evts.GenPart.status == 1]
 
 # define objects whose that will be added to objs by the sidm_processor after LJs are clustered
 # and LJ cuts are applied. postLj_obj cuts can be applied to these
@@ -76,3 +77,18 @@ derived_objs["genAs_matched_muLj"]      = lambda objs, r: matched(objs["genAs"],
 derived_objs["genAs_toMu_matched_muLj"] = lambda objs, r: matched(objs["genAs_toMu"], objs["mu_ljs"], r)
 derived_objs["genAs_matched_egmLj"]     = lambda objs, r: matched(objs["genAs"], objs["egm_ljs"], r)
 derived_objs["genAs_toE_matched_egmLj"] = lambda objs, r: matched(objs["genAs_toE"], objs["egm_ljs"], r)
+
+derived_objs["muons_matched_genAs"] = lambda objs, r: matched(objs["muons"], objs["genAs_toMu"], r)
+derived_objs["dsaMuons_matched_genAs"] = lambda objs, r: matched(objs["dsaMuons"], objs["genAs_toMu"], r)
+derived_objs["lj_matched_genAs_toMu"]   = lambda objs, r: matched(objs["ljs"], objs["genAs_toMu"], r)
+derived_objs["lj_matched_genAs_toE"]    = lambda objs, r: matched(objs["ljs"], objs["genAs_toE"], r)
+
+derived_objs["fs_gen_matched_lj"]          = lambda objs, r: matched(objs["fs_gens"], objs["ljs"], r)
+derived_objs["fs_gen_matched_mu_lj"]          = lambda objs, r: matched(objs["fs_gens"], objs["mu_ljs"], r)
+derived_objs["fs_gen_matched_Lmu_lj"]          = lambda objs, r: matched(objs["fs_gens"], objs["mu_ljs"][:,0:1], r)
+derived_objs["fs_gen_matched_SLmu_lj"]          = lambda objs, r: matched(objs["fs_gens"], objs["mu_ljs"][:,1:2], r)
+derived_objs["fs_gen_matched_egm_lj"]          = lambda objs, r: matched(objs["fs_gens"], objs["egm_ljs"], r)
+derived_objs["fs_gen_matched_Legm_lj"]          = lambda objs, r: matched(objs["fs_gens"], objs["egm_ljs"][:,0:1], r)
+derived_objs["fs_gen_matched_SLegm_lj"]          = lambda objs, r: matched(objs["fs_gens"], objs["egm_ljs"][:,1:2], r)
+derived_objs["fs_gen_matched_Ldp"]          = lambda objs, r: matched(objs["fs_gens"], objs["genAs"][:,0:1], r)
+derived_objs["fs_gen_matched_SLdp"]          = lambda objs, r: matched(objs["fs_gens"], objs["genAs"][:,1:2], r)

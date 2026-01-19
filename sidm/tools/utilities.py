@@ -94,6 +94,73 @@ def lj_combination_dR(obj):
     max_dR = ak.max(dR_general(pair["lj1"], pair["lj2"]), axis=1)
     return dR, min_dR, max_dR
 
+def pick_leptonlike_pdgid(obj):
+    mask_e = (abs(obj.pdgId) == 11)
+    mask_mu = (abs(obj.pdgId) == 13)
+    mask_pho = (abs(obj.pdgId) == 22)
+
+    e, mu, pho = obj[mask_e], obj[mask_mu], obj[mask_pho]
+    return e, mu, pho
+
+def pick_e_mother_category(obj):
+    e_mask = (abs(obj.pdgId) == 11)
+    obj = obj[e_mask]
+    mother = obj.distinctParent.pdgId
+    
+    mask_dp = (abs(mother) == 32)
+    mask_W = (abs(mother) == 24)
+    mask_DB = (abs(mother) == 411) | (abs(mother) == 421) | (abs(mother) == 423) | (abs(mother) == 431) | (abs(mother) == 511) | (abs(mother) == 521) | (abs(mother) == 531) | (abs(mother) == 541)
+    mask_pion = (abs(mother) == 111) | (abs(mother) == 211)
+
+    m_dp, m_W, m_DB, m_pion = obj[mask_dp], obj[mask_W], obj[mask_DB], obj[mask_pion]
+    return obj, m_dp, m_W, m_DB, m_pion
+
+def pick_mu_mother_category(obj):
+    mu_mask = (abs(obj.pdgId) == 13)
+    obj = obj[mu_mask]
+    mother = abs(obj.distinctParent.pdgId)
+    
+    mask_dp = (abs(mother) == 32)
+    mask_Z = (abs(mother) == 23)
+    mask_D = (abs(mother) == 411) | (abs(mother) == 421) | (abs(mother) == 423) | (abs(mother) == 431)
+    mask_B = (abs(mother) == 511) | (abs(mother) == 521) | (abs(mother) == 531) | (abs(mother) == 541)
+    mask_qg = (abs(mother) == 1) | (abs(mother) == 2) | (abs(mother) == 3) | (abs(mother) == 4) | (abs(mother) == 5) | (abs(mother) == 6) | (abs(mother) == 9) | (abs(mother) == 21)
+    mask_pion = (abs(mother) == 111) | (abs(mother) == 211)
+    
+    m_dp, m_Z, m_D, m_B, m_qg, m_pion = obj[mask_dp], obj[mask_Z], obj[mask_D], obj[mask_B], obj[mask_qg], obj[mask_pion]
+    return obj, m_dp, m_Z, m_D, m_B, m_qg, m_pion
+
+def pick_pho_mother_category(obj):
+    pho_mask = (abs(obj.pdgId) == 22)
+    obj = obj[pho_mask]
+    mother = obj.distinctParent.pdgId
+    
+    mask_e = (abs(mother) == 11)
+    mask_mu = (abs(mother) == 13)
+    mask_Z = (abs(mother) == 23)
+    mask_pion = (abs(mother) == 111) | (abs(mother) == 211)
+    mask_qg = (abs(mother) == 1) | (abs(mother) == 2) | (abs(mother) == 3) | (abs(mother) == 4) | (abs(mother) == 5) | (abs(mother) == 6) | (abs(mother) == 9) | (abs(mother) == 21)
+    
+    m_e, m_mu, m_Z, m_pion, m_qg = obj[mask_e], obj[mask_mu], obj[mask_Z], obj[mask_pion], obj[mask_qg]
+    return obj, m_e, m_mu, m_Z, m_pion, m_qg
+
+def pick_all_mother_category(obj):
+    all_mask = (abs(obj.pdgId) == 11) | (abs(obj.pdgId) == 13) | (abs(obj.pdgId) == 22)
+    obj = obj[all_mask]
+    mother = obj.distinctParent.pdgId
+
+    mask_dp = (abs(mother) == 32)
+    mask_W = (abs(mother) == 24)
+    mask_Z = (abs(mother) == 23)
+    mask_DB = (abs(mother) == 411) | (abs(mother) == 421) | (abs(mother) == 423) | (abs(mother) == 431) | (abs(mother) == 511) | (abs(mother) == 521) | (abs(mother) == 531) | (abs(mother) == 541)
+    mask_qg = (abs(mother) == 1) | (abs(mother) == 2) | (abs(mother) == 3) | (abs(mother) == 4) | (abs(mother) == 5) | (abs(mother) == 6) | (abs(mother) == 9) | (abs(mother) == 21)
+    mask_pion = (abs(mother) == 111) | (abs(mother) == 211)
+    mask_e = (abs(mother) == 11)
+    mask_mu = (abs(mother) == 13)
+    
+    m_dp, m_W, m_Z, m_DB, m_qg, m_pi, m_e, m_mu = obj[mask_dp], obj[mask_W], obj[mask_Z], obj[mask_DB], obj[mask_qg], obj[mask_pion], obj[mask_e], obj[mask_mu]
+    return obj, m_dp, m_W, m_Z, m_DB, m_qg, m_pi, m_e, m_mu
+
 def rho(obj, ref=None, use_v=False):
     """Return transverse distance between object and reference (default reference is 0,0)"""
     if use_v:
@@ -334,3 +401,106 @@ def returnBitMapTArrayPhoton(bitMap, var1, var2):
                 temp.append(False)
         tList.append(temp)
     return ak.Array(tList)
+
+
+########## DY Test Area ################
+
+### test area
+
+def get_eff_points(num_hist, denom_hist):
+    # 1D 가정
+    ax = num_hist.axes[0]
+    x = ax.centers  # bin center
+
+    num_vals = num_hist.values(flow=False)
+    den_vals = denom_hist.values(flow=False)
+
+    # efficiency = num / den
+    with np.errstate(divide='ignore', invalid='ignore'):
+        eff = np.divide(
+            num_vals, den_vals,
+            out=np.zeros_like(num_vals, dtype=float),
+            where=den_vals > 0
+        )
+
+    # 간단한 binomial error: sqrt(eff*(1-eff)/den)
+    with np.errstate(divide='ignore', invalid='ignore'):
+        yerr = np.sqrt(
+            eff * (1.0 - eff) / den_vals,
+            out=np.zeros_like(eff, dtype=float),
+            where=den_vals > 0
+        )
+
+    return x, eff, yerr
+
+def plot_ratio_multi(nums, den, labels, colors=None, eff_ylim=(0.8, 1.05)):
+    """
+    nums: numerator 히스토그램 리스트 [hA, hB, hC, hD]
+    den : denominator 히스토그램 (공통)
+    labels: 각 numerator에 대한 legend 라벨 리스트
+    colors: 각 numerator 색 (None이면 자동)
+    eff_ylim: (ymin, ymax) 튜플 – efficiency 축 범위
+    """
+
+    if colors is None:
+        colors = [None] * len(nums)
+
+    fig, (ax_top, ax_bot) = plt.subplots(
+        2, 1,
+        figsize=(24, 20),
+        sharex=True,
+        gridspec_kw={'height_ratios': [2, 1], 'hspace': 0}
+    )
+
+    # ------------------ 위: 분포 ------------------
+    for num, lab, col in zip(nums, labels, colors):
+        plot(
+            num, ax=ax_top,
+            flow='none',
+            label=lab,
+            color=col,
+            linewidth = 3, 
+            yerr=False,
+            skip_label = True,
+        )
+
+    # denominator는 검정 점선으로
+    plot(
+        den, ax=ax_top, flow='none',
+        label="All Dark Photon", color="black", linestyle="--"
+        , linewidth=2, yerr=False, skip_label=True)
+
+    ax_top.legend(fontsize=30)
+    ax_top.set_ylabel("Events")
+
+    # ------------------ 아래: efficiency (점 + 에러바) ------------------
+    for num, lab, col in zip(nums, labels, colors):
+        x, eff, yerr = get_eff_points(num, den)
+
+        ax_bot.errorbar(
+            x, eff, yerr=False,
+            fmt='o',           # 점 + 에러바 (라인 없음)
+            markersize=8,
+            linestyle='--',
+            label=lab,
+            color=col
+        )
+
+    # 기준선 1.0 (원하면)
+    ax_bot.axhline(1.0, color="gray", linestyle="--", linewidth=1)
+
+    ax_bot.set_ylabel("Efficiency")
+    ax_bot.set_ylim(*eff_ylim)   # 예: (0.9, 1.02) 같이 줘서 확대
+
+    # x축 라벨 (있으면 가져오기)
+    try:
+        ax_bot.set_xlabel(den.axes[0].label)
+    except Exception:
+        ax_bot.set_xlabel("")
+
+    ax_bot.grid(True, axis='y', alpha=0.3)
+
+    # efficiency 쪽 legend는 빼고 싶으면 주석 처리
+    # ax_bot.legend(fontsize=20)
+
+    return fig, (ax_top, ax_bot)
