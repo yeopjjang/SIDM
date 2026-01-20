@@ -3811,6 +3811,18 @@ hist_defs = {
                    lambda objs, mask: ak.num(objs["egm_ljs"].muons, axis=-1)),
         ],
     ),
+    "egm_lj_pfmuon_n": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(10, 0, 10, name=r"Number of PF Muon (egm LJ)"),
+                   lambda objs, mask: ak.num(objs["egm_ljs"].pfMuons, axis=-1)),
+        ],
+    ),
+    "egm_lj_dsamuon_n": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(10, 0, 10, name=r"Number of DSA Muon (egm LJ)"),
+                   lambda objs, mask: ak.num(objs["egm_ljs"].dsaMuons, axis=-1)),
+        ],
+    ),
     "egm_lj_electron_n": h.Histogram(
         [
             h.Axis(hist.axis.Regular(10, 0, 10, name=r"Number of Electron (egm LJ)"),
@@ -3827,6 +3839,18 @@ hist_defs = {
         [
             h.Axis(hist.axis.Regular(10, 0, 10, name=r"Number of Muon (Mu LJ)"),
                    lambda objs, mask: ak.num(objs["mu_ljs"].muons, axis=-1)),
+        ],
+    ),
+    "mu_lj_pfmuon_n": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(10, 0, 10, name=r"Number of PF Muon (Mu LJ)"),
+                   lambda objs, mask: ak.num(objs["mu_ljs"].pfMuons, axis=-1)),
+        ],
+    ),
+    "mu_lj_dsamuon_n": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(10, 0, 10, name=r"Number of DSA Muon (Mu LJ)"),
+                   lambda objs, mask: ak.num(objs["mu_ljs"].dsaMuons, axis=-1)),
         ],
     ),
     "mu_lj_electron_n": h.Histogram(

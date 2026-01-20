@@ -377,6 +377,48 @@ exo_2d_base: &exo_2d_base
   - "electron_mj_lj_Eratio_hadfrac"
   - "photon_mj_lj_Eratio_hadfrac"
 
+charge_sum_base: &charge_sum_base
+  - "lj_pt"
+  - "mu_lj_pt"
+  - "egm_lj_pt"
+  - "lj_dp_pt_ratio_nosel"
+  - "lj_dp_pt_ratio_noPF_twoDSA"
+  - "lj_dp_pt_ratio_onePF_oneDSA"
+  - "lj_dp_pt_ratio_twoPF_noDSA"
+
+  - "genAs_toMu_lxy_nosel"
+  - "genAs_toMu_lxy_nosel_large"
+  - "genAs_toMu_lxy_nearLJ_nosel"
+  - "genAs_toMu_lxy_nearLJ_nosel_large"
+  - "genAs_toMu_lxy_nearLJ_2pf"
+  - "genAs_toMu_lxy_nearLJ_2pf_large"
+  - "genAs_toMu_lxy_nearLJ_1pf_1dsa"
+  - "genAs_toMu_lxy_nearLJ_1pf_1dsa_large"
+  - "genAs_toMu_lxy_nearLJ_0pf_2dsa"
+  - "genAs_toMu_lxy_nearLJ_0pf_2dsa_large"
+
+  - "lj_lj_invmass_nosel"
+  - "lj_lj_invmass_nosel_large"
+  - "lj_lj_invmass_nosel_2mu2e"
+  - "lj_lj_invmass_nosel_2mu2e_large"
+  - "lj_lj_invmass_nosel_4mu"
+  - "lj_lj_invmass_nosel_4mu_large"
+  
+  - "muon_chargesum_lj"
+  - "muon_chargesum_Ldp"
+  - "muon_chargesum_SLdp"
+  
+  - "egm_lj_muon_n"
+  - "egm_lj_pfmuon_n"
+  - "egm_lj_dsamuon_n"
+  - "egm_lj_electron_n"
+  - "egm_lj_photon_n"
+  - "mu_lj_muon_n"
+  - "mu_lj_pfmuon_n"
+  - "mu_lj_dsamuon_n"
+  - "mu_lj_electron_n"
+  - "mu_lj_photon_n"
+
 energy_transfer_base: &energy_transfer_base
   - "e_pt_mother_all_Legm"
   - "e_pt_mother_all_SLegm"
