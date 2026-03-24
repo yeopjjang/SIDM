@@ -365,6 +365,55 @@ munumtest_mu2ormore_disp: &munumtest_mu2ormore_disp
   evt_cuts: 
     - *evt_baseNoLj
 
+munumtest_mu2ormore_disp_egmiso: &munumtest_mu2ormore_disp_egmiso
+  obj_cuts:
+    <<: *obj_baseNoLj
+  postLj_obj_cuts:
+    ljs:
+      - "pT > 30 GeV"
+      - "|eta| < 2.4"
+    mu_ljs:
+      - "Mu >= 2"
+      - "displaced"
+    egm_ljs:
+      - "displaced"
+      - "egm_lj_iso < 0.2"
+  evt_cuts: 
+    - *evt_baseNoLj
+
+munumtest_mu2ormore_disp_muiso: &munumtest_mu2ormore_disp_muiso
+  obj_cuts:
+    <<: *obj_baseNoLj
+  postLj_obj_cuts:
+    ljs:
+      - "pT > 30 GeV"
+      - "|eta| < 2.4"
+    mu_ljs:
+      - "Mu >= 2"
+      - "displaced"
+      - "mu_lj_iso < 0.1"
+    egm_ljs:
+      - "displaced"
+  evt_cuts: 
+    - *evt_baseNoLj
+
+munumtest_mu2ormore_disp_bothiso: &munumtest_mu2ormore_disp_bothiso
+  obj_cuts:
+    <<: *obj_baseNoLj
+  postLj_obj_cuts:
+    ljs:
+      - "pT > 30 GeV"
+      - "|eta| < 2.4"
+    mu_ljs:
+      - "Mu >= 2"
+      - "displaced"
+      - "mu_lj_iso < 0.1"
+    egm_ljs:
+      - "displaced"
+      - "egm_lj_iso < 0.2"
+  evt_cuts: 
+    - *evt_baseNoLj
+
 munumtest_mu3: &munumtest_mu3
   obj_cuts:
     <<: *obj_baseNoLj
