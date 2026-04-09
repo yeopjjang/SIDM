@@ -3530,7 +3530,6 @@ llpNanoAOD_v2:
       - CutDecayFalse_SIDM_BsTo2DpTo2Mu2e_MBs-800_MDp-5p0_ctau-5p0_v3_part-8.root
       - CutDecayFalse_SIDM_BsTo2DpTo2Mu2e_MBs-800_MDp-5p0_ctau-5p0_v3_part-9.root
       path: CutDecayFalse_SIDM_BsTo2DpTo2Mu2e_MBs-800_MDp-5p0_ctau-5p0_v3/LLPnanoAODv2/
-
     2Mu2E_800GeV_5p0GeV_25p0mm:
       files:
       - CutDecayFalse_SIDM_BsTo2DpTo2Mu2e_MBs-800_MDp-5p0_ctau-25p0_v3_part-0.root
