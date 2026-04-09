@@ -221,6 +221,18 @@ evt_cut_defs = {
         | objs["hlt"].DoubleL2Mu25NoVtx_2Cha_Eta2p4
         | objs["hlt"].DoubleL2Mu25NoVtx_2Cha_CosmicSeed_Eta2p4
     ),
+    "pass flags": lambda objs: (
+          objs["flags"].goodVertices
+        & objs["flags"].globalSuperTightHalo2016Filter
+        & objs["flags"].HBHENoiseFilter
+        & objs["flags"].HBHENoiseIsoFilter
+        & objs["flags"].EcalDeadCellTriggerPrimitiveFilter
+        & objs["flags"].BadPFMuonFilter
+        & objs["flags"].BadPFMuonDzFilter
+        & objs["flags"].eeBadScFilter
+        & objs["flags"].ecalBadCalibFilter
+        & objs["flags"].hfNoisyHitsFilter
+    ),
     ">=1 muon": lambda objs: ak.num(objs["muons"]) >= 1,
     "PV filter": lambda objs: ak.flatten(objs["pvs"].npvsGood) >= 1,
     #"Cosmic veto": lambda objs: objs["cosmicveto"].result,
@@ -241,4 +253,5 @@ evt_cut_defs = {
     "50 GeV <= GenMu0_pT <= 60 GeV": lambda objs : (objs["genMus"][:, 0].pt >=50) & (objs["genMus"][:, 0].pt <=60),
     "genMus": lambda objs: ak.num(objs["genMus"]) > 1,
     "dR(Mu_0, Mu_1) > 0.03": lambda objs: objs["genMus"][:,0].delta_r(objs["genMus"][:,1]) > 0.03,
+    "= 1 LJs": lambda objs: ak.num(objs["ljs"]) == 1,
 }

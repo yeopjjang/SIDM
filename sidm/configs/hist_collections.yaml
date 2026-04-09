@@ -103,6 +103,7 @@ lj_base: &lj_base
   - "lj_muonN"
   - "lj_dsaMuN"
   - "lj_pfMuN"
+  - "lj_isolation"
 
 
 mu_lj_base: &mu_lj_base
@@ -153,6 +154,9 @@ mu_lj_base: &mu_lj_base
   - "mu_lj_pfMu_trkNumPixelHits"
   - "mu_lj_pfMu_trkNumTrkLayers"
   - "mu_lj_muon_eta_phi"
+  - "mu_lj_isolation"
+  - "pfmu_lj_isolation"
+  - "dsamu_lj_isolation"
 
 egm_lj_base: &egm_lj_base
   - "egm_lj_n"
@@ -181,6 +185,9 @@ egm_lj_base: &egm_lj_base
   - "egm_lj_electron_min_dxy_XXXXLowRange"
   - "egm_lj_electron_max_dxy_XXXXLowRange"
   - "egm_lj_electron_lostHits"
+  - "egm_lj_isolation"
+  - "electron_lj_isolation"
+  - "photon_lj_isolation"
 
 electron_lj_base: &electron_lj_base
   - "electron_lj_dR"
