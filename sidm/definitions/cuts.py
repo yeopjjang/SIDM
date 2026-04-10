@@ -36,6 +36,7 @@ obj_cut_defs = {
         "pfDsaMuLj": lambda objs: (ak.num(objs["ljs"].pfMuons) > 0) & (ak.num(objs["ljs"].dsaMuons) > 0),
         "lj_iso < 0.1": lambda objs: objs["ljs"].isolation < 0.1,
         "lj_iso < 0.2": lambda objs: objs["ljs"].isolation < 0.2,
+        "Mu <= 1": lambda objs: objs["ljs"].muon_n <= 1,
     },
     "egm_ljs": {
         "eLj": lambda objs: (objs["egm_ljs"].electron_n > 0) & (objs["egm_ljs"].photon_n == 0),
@@ -254,4 +255,6 @@ evt_cut_defs = {
     "genMus": lambda objs: ak.num(objs["genMus"]) > 1,
     "dR(Mu_0, Mu_1) > 0.03": lambda objs: objs["genMus"][:,0].delta_r(objs["genMus"][:,1]) > 0.03,
     "= 1 LJs": lambda objs: ak.num(objs["ljs"]) == 1,
+    "= 1 muLJs": lambda objs: (ak.num(objs["mu_ljs"]) == 1) & (ak.num(objs["egm_ljs"]) == 0),
+    "= 1 egmLJs": lambda objs: (ak.num(objs["mu_ljs"]) == 0) & (ak.num(objs["egm_ljs"]) == 1),
 }
