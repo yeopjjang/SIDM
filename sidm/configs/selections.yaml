@@ -1548,7 +1548,7 @@ data_control_region_1Lj: &data_control_region_1Lj
   evt_cuts: 
     - *evt_baseNoLj
     - "pass flags"
-    - "= 1 LJs"
+    - "= 1 LJs"  #muLJ + EGMLJ == 1 
 
 data_control_region_1Lj_invertMusel: &data_control_region_1Lj_invertMusel
   obj_cuts:
@@ -1564,6 +1564,21 @@ data_control_region_1Lj_invertMusel: &data_control_region_1Lj_invertMusel
     - "pass flags"
     - "= 1 LJs"
 
+data_control_region_1muLj: &data_control_region_1muLj
+  obj_cuts:
+    <<: *obj_ljsource_cuts
+  postLj_obj_cuts: 
+    ljs: 
+      - "pT > 30 GeV"
+      - "|eta| < 2.4"
+    mu_ljs: 
+      - "Mu >= 2"
+  evt_cuts: 
+    - *evt_baseNoLj
+    - "pass flags"
+    - "= 1 LJs"
+    - "= 1 muLJs"
+
 data_control_region_1muLj_invertMusel: &data_control_region_1muLj_invertMusel
   obj_cuts:
     <<: *obj_ljsource_cuts
@@ -1573,6 +1588,19 @@ data_control_region_1muLj_invertMusel: &data_control_region_1muLj_invertMusel
       - "|eta| < 2.4"
     mu_ljs: 
       - "Mu == 1"
+  evt_cuts: 
+    - *evt_baseNoLj
+    - "pass flags"
+    - "= 1 LJs"
+    - "= 1 muLJs"
+
+data_control_region_1muLj_inclusive: &data_control_region_1muLj_inclusive
+  obj_cuts:
+    <<: *obj_ljsource_cuts
+  postLj_obj_cuts: 
+    ljs: 
+      - "pT > 30 GeV"
+      - "|eta| < 2.4"
   evt_cuts: 
     - *evt_baseNoLj
     - "pass flags"
