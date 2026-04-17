@@ -4,7 +4,7 @@
 import awkward as ak
 # local
 from sidm.definitions.objects import derived_objs
-from sidm.tools.utilities import dR, lxy, rho, check_bits, returnBitMapTArrayPhoton, dR_outer
+from sidm.tools.utilities import dR, lxy, rho, check_bits, returnBitMapTArrayPhoton, dR_outer, cosA_cut, cosA_pair_cut, cosAlpha
 
 obj_cut_defs = {
     "pvs": {
@@ -188,6 +188,8 @@ obj_cut_defs = {
     },
     "dsaMuons": {
         "pT > 10 GeV": lambda objs, dsa: dsa.pt > 10,
+        "|dxy| <= 40" : lambda objs, dsa: abs(dsa.dxy) <= 40,
+        "|dz| <= 60" : lambda objs, dsa: abs(dsa.dz) <= 60,
         "|eta| < 2.4": lambda objs, dsa: abs(dsa.eta) < 2.4,
         # displaced ID as a single flag and as individual cuts
         "displaced ID" : lambda objs, dsa: dsa.displacedID > 0,
@@ -257,4 +259,11 @@ evt_cut_defs = {
     "= 1 LJs": lambda objs: ak.num(objs["ljs"]) == 1,
     "= 1 muLJs": lambda objs: (ak.num(objs["mu_ljs"]) == 1) & (ak.num(objs["egm_ljs"]) == 0),
     "= 1 egmLJs": lambda objs: (ak.num(objs["mu_ljs"]) == 0) & (ak.num(objs["egm_ljs"]) == 1),
+    "cosA_muons > -0.95":  lambda objs : cosA_cut(objs["muons"]),
+    "cosA_dsaMuons > -0.95":  lambda objs : cosA_cut(objs["dsaMuons"]),
+    "cosmic_mu_pair <= 6":lambda objs : cosA_pair_cut(objs["muons"]),
+    "cosmic_dsaMu_pair <= 6":lambda objs : cosA_pair_cut(objs["dsaMuons"]),
+    "all cos_alpha(dsa, dsa) > -0.9" : lambda objs : ak.all(cosAlpha(objs["dsaMuons"]) > -0.9, axis =1),
+    "n_dsa >= 2": lambda objs : ak.num(objs["dsaMuons"]) >= 2,
+    
 }

@@ -1614,10 +1614,27 @@ data_control_region_1egmLj_invertMusel: &data_control_region_1egmLj_invertMusel
     ljs: 
       - "pT > 30 GeV"
       - "|eta| < 2.4"
-    mu_ljs: 
-      - "Mu == 1"
   evt_cuts: 
     - *evt_baseNoLj
     - "pass flags"
     - "= 1 LJs"
     - "= 1 egmLJs"
+
+data_control_region_1muLj_cosmic_veto: &data_control_region_1muLj_cosmic_veto
+  obj_cuts: 
+    <<: *obj_ljsource_cuts
+    dsaMuons:
+      - "|dxy| <= 40"
+      - "|dz| <= 60"
+  postLj_obj_cuts: 
+    ljs: 
+      - "pT > 30 GeV"
+      - "|eta| < 2.4"
+    mu_ljs: 
+      - "Mu >= 2"
+  evt_cuts: 
+    - *evt_baseNoLj
+    - "pass flags"
+    - "= 1 LJs"
+    - "= 1 muLJs"
+    - "all cos_alpha(dsa, dsa) > -0.9"

@@ -13,7 +13,7 @@ import hist
 import awkward as ak
 # local
 from sidm.tools import histogram as h
-from sidm.tools.utilities import dR, lxy, matched, dxy, lepton_dxy_resolution
+from sidm.tools.utilities import dR, lxy, matched, dxy, lepton_dxy_resolution, cosA_cut, cosA_pair_cut, cosAlpha
 from sidm.definitions.objects import derived_objs
 # always reload local modules to pick up changes during development
 importlib.reload(h)
@@ -54,6 +54,7 @@ attr_labels = {
     "phi": r"$\phi$",
     "lxy": r"$L_{{xy}}$ (cm) ",
     "dxy": r"$d_0$",
+    "dz": r"$d_z$",
     "mass": "Mass (GeV)",
     "gamma": r"Lorentz Factor $\gamma$",
     "status": "Gen Status (1=Final, 23=Born)",
@@ -67,6 +68,8 @@ default_binnings = {
     "mass": (100, 0, 1000),
     "gamma": (100, 0, 5000),
     "status": (60, -30, 30),
+    "dxy": (100, 0, 50),
+    "dz": (100, 0, 80),
 }
 
 
@@ -454,9 +457,6 @@ hist_defs = {
                    lambda objs, mask: objs["muons"].good_matched_dsa_muons[:,:,:1].numMatch),#Also works! idk if the result makes sense, but it runs
         ],
     ),
-
-
-
     # pfmuon-genA
     "muon_nearGenA_n_genA_lxy": h.Histogram(
         [
@@ -616,7 +616,19 @@ hist_defs = {
     # dsamuon
     "dsaMuon_n": obj_attr("dsaMuons", "n"),
     "dsaMuon_pt":obj_attr("dsaMuons", "pt", xmax=500),
-    "dsaMuon_dxy":obj_attr("dsaMuons", "dxy"),
+    # "dsaMuon_dxy":obj_attr("dsaMuons", "dxy"),
+    "dsaMuon_dxy": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(100, 0, 50, name=r"DSA Muon dxy (cm)"),
+                   lambda objs, mask: abs(objs["dsaMuons"].dxy)),
+        ],
+    ),
+    "dsaMuon_dz": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(100, 0, 80, name=r"DSA Muon dz (cm)"),
+                   lambda objs, mask: abs(objs["dsaMuons"].dz)),
+        ],
+    ),
     "dsaMuon_eta_phi": obj_eta_phi("dsaMuons"),
     "dsaMuon_absD0": obj_attr("dsaMuons", "dxy", absval=True, xmax=500),
     "dsaMuon_absD0_lowRange": obj_attr("dsaMuons", "dxy", absval=True, xmax=10),
@@ -639,7 +651,13 @@ hist_defs = {
                    lambda objs, mask: objs["dsaMuons"].good_matched_muons[:,:,:1].numMatch),#Also works! idk if the result makes sense, but it runs
         ],
     ),
-
+    "dsaMu_dsaMu_cosAlpha": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(100, -1, 1, name="muon_muon_cosAlpha",
+                                     label=r"CosAlpha(DSA $\mu$, DSA $\mu$)"),
+                   lambda objs, mask: cosAlpha(objs["dsaMuons"])),
+        ],
+    ),
     # dsamuon-genA
     "dsaMuon_nearGenA_n_genA_lxy": h.Histogram(
         [
@@ -992,6 +1010,12 @@ hist_defs = {
         [
             h.Axis(hist.axis.Regular(100, 0, 50, name=r"$\mu$- type LJ DSA $\mu$ dxy (cm)"),
                    lambda objs, mask: abs(objs["mu_ljs"].dsaMuons.dxy)),
+        ],
+    ),
+    "mu_lj_dsaMuon_dz": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(100, 0, 80, name=r"$\mu$- type LJ DSA $\mu$ dz (cm)"),
+                   lambda objs, mask: abs(objs["mu_ljs"].dsaMuons.dz)),
         ],
     ),
     "mu_lj_muon_dxy_lowRange": h.Histogram(
