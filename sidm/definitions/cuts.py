@@ -199,7 +199,7 @@ obj_cut_defs = {
                                            & (dsa.trkNumDTHits <= 18)), False, True),
         "normChi2 < 2.5": lambda objs, dsa: dsa.normChi2 < 2.5,
         "ptErrorOverPT < 1": lambda objs, dsa: (dsa.ptErr / dsa.pt) < 1.0,
-        "barrel": lambda objs, dsa: dsa.eta <= 1.479,
+        "barrel": lambda objs, dsa: abs(dsa.eta) <= 1.479,
         "endcap": lambda objs, dsa: ((abs(dsa.eta) > 1.479)& (abs(dsa.eta) < 2.4)),
         # just use segment-based matching
        # "no PF match" : lambda objs, dsa: dsa.muonMatch1/dsa.nSegments < 0.667,

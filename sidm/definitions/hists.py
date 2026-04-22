@@ -725,6 +725,13 @@ hist_defs = {
         ],
         evt_mask=lambda objs: ak.num(objs["ljs"]) > 1,
     ),
+    "lj_e": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(100, 0, 1000, name="lj_e",
+                                     label="LJ Energy [GeV]"),
+                   lambda objs, mask: objs["ljs"][mask].energy),
+        ],
+    ),
     "mu_lj_e": h.Histogram(
         [
             h.Axis(hist.axis.Regular(100, 0, 1000, name="lj_e",
@@ -744,6 +751,27 @@ hist_defs = {
             h.Axis(hist.axis.Regular(100, 0, 1000, name="lj_e",
                                      label="DSA Mu LJ Energy [GeV]"),
                    lambda objs, mask: objs["dsamu_ljs"][mask].energy),
+        ],
+    ),
+    "egm_lj_e": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(100, 0, 1000, name="lj_e",
+                                     label="EGM LJ Energy [GeV]"),
+                   lambda objs, mask: objs["egm_ljs"][mask].energy),
+        ],
+    ),
+    "electron_lj_e": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(100, 0, 1000, name="lj_e",
+                                     label="Elecgtron LJ Energy [GeV]"),
+                   lambda objs, mask: objs["electron_ljs"][mask].energy),
+        ],
+    ),
+    "photon_lj_e": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(100, 0, 1000, name="lj_e",
+                                     label="Photon LJ Energy [GeV]"),
+                   lambda objs, mask: objs["photon_ljs"][mask].energy),
         ],
     ),
     "lj0_dRSpread": h.Histogram(
@@ -774,7 +802,9 @@ hist_defs = {
     "mu_lj_muonN": obj_attr("mu_ljs", "muon_n", xmax=10, nbins=10),
     "mu_lj_pfMu_n": obj_attr("mu_ljs", "pfMu_n", xmax=10, nbins=10),
     "mu_lj_dsaMu_n": obj_attr("mu_ljs", "dsaMu_n", xmax=10, nbins=10),
-    "egm_lj_pt": obj_attr("egm_ljs", "pt", xmax=700),
+    "egm_lj_pt": obj_attr("egm_ljs", "pt", xmax=1000),
+    "electron_lj_pt": obj_attr("electron_ljs", "pt", xmax=1000),
+    "photon_lj_pt": obj_attr("photon_ljs", "pt", xmax=1000),
     "egm_lj_electronN": obj_attr("egm_ljs", "electron_n", xmax=10, nbins=10),
     "egm_lj_photonN": obj_attr("egm_ljs", "photon_n", xmax=10, nbins=10),
     "egm_lj_electron_pt": h.Histogram(
@@ -2319,6 +2349,24 @@ hist_defs = {
                    lambda objs, mask: objs["dsamu_ljs"].dR_matched_jet),
         ],
     ),
+    "mu_in_lj_mu_lj_dR": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 0.4, name="mu_matched_jet_lj_dR",label="dR(Mu-LJ, Mu-Matched Jet)"),
+                   lambda objs, mask: objs["mu_ljs"].delta_r(objs["mu_ljs"].muons)),
+        ],
+    ),
+    "pfmu_in_lj_mu_lj_dR": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 0.4, name="mu_matched_jet_lj_dR",label="dR(Mu-LJ, Mu-Matched Jet)"),
+                   lambda objs, mask: objs["mu_ljs"].delta_r(objs["mu_ljs"].pfMuons)),
+        ],
+    ),
+    "dsamu_in_lj_mu_lj_dR": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 0.4, name="mu_matched_jet_lj_dR",label="dR(Mu-LJ, Mu-Matched Jet)"),
+                   lambda objs, mask: objs["mu_ljs"].delta_r(objs["mu_ljs"].dsaMuons)),
+        ],
+    ),
     "egm_matched_jet_lj_dR": h.Histogram(
         [
             h.Axis(hist.axis.Regular(50, 0, 0.4, name="egm_matched_jet_lj_dR",
@@ -2408,6 +2456,20 @@ hist_defs = {
             h.Axis(hist.axis.Regular(100, 0, 1000, name="dpt_matched_jet_lj",
                    label="|EGM Matched Jet $p_{T}$ - EGM LJ $p_{T}$|"),
                    lambda objs, mask: abs(objs["egm_ljs"].matched_jet.pt - objs["egm_ljs"].pt)),
+        ],
+    ),
+    "dpt_electron_matched_jet_lj_large": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(100, 0, 1000, name="dpt_matched_jet_lj",
+                   label="|Electron Matched Jet $p_{T}$ - Electron LJ $p_{T}$|"),
+                   lambda objs, mask: abs(objs["electron_ljs"].matched_jet.pt - objs["electron_ljs"].pt)),
+        ],
+    ),
+    "dpt_photon_matched_jet_lj_large": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(100, 0, 1000, name="dpt_matched_jet_lj",
+                   label="|Photon Matched Jet $p_{T}$ - Photon LJ $p_{T}$|"),
+                   lambda objs, mask: abs(objs["photon_ljs"].matched_jet.pt - objs["photon_ljs"].pt)),
         ],
     ),
     # E_mj/E_lj
@@ -2557,6 +2619,231 @@ hist_defs = {
             h.Axis(hist.axis.Regular(50, 0, 0.2, name="photon_lj_isolation",
                    label="Photon-LJ Isolation"),
                    lambda objs, mask:  objs["photon_ljs"].isolation),
+        ],
+    ),
+    # LJ-MJ 2D
+    "mj_lj_Eratio_lj_e": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 2, name="mj_lj_Eratio", label=r"$E_{Matched Jet} / E_{LJ}$"),
+                   lambda objs, mask:  (objs["ljs"].matched_jet.energy / objs["ljs"].energy)),
+            h.Axis(hist.axis.Regular(50, 0, 1000, name="lj_e",label="LJ Energy [GeV]"),
+                   lambda objs, mask: objs["ljs"][mask].energy),
+        ],
+    ),
+    "mu_mj_lj_Eratio_lj_e": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 2, name="mu_mj_lj_Eratio",label=r"Mu-type $E_{Matched Jet} / E_{LJ}$"),
+                   lambda objs, mask:  (objs["mu_ljs"].matched_jet.energy / objs["mu_ljs"].energy)),
+            h.Axis(hist.axis.Regular(50, 0, 1000, name="lj_e",label="Mu LJ Energy [GeV]"),
+                   lambda objs, mask: objs["mu_ljs"].energy),
+        ],
+    ),
+    "pfmu_mj_lj_Eratio_lj_e": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 2, name="pfmu_mj_lj_Eratio", label=r"PF Mu-type $E_{Matched Jet} / E_{LJ}$"),
+                   lambda objs, mask:  (objs["pfmu_ljs"].matched_jet.energy / objs["pfmu_ljs"].energy)),
+            h.Axis(hist.axis.Regular(50, 0, 1000, name="lj_e",label="PF Mu LJ Energy [GeV]"),
+                   lambda objs, mask: objs["pfmu_ljs"].energy),
+        ],
+    ),
+    "dsamu_mj_lj_Eratio_lj_e": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 2, name="dsamu_mj_lj_Eratio", label=r"DSA Mu-type $E_{Matched Jet} / E_{LJ}$"),
+                   lambda objs, mask:  (objs["dsamu_ljs"].matched_jet.energy / objs["dsamu_ljs"].energy)),
+            h.Axis(hist.axis.Regular(50, 0, 1000, name="lj_e",label="DSA Mu LJ Energy [GeV]"),
+                   lambda objs, mask: objs["dsamu_ljs"].energy),
+        ],
+    ),
+    "egm_mj_lj_Eratio_lj_e": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 2, name="egm_mj_lj_Eratio",label=r"EGM-type $E_{Matched Jet} / E_{LJ}$"),
+                   lambda objs, mask:  (objs["egm_ljs"].matched_jet.energy / objs["egm_ljs"].energy)),
+            h.Axis(hist.axis.Regular(50, 0, 1000, name="lj_e",label="EGM LJ Energy [GeV]"),
+                   lambda objs, mask: objs["egm_ljs"].energy),
+        ],
+    ),
+    "electron_mj_lj_Eratio_lj_e": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 2, name="electron_mj_lj_Eratio",label=r"Electron-type $E_{Matched Jet} / E_{LJ}$"),
+                   lambda objs, mask:  (objs["electron_ljs"].matched_jet.energy / objs["electron_ljs"].energy)),
+            h.Axis(hist.axis.Regular(50, 0, 1000, name="lj_e",label="Electron LJ Energy [GeV]"),
+                   lambda objs, mask: objs["electron_ljs"].energy),
+        ],
+    ),
+    "photon_mj_lj_Eratio_lj_e": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 2, name="photon_mj_lj_Eratio",label=r"Photon-type $E_{Matched Jet} / E_{LJ}$"),
+                   lambda objs, mask:  (objs["photon_ljs"].matched_jet.energy / objs["photon_ljs"].energy)),
+            h.Axis(hist.axis.Regular(50, 0, 1000, name="lj_e",label="Photon LJ Energy [GeV]"),
+                   lambda objs, mask: objs["photon_ljs"].energy),
+        ],
+    ),
+    "mj_lj_Eratio_mj_e": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 2, name="mj_lj_Eratio", label=r"$E_{Matched Jet} / E_{LJ}$"),
+                   lambda objs, mask:  (objs["ljs"].matched_jet.energy / objs["ljs"].energy)),
+            h.Axis(hist.axis.Regular(50, 0, 1000, name="matched_jet_e", label="Matched Jet Energy [GeV]"),
+                   lambda objs, mask:  objs["ljs"].matched_jet.energy),
+        ],
+    ),
+    "mu_mj_lj_Eratio_mj_e": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 2, name="mu_mj_lj_Eratio",label=r"Mu-type $E_{Matched Jet} / E_{LJ}$"),
+                   lambda objs, mask:  (objs["mu_ljs"].matched_jet.energy / objs["mu_ljs"].energy)),
+            h.Axis(hist.axis.Regular(50, 0, 1000, name="mu_matched_jet_e", label="Mu Matched Jet Energy [GeV]"),
+                   lambda objs, mask:  objs["mu_ljs"].matched_jet.energy),
+        ],
+    ),
+    "pfmu_mj_lj_Eratio_mj_e": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 2, name="pfmu_mj_lj_Eratio", label=r"PF Mu-type $E_{Matched Jet} / E_{LJ}$"),
+                   lambda objs, mask:  (objs["pfmu_ljs"].matched_jet.energy / objs["pfmu_ljs"].energy)),
+            h.Axis(hist.axis.Regular(50, 0, 1000, name="pfmu_matched_jet_e", label="PF Mu Matched Jet Energy [GeV]"),
+                   lambda objs, mask:  objs["pfmu_ljs"].matched_jet.energy),
+        ],
+    ),
+    "dsamu_mj_lj_Eratio_mj_e": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 2, name="dsamu_mj_lj_Eratio", label=r"DSA Mu-type $E_{Matched Jet} / E_{LJ}$"),
+                   lambda objs, mask:  (objs["dsamu_ljs"].matched_jet.energy / objs["dsamu_ljs"].energy)),
+            h.Axis(hist.axis.Regular(50, 0, 1000, name="dsamu_matched_jet_e", label="DSA Mu Matched Jet Energy [GeV]"),
+                   lambda objs, mask:  objs["dsamu_ljs"].matched_jet.energy),
+        ],
+    ),
+    "egm_mj_lj_Eratio_mj_e": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 2, name="egm_mj_lj_Eratio",label=r"EGM-type $E_{Matched Jet} / E_{LJ}$"),
+                   lambda objs, mask:  (objs["egm_ljs"].matched_jet.energy / objs["egm_ljs"].energy)),
+            h.Axis(hist.axis.Regular(50, 0, 1000, name="egm_matched_jet_e", label="EGM Matched Jet Energy [GeV]"),
+                   lambda objs, mask:  objs["egm_ljs"].matched_jet.energy),
+        ],
+    ),
+    "electron_mj_lj_Eratio_mj_e": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 2, name="electron_mj_lj_Eratio",label=r"Electron-type $E_{Matched Jet} / E_{LJ}$"),
+                   lambda objs, mask:  (objs["electron_ljs"].matched_jet.energy / objs["electron_ljs"].energy)),
+            h.Axis(hist.axis.Regular(50, 0, 1000, name="electron_matched_jet_e", label="Electron Matched Jet Energy [GeV]"),
+                   lambda objs, mask:  objs["electron_ljs"].matched_jet.energy),
+        ],
+    ),
+    "photon_mj_lj_Eratio_mj_e": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 2, name="photon_mj_lj_Eratio",label=r"Photon-type $E_{Matched Jet} / E_{LJ}$"),
+                   lambda objs, mask:  (objs["photon_ljs"].matched_jet.energy / objs["photon_ljs"].energy)),
+            h.Axis(hist.axis.Regular(50, 0, 1000, name="photon_matched_jet_e", label="Photon Matched Jet Energy [GeV]"),
+                   lambda objs, mask:  objs["photon_ljs"].matched_jet.energy),
+        ],
+    ),
+    "lepfraction_lj_e": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 1, name="matched_jet_lepfraction",label="Matched Jet Lepton Fraction"),
+                   lambda objs, mask:  objs["ljs"].lepton_fraction),
+            h.Axis(hist.axis.Regular(50, 0, 1000, name="lj_e",label="LJ Energy [GeV]"),
+                   lambda objs, mask: objs["ljs"][mask].energy),
+        ],
+    ),
+    "mu_lepfraction_lj_e": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 1, name="mu_matched_jet_lepfraction",label="Mu Matched Jet Lepton Fraction"),
+                   lambda objs, mask:  objs["mu_ljs"].lepton_fraction),
+            h.Axis(hist.axis.Regular(50, 0, 1000, name="lj_e",label="Mu LJ Energy [GeV]"),
+                   lambda objs, mask: objs["mu_ljs"][mask].energy),
+        ],
+    ),
+    "pfmu_lepfraction_lj_e": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 1, name="pfmu_matched_jet_lepfraction",label="PF Mu Matched Jet Lepton Fraction"),
+                   lambda objs, mask:  objs["pfmu_ljs"].lepton_fraction),
+            h.Axis(hist.axis.Regular(50, 0, 1000, name="lj_e",label="PF Mu LJ Energy [GeV]"),
+                   lambda objs, mask: objs["pfmu_ljs"][mask].energy),
+        ],
+    ),
+    "dsamu_lepfraction_lj_e": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 1, name="dsamu_matched_jet_lepfraction",label="DSA Mu Matched Jet Lepton Fraction"),
+                   lambda objs, mask:  objs["dsamu_ljs"].lepton_fraction),
+            h.Axis(hist.axis.Regular(50, 0, 1000, name="lj_e",label="DSA Mu LJ Energy [GeV]"),
+                   lambda objs, mask: objs["dsamu_ljs"][mask].energy),
+        ],
+    ),
+    "egm_lepfraction_lj_e": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 1, name="egm_matched_jet_lepfraction",label="EGM Matched Jet Lepton Fraction"),
+                   lambda objs, mask:  objs["egm_ljs"].lepton_fraction),
+            h.Axis(hist.axis.Regular(50, 0, 1000, name="lj_e",label="EGM LJ Energy [GeV]"),
+                   lambda objs, mask: objs["egm_ljs"][mask].energy),
+        ],
+    ),
+    "electron_lepfraction_lj_e": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 1, name="electron_matched_jet_lepfraction",label="Electron Matched Jet Lepton Fraction"),
+                   lambda objs, mask:  objs["electron_ljs"].lepton_fraction),
+            h.Axis(hist.axis.Regular(50, 0, 1000, name="lj_e",label="Electron LJ Energy [GeV]"),
+                   lambda objs, mask: objs["electron_ljs"][mask].energy),
+        ],
+    ),
+    "photon_lepfraction_lj_e": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 1, name="photon_matched_jet_lepfraction",label="Photon Matched Jet Lepton Fraction"),
+                   lambda objs, mask:  objs["photon_ljs"].lepton_fraction),
+            h.Axis(hist.axis.Regular(50, 0, 1000, name="lj_e",label="Photon LJ Energy [GeV]"),
+                   lambda objs, mask: objs["photon_ljs"][mask].energy),
+        ],
+    ),
+    "lepfraction_mj_e": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 1, name="matched_jet_lepfraction",label="Matched Jet Lepton Fraction"),
+                   lambda objs, mask:  objs["ljs"].lepton_fraction),
+            h.Axis(hist.axis.Regular(50, 0, 1000, name="matched_jet_e", label="Matched Jet Energy [GeV]"),
+                   lambda objs, mask:  objs["ljs"].matched_jet.energy),
+        ],
+    ),
+    "mu_lepfraction_mj_e": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 1, name="mu_matched_jet_lepfraction",label="Mu Matched Jet Lepton Fraction"),
+                   lambda objs, mask:  objs["mu_ljs"].lepton_fraction),
+            h.Axis(hist.axis.Regular(50, 0, 1000, name="mu_matched_jet_e", label="Mu Matched Jet Energy [GeV]"),
+                   lambda objs, mask:  objs["mu_ljs"].matched_jet.energy),
+        ],
+    ),
+    "pfmu_lepfraction_mj_e": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 1, name="pfmu_matched_jet_lepfraction",label="PF Mu Matched Jet Lepton Fraction"),
+                   lambda objs, mask:  objs["pfmu_ljs"].lepton_fraction),
+            h.Axis(hist.axis.Regular(50, 0, 1000, name="pfmu_matched_jet_e", label="PF Mu Matched Jet Energy [GeV]"),
+                   lambda objs, mask:  objs["pfmu_ljs"].matched_jet.energy),
+        ],
+    ),
+    "dsamu_lepfraction_mj_e": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 1, name="dsamu_matched_jet_lepfraction",label="DSA Mu Matched Jet Lepton Fraction"),
+                   lambda objs, mask:  objs["dsamu_ljs"].lepton_fraction),
+            h.Axis(hist.axis.Regular(50, 0, 1000, name="dsamu_matched_jet_e", label="DSA Mu Matched Jet Energy [GeV]"),
+                   lambda objs, mask:  objs["dsamu_ljs"].matched_jet.energy),
+        ],
+    ),
+    "egm_lepfraction_mj_e": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 1, name="egm_matched_jet_lepfraction",label="EGM Matched Jet Lepton Fraction"),
+                   lambda objs, mask:  objs["egm_ljs"].lepton_fraction),
+            h.Axis(hist.axis.Regular(50, 0, 1000, name="egm_matched_jet_e", label="EGM Matched Jet Energy [GeV]"),
+                   lambda objs, mask:  objs["egm_ljs"].matched_jet.energy),
+        ],
+    ),
+    "electron_lepfraction_mj_e": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 1, name="electron_matched_jet_lepfraction",label="Electron Matched Jet Lepton Fraction"),
+                   lambda objs, mask:  objs["electron_ljs"].lepton_fraction),
+            h.Axis(hist.axis.Regular(50, 0, 1000, name="electron_matched_jet_e", label="Electron Matched Jet Energy [GeV]"),
+                   lambda objs, mask:  objs["electron_ljs"].matched_jet.energy),
+        ],
+    ),
+    "photon_lepfraction_mj_e": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 1, name="photon_matched_jet_lepfraction",label="Photon Matched Jet Lepton Fraction"),
+                   lambda objs, mask:  objs["photon_ljs"].lepton_fraction),
+            h.Axis(hist.axis.Regular(50, 0, 1000, name="photon_matched_jet_e", label="Photon Matched Jet Energy [GeV]"),
+                   lambda objs, mask:  objs["photon_ljs"].matched_jet.energy),
         ],
     ),
     # ABCD plane
