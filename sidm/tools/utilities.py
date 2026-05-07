@@ -9,6 +9,9 @@ import mplhep as hep
 import scipy.optimize as opt
 import hist.intervals
 from sidm import BASE_DIR
+from matplotlib.patches import Circle
+from dataclasses import dataclass, field
+
 
 def print_list(l):
     """Print one list element per line"""
@@ -586,3 +589,93 @@ def cosAlpha(muons): #could work for any object
     v1, v2 = ak.unzip(pairs)
     cos_alpha = np.cos(v1.deltaangle(v2))
     return (cos_alpha)
+
+######### EVT DISPLAY TEST ################
+
+def make_basic_event_display(objs, sel_objs, max_events=5):
+    mask = (
+        (ak.num(sel_objs["muons"]) > 0) &
+        (ak.num(sel_objs["dsaMuons"]) > 0) &
+        (ak.num(sel_objs["mu_ljs"]) > 0) &
+        (ak.num(sel_objs["egm_ljs"]) > 0)
+    )
+
+    # raw objects from the SAME selected events
+    raw_pfmu = objs["muons"][mask][:max_events]
+    raw_dsa  = objs["dsaMuons"][mask][:max_events]
+    raw_ele  = objs["electrons"][mask][:max_events]
+    raw_pho  = objs["photons"][mask][:max_events]
+
+    # selected objects from the SAME selected events
+    sel_pfmu = sel_objs["muons"][mask][:max_events]
+    sel_dsa  = sel_objs["dsaMuons"][mask][:max_events]
+    sel_ele  = sel_objs["electrons"][mask][:max_events]
+    sel_pho  = sel_objs["photons"][mask][:max_events]
+    sel_ljs  = sel_objs["ljs"][mask][:max_events]
+    sel_mu_ljs  = sel_objs["mu_ljs"][mask][:max_events]
+    sel_egm_ljs = sel_objs["egm_ljs"][mask][:max_events]
+
+    return {
+        "raw": {
+            "n_pfmu": ak.to_list(ak.num(raw_pfmu)),
+            "n_dsa":  ak.to_list(ak.num(raw_dsa)),
+            "n_ele":  ak.to_list(ak.num(raw_ele)),
+            "n_pho":  ak.to_list(ak.num(raw_pho)),
+
+            "pfmu_eta": ak.to_list(raw_pfmu.eta),
+            "pfmu_phi": ak.to_list(raw_pfmu.phi),
+            "pfmu_pt":  ak.to_list(raw_pfmu.pt),
+
+            "dsa_eta": ak.to_list(raw_dsa.eta),
+            "dsa_phi": ak.to_list(raw_dsa.phi),
+            "dsa_pt":  ak.to_list(raw_dsa.pt),
+
+            "ele_eta": ak.to_list(raw_ele.eta),
+            "ele_phi": ak.to_list(raw_ele.phi),
+            "ele_pt":  ak.to_list(raw_ele.pt),
+
+            "pho_eta": ak.to_list(raw_pho.eta),
+            "pho_phi": ak.to_list(raw_pho.phi),
+            "pho_pt":  ak.to_list(raw_pho.pt),
+        },
+
+        "sel": {
+            "n_pfmu": ak.to_list(ak.num(sel_pfmu)),
+            "n_dsa":  ak.to_list(ak.num(sel_dsa)),
+            "n_ele":  ak.to_list(ak.num(sel_ele)),
+            "n_pho":  ak.to_list(ak.num(sel_pho)),
+            "n_lj":   ak.to_list(ak.num(sel_ljs)),
+
+            "pfmu_eta": ak.to_list(sel_pfmu.eta),
+            "pfmu_phi": ak.to_list(sel_pfmu.phi),
+            "pfmu_pt":  ak.to_list(sel_pfmu.pt),
+
+            "dsa_eta": ak.to_list(sel_dsa.eta),
+            "dsa_phi": ak.to_list(sel_dsa.phi),
+            "dsa_pt":  ak.to_list(sel_dsa.pt),
+
+            "ele_eta": ak.to_list(sel_ele.eta),
+            "ele_phi": ak.to_list(sel_ele.phi),
+            "ele_pt":  ak.to_list(sel_ele.pt),
+
+            "pho_eta": ak.to_list(sel_pho.eta),
+            "pho_phi": ak.to_list(sel_pho.phi),
+            "pho_pt":  ak.to_list(sel_pho.pt),
+
+            "lj_eta": ak.to_list(sel_ljs.eta),
+            "lj_phi": ak.to_list(sel_ljs.phi),
+            "lj_pt":  ak.to_list(sel_ljs.pt),
+            
+            "n_mu_lj":  ak.to_list(ak.num(sel_mu_ljs)),
+            "n_egm_lj": ak.to_list(ak.num(sel_egm_ljs)),
+
+            "mu_lj_eta": ak.to_list(sel_mu_ljs.eta),
+            "mu_lj_phi": ak.to_list(sel_mu_ljs.phi),
+            "mu_lj_pt":  ak.to_list(sel_mu_ljs.pt),
+
+            "egm_lj_eta": ak.to_list(sel_egm_ljs.eta),
+            "egm_lj_phi": ak.to_list(sel_egm_ljs.phi),
+            "egm_lj_pt":  ak.to_list(sel_egm_ljs.pt),
+        }
+    }
+    

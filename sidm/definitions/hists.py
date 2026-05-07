@@ -13,12 +13,16 @@ import hist
 import awkward as ak
 # local
 from sidm.tools import histogram as h
-from sidm.tools.utilities import dR, lxy, matched, dxy, lepton_dxy_resolution, cosA_cut, cosA_pair_cut, cosAlpha
+from sidm.tools.utilities import dR, lxy, matched, dxy, lepton_dxy_resolution, cosA_cut, cosA_pair_cut, cosAlpha, make_basic_event_display
 from sidm.definitions.objects import derived_objs
 # always reload local modules to pick up changes during development
 importlib.reload(h)
 import numpy as np
 
+
+event_display_defs = {
+    "basic": lambda objs, sel_objs: make_basic_event_display(objs, sel_objs, max_events=10),
+}
 
 # define counters
 counter_defs = {
@@ -763,7 +767,7 @@ hist_defs = {
     "electron_lj_e": h.Histogram(
         [
             h.Axis(hist.axis.Regular(100, 0, 1000, name="lj_e",
-                                     label="Elecgtron LJ Energy [GeV]"),
+                                     label="Electron LJ Energy [GeV]"),
                    lambda objs, mask: objs["electron_ljs"][mask].energy),
         ],
     ),

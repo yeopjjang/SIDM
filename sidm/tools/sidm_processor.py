@@ -13,7 +13,7 @@ import vector
 #local
 from sidm import BASE_DIR
 from sidm.tools import selection, cutflow, utilities
-from sidm.definitions.hists import hist_defs, counter_defs
+from sidm.definitions.hists import hist_defs, counter_defs, event_display_defs
 from sidm.definitions.objects import preLj_objs, postLj_objs, postLj_objs_MC
 import coffea.nanoevents.transforms as tr
 
@@ -98,6 +98,7 @@ class SidmProcessor(processor.ProcessorABC):
 
         cutflows = {}
         counters = {}
+        event_displays = {}
 
         # define histograms
         hists = self.build_histograms()
@@ -175,6 +176,17 @@ class SidmProcessor(processor.ProcessorABC):
                     except (KeyError, AttributeError) as e:
                         print(f"Warning: cannot fill counter {name}. Skipping.")
 
+                # Fill event displays
+                if lj_reco not in event_displays:
+                    event_displays[lj_reco] = {}
+                event_displays[lj_reco][channel] = {}
+
+                for name, display in event_display_defs.items():
+                    try:
+                        event_displays[lj_reco][channel][name] = display(objs, sel_objs)
+                    except (KeyError, AttributeError) as e:
+                        print(f"Warning: cannot fill event display {name}. Skipping. Error: {repr(e)}")
+
         # lose lj_reco dimension to cutflows if only one reco was run
         if len(self.lj_reco_choices) == 1:
             cutflows = cutflows[self.lj_reco_choices[0]]
@@ -183,6 +195,7 @@ class SidmProcessor(processor.ProcessorABC):
             "cutflow": cutflows,
             "hists": {n: h.hist for n, h in hists.items()}, # output hist.Hists, not Histograms
             "counters": counters,
+            "event_display": event_displays,
             "metadata": {
                 "n_evts": events.metadata["entrystop"] - events.metadata["entrystart"],
                 "scaled_sum_weights": ak.sum(evt_weights)/events.metadata["skim_factor"],
@@ -191,7 +204,6 @@ class SidmProcessor(processor.ProcessorABC):
                 "is_data": processor.set_accumulator([events.metadata["is_data"]]),
             },
         }
-
         return {events.metadata["dataset"]: out}
 
     def make_vector(self, objs, collection, fields, type_id=None, mass=None):
