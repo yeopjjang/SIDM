@@ -68,6 +68,7 @@ preLj_objs["genAs_toE"]  = lambda evts: toPid(preLj_objs["genAs"](evts), 11)
 preLj_objs["rho_PFIso"]  = lambda evts: evts.fixedGridRhoFastjetAll
 preLj_objs["jets"]       = lambda evts: evts.Jet
 preLj_objs["flags"]      = lambda evts: evts.Flag
+preLj_objs["fs_gens"]    = lambda evts: preLj_objs["gens"](evts)[preLj_objs["gens"](evts).status == 1]
 
 # define objects whose that will be added to objs by the sidm_processor after LJs are clustered
 # and LJ cuts are applied. postLj_obj cuts can be applied to these
@@ -106,3 +107,14 @@ derived_objs["genA_from_genEs"]  = lambda objs: withMass(fromPid(pid(objs["gens"
 derived_objs["genBSs"]           = lambda objs: pid(objs["gens"], 35)
 derived_objs["genBSs_toA"]       = lambda objs: toPid(derived_objs["genBSs"](objs), 32)
 derived_objs["genBS_from_genAs"] = lambda objs: pid(objs["gens"], 32).sum()
+
+# Final-state particles geometrically matched to reconstructed LJ or signal-gen roles.
+derived_objs["fs_gen_matched_lj"]       = lambda objs, r: matched(objs["fs_gens"], objs["ljs"], r)
+derived_objs["fs_gen_matched_mu_lj"]    = lambda objs, r: matched(objs["fs_gens"], objs["mu_ljs"], r)
+derived_objs["fs_gen_matched_Lmu_lj"]   = lambda objs, r: matched(objs["fs_gens"], objs["mu_ljs"][:, :1], r)
+derived_objs["fs_gen_matched_SLmu_lj"]  = lambda objs, r: matched(objs["fs_gens"], objs["mu_ljs"][:, 1:2], r)
+derived_objs["fs_gen_matched_egm_lj"]   = lambda objs, r: matched(objs["fs_gens"], objs["egm_ljs"], r)
+derived_objs["fs_gen_matched_Legm_lj"]  = lambda objs, r: matched(objs["fs_gens"], objs["egm_ljs"][:, :1], r)
+derived_objs["fs_gen_matched_SLegm_lj"] = lambda objs, r: matched(objs["fs_gens"], objs["egm_ljs"][:, 1:2], r)
+derived_objs["fs_gen_matched_Ldp"]       = lambda objs, r: matched(objs["fs_gens"], objs["genAs"][:, :1], r)
+derived_objs["fs_gen_matched_SLdp"]      = lambda objs, r: matched(objs["fs_gens"], objs["genAs"][:, 1:2], r)

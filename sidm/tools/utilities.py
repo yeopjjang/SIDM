@@ -1156,6 +1156,57 @@ def plot_data_mc(
         plt.show()
 
     return fig, ax_main, ax_ratio
+
 def get_pairs(obj):
     pairs = ak.combinations(obj, 2, axis=1)
     return (pairs)
+
+def pick_leptonlike_pdgid(obj):
+    """Split particles into electron, muon, and photon collections."""
+    abs_pdgid = abs(obj.pdgId)
+    return obj[abs_pdgid == 11], obj[abs_pdgid == 13], obj[abs_pdgid == 22]
+
+def matches_any_pdgid(pdgid, values):
+    """Return a mask selecting any absolute PDG ID in values."""
+    mask = ak.zeros_like(pdgid, dtype=bool)
+    for value in values:
+        mask = mask | (pdgid == value)
+    return mask
+
+def pick_mother_categories(obj):
+    """Group particles by distinct-parent category while preserving jagged structure."""
+    mother_pdgid = ak.fill_none(abs(obj.distinctParent.pdgId), 0)
+    category_ids = {
+        "dark_photon": (32,),
+        "W": (24,),
+        "Z": (23,),
+        "D": (411, 421, 423, 431),
+        "B": (511, 521, 531, 541),
+        "quark_gluon": (1, 2, 3, 4, 5, 6, 9, 21),
+        "pion": (111, 211),
+        "eta_omega": (221, 223),
+        "jpsi": (443,),
+        "electron": (11,),
+        "muon": (13,),
+    }
+
+    categories = {"inclusive": obj}
+    categorized = ak.zeros_like(mother_pdgid, dtype=bool)
+    for name, pdgids in category_ids.items():
+        category_mask = matches_any_pdgid(mother_pdgid, pdgids)
+        categories[name] = obj[category_mask]
+        categorized = categorized | category_mask
+    categories["other"] = obj[~categorized]
+    return categories
+
+def pick_e_mother_categories(obj):
+    """Return distinct-parent categories for final-state electrons."""
+    return pick_mother_categories(obj[abs(obj.pdgId) == 11])
+
+def pick_mu_mother_categories(obj):
+    """Return distinct-parent categories for final-state muons."""
+    return pick_mother_categories(obj[abs(obj.pdgId) == 13])
+
+def pick_pho_mother_categories(obj):
+    """Return distinct-parent categories for final-state photons."""
+    return pick_mother_categories(obj[abs(obj.pdgId) == 22])

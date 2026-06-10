@@ -291,6 +291,13 @@ isolation_base: &isolation_base
   - "photon_lj_isolation"
   - "photon_lj_isolation_zoom"
 
+mother_tracking_base: &mother_tracking_base
+  - "fs_gen_id"
+  - "fs_gen_mother_id"
+  - "fs_e_gen_mother_id"
+  - "fs_mu_gen_mother_id"
+  - "fs_pho_gen_mother_id"
+
 abcd_base: &abcd_base
   - "lj_lj_absdphi_invmass"
   - "lj_lj_absdphi_absdR"
