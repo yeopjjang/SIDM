@@ -10,7 +10,7 @@ from dask.distributed import Client, PipInstall
 def make_dask_client(address):
     """Create dask client that includes dependency installer (coffea-casa)."""
     dependencies = [
-        "git+https://github.com/btcardwell/SIDM.git",
+        "git+https://github.com/yeopjjang/SIDM.git@DY_CMS_SIDM_DEV",
     ]
     client = Client(address)
     client.register_plugin(PipInstall(packages=dependencies, pip_options=["--upgrade", "--no-cache-dir"]))
