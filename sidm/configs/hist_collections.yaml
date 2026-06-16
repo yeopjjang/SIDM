@@ -298,6 +298,10 @@ mother_tracking_base: &mother_tracking_base
   - "fs_mu_gen_mother_id"
   - "fs_pho_gen_mother_id"
 
+abcd_iso_base: &abcd_iso_base
+  - "mulj_egmlj_iso"
+  - "mulj_mulj_iso"
+
 abcd_base: &abcd_base
   - "lj_lj_absdphi_invmass"
   - "lj_lj_absdphi_absdR"

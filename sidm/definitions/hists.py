@@ -2656,6 +2656,24 @@ hist_defs = {
         ],
     ),
     # ABCD plane
+    "mulj_egmlj_iso": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 2, name="mu_lj_iso", label="mu-LJ Isolation"),
+                   lambda objs, mask: objs["mu_ljs"][mask, 0].isolation),
+            h.Axis(hist.axis.Regular(50, 0, 2, name="egm_lj_iso", label="egamma-LJ Isolation"),
+                   lambda objs, mask: objs["egm_ljs"][mask, 0].isolation),
+        ],
+        evt_mask=lambda objs: (ak.num(objs["mu_ljs"]) > 0) & (ak.num(objs["egm_ljs"]) > 0),
+    ),
+    "mulj_mulj_iso": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 2, name="mu_lj0_iso", label="Leading mu-LJ Isolation"),
+                   lambda objs, mask: objs["mu_ljs"][mask, 0].isolation),
+            h.Axis(hist.axis.Regular(50, 0, 2, name="mu_lj1_iso", label="Subleading mu-LJ Isolation"),
+                   lambda objs, mask: objs["mu_ljs"][mask, 1].isolation),
+        ],
+        evt_mask=lambda objs: ak.num(objs["mu_ljs"]) > 1,
+    ),
     "lj_lj_absdphi_invmass": h.Histogram(
         [
             h.Axis(hist.axis.Regular(100, 0, 2*math.pi, name=r"|$\Delta\phi$| ($LJ_{0}$, $LJ_{1}$)"),
