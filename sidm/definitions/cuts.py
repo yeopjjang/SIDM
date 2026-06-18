@@ -48,7 +48,10 @@ obj_cut_defs = {
         "2gLj": lambda objs: (objs["egm_ljs"].electron_n == 0) & (objs["egm_ljs"].photon_n == 2),
         "egm_lj_iso < 0.2": lambda objs: objs["egm_ljs"].isolation < 0.2,
         "lostHits >= 1": lambda objs: ak.min(objs["egm_ljs"].electrons.trkNumPixelHits, axis=-1) >= 1,
-        "displaced": lambda objs: (ak.min(objs["egm_ljs"].egamma.lostHits, axis=-1) >= 1)
+        "displaced": lambda objs: (ak.min(objs["egm_ljs"].egamma.lostHits, axis=-1) >= 1),
+        "inverse displaced": lambda objs: (ak.min(objs["egm_ljs"].egamma.lostHits, axis=-1) < 1),
+        "egm_lj_iso < 0.1": lambda objs: objs["egm_ljs"].isolation < 0.1,
+        "egm_lj_iso >= 0.1": lambda objs: objs["egm_ljs"].isolation >= 0.1,
     },
     "mu_ljs": {
         "pfMuLj": lambda objs: (objs["mu_ljs"].pfMu_n > 0) & (objs["mu_ljs"].dsaMu_n == 0),
@@ -57,12 +60,15 @@ obj_cut_defs = {
         "1dsaMuLj": lambda objs: objs["mu_ljs"].dsaMu_n > 0,
         "mu_lj_iso < 0.1": lambda objs: objs["mu_ljs"].isolation < 0.1,
         "pf_pixelhits <= 2": lambda objs: ak.max(objs["mu_ljs"].pfMuons.trkNumPixelHits, axis=-1) <= 2,
-        "displaced": lambda objs: (ak.max(objs["mu_ljs"].muons.trkNumPixelHits, axis=-1) <= 2) ,
+        "displaced": lambda objs: (ak.max(objs["mu_ljs"].muons.trkNumPixelHits, axis=-1) <= 2),
+        "inverse displaced": lambda objs: (ak.max(objs["mu_ljs"].muons.trkNumPixelHits, axis=-1) > 2),
         "Mu == 1": lambda objs: objs["mu_ljs"].muon_n == 1,
         "Mu == 2": lambda objs: objs["mu_ljs"].muon_n == 2,
         "Mu == 3": lambda objs: objs["mu_ljs"].muon_n == 3,
         "Mu >= 4": lambda objs: objs["mu_ljs"].muon_n >= 4,
         "Mu >= 2": lambda objs: objs["mu_ljs"].muon_n >= 2,
+        "mu_lj_iso < 0.25": lambda objs: objs["mu_ljs"].isolation < 0.25,
+        "mu_lj_iso >= 0.25": lambda objs: objs["mu_ljs"].isolation >= 0.25,
     },
     "genMus":{
         "pT >= 10 GeV": lambda objs: objs["genMus"].pt >= 10,
@@ -152,6 +158,7 @@ obj_cut_defs = {
         'MVANonIsoWPL': lambda objs: objs['electrons'].mvaFall17V2noIso_WPL,
         "missing_hits == 0" : lambda objs: objs["electrons"].lostHits == 0,
         "missing_hits == 1" : lambda objs: objs["electrons"].lostHits == 1,
+        "missing_hits >= 1" : lambda objs: objs["electrons"].lostHits >= 1,
         "dxy >= 0.05" : lambda objs: objs["electrons"].dxy >= 0.05,
     },
     "muons": {

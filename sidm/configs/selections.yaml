@@ -28,6 +28,15 @@ ljsource_cuts: &ljsource_cuts
       - "displaced ID"
       - "all" # cross-cleaning
 
+
+ljsource_cuts_noCC: &ljsource_cuts_noCC
+  obj_cuts: &obj_ljsource_cuts_noCC
+    <<: *obj_ljsource_cuts
+    dsaMuons:
+      - "pT > 10 GeV"
+      - "|eta| < 2.4"
+      - "displaced ID"
+
 # require final-state gen e and mu
 gen_level_cuts: &gen_level_cuts
   obj_cuts: &obj_gen_level_cuts
@@ -280,6 +289,29 @@ baseNoLj_egLj: &baseNoLj_egLj
       - "|eta| < 2.4"
       - "pT > 30 GeV"
   evt_cuts:
+    - *evt_baseNoLj
+    - ">=2 LJs"
+
+base_noCC: &base_noCC
+  obj_cuts:
+    <<: *obj_baseNoLjNoLjsource
+    <<: *obj_ljsource_cuts_noCC
+  postLj_obj_cuts:
+    <<: *base_postLj_obj_cuts
+  evt_cuts:
+    - *evt_baseNoLj
+    - ">=2 LJs"
+
+base_finalCC: &base_finalCC
+  <<: *base
+
+base_finalCC_charge: &base_finalCC_charge
+  obj_cuts:
+    <<: *obj_baseNoLjNoLjsource
+    <<: *obj_ljsource_cuts_chargeCC
+  postLj_obj_cuts:
+    <<: *base_postLj_obj_cuts
+  evt_cuts: 
     - *evt_baseNoLj
     - ">=2 LJs"
 
@@ -1825,3 +1857,184 @@ data_control_region_2muLj_cosmic_veto: &data_control_region_2muLj_cosmic_veto
     - "= 2 LJs"
     - "= 2 muLJs"
     - "all cos_alpha(dsa, dsa) > -0.9"
+
+data_control_region_1muLj_cosmic_veto_both_pass: &data_control_region_1muLj_cosmic_veto_both_pass
+  obj_cuts:
+    <<: *obj_ljsource_cuts
+    dsaMuons:
+      - *dsaMuons_ljsource_cuts
+      - "|dxy| <= 40"
+      - "|dz| <= 60"
+  postLj_obj_cuts:
+    ljs:
+      - "pT > 30 GeV"
+      - "|eta| < 2.4"
+    mu_ljs:
+      - "Mu >= 2"
+      - "mu_lj_iso < 0.25"
+      - "displaced"
+  evt_cuts:
+    - *evt_baseNoLj
+    - "pass flags"
+    - "= 1 LJs"
+    - "= 1 muLJs"
+    - "all cos_alpha(dsa, dsa) > -0.9"
+
+data_control_region_1muLj_cosmic_veto_both_fail: &data_control_region_1muLj_cosmic_veto_both_fail
+  obj_cuts:
+    <<: *obj_ljsource_cuts
+    dsaMuons:
+      - *dsaMuons_ljsource_cuts
+      - "|dxy| <= 40"
+      - "|dz| <= 60"
+  postLj_obj_cuts:
+    ljs:
+      - "pT > 30 GeV"
+      - "|eta| < 2.4"
+    mu_ljs:
+      - "Mu >= 2"
+      - "mu_lj_iso >= 0.25"
+      - "inverse displaced"
+  evt_cuts:
+    - *evt_baseNoLj
+    - "pass flags"
+    - "= 1 LJs"
+    - "= 1 muLJs"
+    - "all cos_alpha(dsa, dsa) > -0.9"
+
+data_control_region_1egmLj_cosmic_veto_both_pass: &data_control_region_1egmLj_cosmic_veto_both_pass
+  obj_cuts:
+    <<: *obj_ljsource_cuts
+    dsaMuons:
+      - *dsaMuons_ljsource_cuts
+      - "|dxy| <= 40"
+      - "|dz| <= 60"
+  postLj_obj_cuts:
+    ljs:
+      - "pT > 30 GeV"
+      - "|eta| < 2.4"
+    egm_ljs:
+      - "egm_lj_iso < 0.1"
+      - "displaced"
+  evt_cuts:
+    - *evt_baseNoLj
+    - "pass flags"
+    - "= 1 LJs"
+    - "= 1 egmLJs"
+    - "all cos_alpha(dsa, dsa) > -0.9"
+
+data_control_region_1egmLj_cosmic_veto_both_fail: &data_control_region_1egmLj_cosmic_veto_both_fail
+  obj_cuts:
+    <<: *obj_ljsource_cuts
+    dsaMuons:
+      - *dsaMuons_ljsource_cuts
+      - "|dxy| <= 40"
+      - "|dz| <= 60"
+  postLj_obj_cuts:
+    ljs:
+      - "pT > 30 GeV"
+      - "|eta| < 2.4"
+    egm_ljs:
+      - "egm_lj_iso >= 0.1"
+      - "inverse displaced"
+  evt_cuts:
+    - *evt_baseNoLj
+    - "pass flags"
+    - "= 1 LJs"
+    - "= 1 egmLJs"
+    - "all cos_alpha(dsa, dsa) > -0.9"
+
+data_control_region_1muLj_1egmLj_cosmic_veto_both_pass: &data_control_region_1muLj_1egmLj_cosmic_veto_both_pass
+  obj_cuts:
+    <<: *obj_ljsource_cuts
+    dsaMuons:
+      - *dsaMuons_ljsource_cuts
+      - "|dxy| <= 40"
+      - "|dz| <= 60"
+  postLj_obj_cuts:
+    ljs:
+      - "pT > 30 GeV"
+      - "|eta| < 2.4"
+    mu_ljs:
+      - "Mu >= 2"
+      - "mu_lj_iso < 0.25"
+      - "displaced"
+    egm_ljs:
+      - "egm_lj_iso < 0.1"
+      - "displaced"
+  evt_cuts:
+    - *evt_baseNoLj
+    - "pass flags"
+    - "= 2 LJs"
+    - "= 1 muLJs and = 1 egmLJs"
+    - "all cos_alpha(dsa, dsa) > -0.9"
+
+data_control_region_1muLj_1egmLj_cosmic_veto_both_fail: &data_control_region_1muLj_1egmLj_cosmic_veto_both_fail
+  obj_cuts:
+    <<: *obj_ljsource_cuts
+    dsaMuons:
+      - *dsaMuons_ljsource_cuts
+      - "|dxy| <= 40"
+      - "|dz| <= 60"
+  postLj_obj_cuts:
+    ljs:
+      - "pT > 30 GeV"
+      - "|eta| < 2.4"
+    mu_ljs:
+      - "Mu >= 2"
+      - "mu_lj_iso >= 0.25"
+      - "inverse displaced"
+    egm_ljs:
+      - "egm_lj_iso >= 0.1"
+      - "inverse displaced"
+  evt_cuts:
+    - *evt_baseNoLj
+    - "pass flags"
+    - "= 2 LJs"
+    - "= 1 muLJs and = 1 egmLJs"
+    - "all cos_alpha(dsa, dsa) > -0.9"
+
+data_control_region_2muLj_cosmic_veto_both_pass: &data_control_region_2muLj_cosmic_veto_both_pass
+  obj_cuts:
+    <<: *obj_ljsource_cuts
+    dsaMuons:
+      - *dsaMuons_ljsource_cuts
+      - "|dxy| <= 40"
+      - "|dz| <= 60"
+  postLj_obj_cuts:
+    ljs:
+      - "pT > 30 GeV"
+      - "|eta| < 2.4"
+    mu_ljs:
+      - "Mu >= 2"
+      - "mu_lj_iso < 0.25"
+      - "displaced"
+  evt_cuts:
+    - *evt_baseNoLj
+    - "pass flags"
+    - "= 2 LJs"
+    - "= 2 muLJs"
+    - "all cos_alpha(dsa, dsa) > -0.9"
+
+data_control_region_2muLj_cosmic_veto_both_fail: &data_control_region_2muLj_cosmic_veto_both_fail
+  obj_cuts:
+    <<: *obj_ljsource_cuts
+    dsaMuons:
+      - *dsaMuons_ljsource_cuts
+      - "|dxy| <= 40"
+      - "|dz| <= 60"
+  postLj_obj_cuts:
+    ljs:
+      - "pT > 30 GeV"
+      - "|eta| < 2.4"
+    mu_ljs:
+      - "Mu >= 2"
+      - "mu_lj_iso >= 0.25"
+      - "inverse displaced"
+  evt_cuts:
+    - *evt_baseNoLj
+    - "pass flags"
+    - "= 2 LJs"
+    - "= 2 muLJs"
+    - "all cos_alpha(dsa, dsa) > -0.9"
+
