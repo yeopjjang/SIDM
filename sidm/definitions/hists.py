@@ -14,7 +14,7 @@ import awkward as ak
 # local
 from sidm.tools import histogram as h
 from sidm.tools.utilities import (
-    dR, lxy, matched, dxy, lepton_dxy_resolution, cosAlpha, pick_leptonlike_pdgid
+    dR, lxy, matched, dxy, lepton_dxy_resolution, cosAlpha, pick_leptonlike_pdgid, dR_outer
 )
 from sidm.definitions.objects import derived_objs
 # always reload local modules to pick up changes during development
@@ -4332,3 +4332,244 @@ hist_defs = {
     ),
     
 }
+
+# Muon PF/DSA cross-cleaning study histograms.
+_CC_TOPOLOGIES = [
+    ("nosel", None, None),
+    ("noDSA", None, 0),
+    ("oneDSA", None, 1),
+    ("twoDSA", None, 2),
+    ("noPF", 0, None),
+    ("noPF_noDSA", 0, 0),
+    ("noPF_oneDSA", 0, 1),
+    ("noPF_twoDSA", 0, 2),
+    ("onePF", 1, None),
+    ("onePF_noDSA", 1, 0),
+    ("onePF_oneDSA", 1, 1),
+    ("onePF_twoDSA", 1, 2),
+    ("twoPF", 2, None),
+    ("twoPF_noDSA", 2, 0),
+    ("twoPF_oneDSA", 2, 1),
+    ("twoPF_twoDSA", 2, 2),
+]
+
+
+def _cc_source_count_topology(objs, pf_n=None, dsa_n=None):
+    mask = ak.num(objs["genAs_toMu"]) >= 0
+    if pf_n is not None:
+        mask = mask & (ak.num(objs["muons"]) == pf_n)
+    if dsa_n is not None:
+        mask = mask & (ak.num(objs["dsaMuons"]) == dsa_n)
+    return mask
+
+
+def _cc_lead_mu_lj_topology(objs, pf_n=None, dsa_n=None):
+    mask = ak.num(objs["mu_ljs"]) > 0
+    if pf_n is not None:
+        mask = mask & (ak.fill_none(ak.firsts(objs["mu_ljs"].pfMu_n), -999) == pf_n)
+    if dsa_n is not None:
+        mask = mask & (ak.fill_none(ak.firsts(objs["mu_ljs"].dsaMu_n), -999) == dsa_n)
+    return mask
+
+
+def _cc_matched_mu_lj_topology(objs, pf_n=None, dsa_n=None):
+    mu_lj = derived_objs["mu_lj_matched_genAs_toMu"](objs, 0.4)
+    mask = ak.num(mu_lj) == 1
+    if pf_n is not None:
+        mask = mask & (ak.fill_none(ak.firsts(mu_lj.pfMu_n), -999) == pf_n)
+    if dsa_n is not None:
+        mask = mask & (ak.fill_none(ak.firsts(mu_lj.dsaMu_n), -999) == dsa_n)
+    return mask
+
+
+def _make_cc_genAs_toMu_lxy_hist(name, suffix, xmax, pf_n, dsa_n):
+    return h.Histogram(
+        [
+            h.Axis(
+                hist.axis.Regular(100, 0, xmax, name=name,
+                                  label=r"Dark photon (to $\mu\mu$) $L_{xy}$ [cm]"),
+                lambda objs, mask: lxy(objs["genAs_toMu"][mask]),
+            ),
+        ],
+        evt_mask=lambda objs: _cc_source_count_topology(objs, pf_n, dsa_n),
+    )
+
+
+def _make_cc_lj_lj_invmass_hist(channel, pf_n, dsa_n):
+    if channel == "2mu2e":
+        value = lambda objs, mask: (objs["mu_ljs"][mask, :1] + objs["egm_ljs"][mask, :1]).mass
+        base_mask = lambda objs: (ak.num(objs["mu_ljs"]) > 0) & (ak.num(objs["egm_ljs"]) > 0)
+    elif channel == "4mu":
+        value = lambda objs, mask: objs["mu_ljs"][mask, :2].sum().mass
+        base_mask = lambda objs: ak.num(objs["mu_ljs"]) > 1
+    else:
+        value = lambda objs, mask: objs["ljs"][mask, :2].sum().mass
+        base_mask = lambda objs: ak.num(objs["ljs"]) > 1
+    return h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(100, 0, 1200, name="ljlj_mass",
+                                     label=r"Invariant Mass ($LJ_{0}$, $LJ_{1}$)"), value),
+        ],
+        evt_mask=lambda objs: base_mask(objs) & _cc_lead_mu_lj_topology(objs, pf_n, dsa_n),
+    )
+
+
+def _make_cc_mu_lj_dp_pt_ratio_hist(pf_n, dsa_n):
+    return h.Histogram(
+        [
+            h.Axis(
+                hist.axis.Regular(100, 0, 2, name="mu_lj_dp_pt_ratio",
+                                  label=r"Mu-LJ (near DP) PT / DP PT (to $\mu\mu$)"),
+                lambda objs, mask: derived_objs["mu_lj_matched_genAs_toMu"](objs, 0.4)[mask].pt
+                / derived_objs["genAs_toMu_matched_muLj"](objs, 0.4)[mask].pt,
+            ),
+        ],
+        evt_mask=lambda objs: _cc_matched_mu_lj_topology(objs, pf_n, dsa_n),
+    )
+
+
+for _suffix, _pf_n, _dsa_n in _CC_TOPOLOGIES:
+    hist_defs[f"genAs_toMu_lxy_{_suffix}"] = _make_cc_genAs_toMu_lxy_hist(
+        f"genAs_toMu_lxy_{_suffix}", _suffix, 3, _pf_n, _dsa_n
+    )
+    hist_defs[f"genAs_toMu_lxy_{_suffix}_large"] = _make_cc_genAs_toMu_lxy_hist(
+        f"genAs_toMu_lxy_{_suffix}_large", _suffix, 400, _pf_n, _dsa_n
+    )
+    hist_defs[f"lj_lj_invmass_{_suffix}"] = _make_cc_lj_lj_invmass_hist("inclusive", _pf_n, _dsa_n)
+    hist_defs[f"lj_lj_invmass_{_suffix}_2mu2e"] = _make_cc_lj_lj_invmass_hist("2mu2e", _pf_n, _dsa_n)
+    hist_defs[f"lj_lj_invmass_{_suffix}_4mu"] = _make_cc_lj_lj_invmass_hist("4mu", _pf_n, _dsa_n)
+    hist_defs[f"mu_lj_dp_pt_ratio_{_suffix}"] = _make_cc_mu_lj_dp_pt_ratio_hist(_pf_n, _dsa_n)
+
+hist_defs["lead_mu_lj_dp_pt_ratio_4mu"] = h.Histogram(
+    [
+        h.Axis(
+            hist.axis.Regular(100, 0, 2, name="lead_mu_lj_dp_pt_ratio_4mu",
+                              label=r"Leading mu-LJ PT / matched DP PT (to $\mu\mu$)"),
+            lambda objs, mask: objs["mu_ljs"][mask, 0:1].pt
+            / objs["mu_ljs"][mask, 0:1].nearest(objs["genAs_toMu"][mask], threshold=0.4).pt,
+        ),
+    ],
+    evt_mask=lambda objs: (ak.num(objs["mu_ljs"]) > 1) & (ak.num(objs["genAs_toMu"]) > 1),
+)
+
+hist_defs["sublead_mu_lj_dp_pt_ratio_4mu"] = h.Histogram(
+    [
+        h.Axis(
+            hist.axis.Regular(100, 0, 2, name="sublead_mu_lj_dp_pt_ratio_4mu",
+                              label=r"Subleading mu-LJ PT / matched DP PT (to $\mu\mu$)"),
+            lambda objs, mask: objs["mu_ljs"][mask, 1:2].pt
+            / objs["mu_ljs"][mask, 1:2].nearest(objs["genAs_toMu"][mask], threshold=0.4).pt,
+        ),
+    ],
+    evt_mask=lambda objs: (ak.num(objs["mu_ljs"]) > 1) & (ak.num(objs["genAs_toMu"]) > 1),
+)
+
+# AN figure support: DSA ID efficiency vs dark-photon Lxy.
+hist_defs["dsa_id_eff_genMu_fromA_lxy_den"] = h.Histogram(
+    [
+        h.Axis(
+            hist.axis.Regular(100, 0, 400, name="dsa_id_eff_genMu_fromA_lxy_den",
+                              label=r"Gen $Z_d\rightarrow\mu\mu$ $L_{xy}$ [cm]"),
+            lambda objs, mask: lxy(objs["genMus_fromA"][mask].parent),
+        ),
+    ],
+    evt_mask=lambda objs: ak.num(objs["genMus_fromA"]) > 0,
+)
+
+hist_defs["dsa_id_eff_genMu_fromA_lxy_selectedDsa_num"] = h.Histogram(
+    [
+        h.Axis(
+            hist.axis.Regular(100, 0, 400, name="dsa_id_eff_genMu_fromA_lxy_selectedDsa_num",
+                              label=r"Gen $Z_d\rightarrow\mu\mu$ $L_{xy}$ [cm]"),
+            lambda objs, mask: lxy(matched(objs["genMus_fromA"], objs["dsaMuons"], 0.4)[mask].parent),
+        ),
+    ],
+    evt_mask=lambda objs: ak.num(matched(objs["genMus_fromA"], objs["dsaMuons"], 0.4)) > 0,
+)
+
+# Inclusive PF-DSA matched-pair variables used by the final cross-cleaning cut.
+def _cc_good_pf_dsa_pair_mask(dsa):
+    return ak.fill_none(dsa.good_matched_muons.numMatch >= 1, False)
+
+
+def _cc_good_pf_dsa_pair_event_mask(objs):
+    pair_mask = _cc_good_pf_dsa_pair_mask(objs["dsaMuons"])
+    return ak.any(ak.any(pair_mask, axis=2), axis=1)
+
+
+def _cc_good_pf_dsa_dR_outer(objs, mask):
+    dsa = objs["dsaMuons"][mask]
+    pair_mask = _cc_good_pf_dsa_pair_mask(dsa)
+    values = dR_outer(dsa[:, :, None], dsa.good_matched_muons)
+    return values[pair_mask]
+
+
+def _cc_good_pf_dsa_segment_fraction(objs, mask):
+    dsa = objs["dsaMuons"][mask]
+    pair_mask = _cc_good_pf_dsa_pair_mask(dsa)
+    values = dsa.good_matched_muons.numMatch / dsa.nSegments[:, :, None]
+    return values[pair_mask]
+
+
+def _cc_good_pf_dsa_num_match(objs, mask):
+    dsa = objs["dsaMuons"][mask]
+    pair_mask = _cc_good_pf_dsa_pair_mask(dsa)
+    return dsa.good_matched_muons.numMatch[pair_mask]
+
+
+def _cc_good_pf_dsa_n_segments(objs, mask):
+    dsa = objs["dsaMuons"][mask]
+    pair_mask = _cc_good_pf_dsa_pair_mask(dsa)
+    values = ak.broadcast_arrays(dsa.nSegments[:, :, None], dsa.good_matched_muons.numMatch)[0]
+    return values[pair_mask]
+
+
+hist_defs["pf_dsa_cc_dR_outer"] = h.Histogram(
+    [
+        h.Axis(hist.axis.Regular(100, 0, 0.5, name="pf_dsa_cc_dR_outer",
+                                 label=r"$\Delta R_{outer}$(DSA, PF)"),
+               _cc_good_pf_dsa_dR_outer),
+    ],
+    evt_mask=_cc_good_pf_dsa_pair_event_mask,
+)
+
+hist_defs["pf_dsa_cc_segment_fraction"] = h.Histogram(
+    [
+        h.Axis(hist.axis.Regular(100, 0, 1.2, name="pf_dsa_cc_segment_fraction",
+                                 label=r"Shared segment fraction"),
+               _cc_good_pf_dsa_segment_fraction),
+    ],
+    evt_mask=_cc_good_pf_dsa_pair_event_mask,
+)
+
+
+hist_defs["pf_dsa_cc_numMatch"] = h.Histogram(
+    [
+        h.Axis(hist.axis.Regular(10, 0, 10, name="pf_dsa_cc_numMatch",
+                                 label=r"PF-DSA shared segments"),
+               _cc_good_pf_dsa_num_match),
+    ],
+    evt_mask=_cc_good_pf_dsa_pair_event_mask,
+)
+
+hist_defs["pf_dsa_cc_nSegments"] = h.Histogram(
+    [
+        h.Axis(hist.axis.Regular(40, 0, 40, name="pf_dsa_cc_nSegments",
+                                 label=r"DSA muon segments"),
+               _cc_good_pf_dsa_n_segments),
+    ],
+    evt_mask=_cc_good_pf_dsa_pair_event_mask,
+)
+
+hist_defs["pf_dsa_cc_cut_plane"] = h.Histogram(
+    [
+        h.Axis(hist.axis.Regular(100, 0, 0.5, name="pf_dsa_cc_dR_outer",
+                                 label=r"$\Delta R_{outer}$(DSA, PF)"),
+               _cc_good_pf_dsa_dR_outer),
+        h.Axis(hist.axis.Regular(100, 0, 1.2, name="pf_dsa_cc_segment_fraction",
+                                 label=r"Shared segment fraction"),
+               _cc_good_pf_dsa_segment_fraction),
+    ],
+    evt_mask=_cc_good_pf_dsa_pair_event_mask,
+)
+
