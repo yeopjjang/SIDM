@@ -810,6 +810,11 @@ hist_defs = {
         ],
     ),
     "mu_lj_pt": obj_attr("mu_ljs", "pt", xmax=700),
+    "mu_lj_eta": obj_attr("mu_ljs", "eta"),
+    "mu_lj_phi": obj_attr("mu_ljs", "phi"),
+    "mu_lj_mass": obj_attr("mu_ljs", "mass", nbins=100, xmax=200),
+    "mu_lj_mass_small": obj_attr("mu_ljs", "mass", nbins=100, xmax=10),
+    "mu_lj_dRSpread": obj_attr("mu_ljs", "dRSpread", nbins=250, xmax=1.0),
     "pfmu_lj_pt": obj_attr("pfmu_ljs", "pt", xmax=1000),
     "dsamu_lj_pt": obj_attr("dsamu_ljs", "pt", xmax=1000),
     "mu_lj_e": h.Histogram(
@@ -834,6 +839,11 @@ hist_defs = {
     "mu_lj_pfMu_n": obj_attr("mu_ljs", "pfMu_n", xmax=10, nbins=10),
     "mu_lj_dsaMu_n": obj_attr("mu_ljs", "dsaMu_n", xmax=10, nbins=10),
     "egm_lj_pt": obj_attr("egm_ljs", "pt", xmax=700),
+    "egm_lj_eta": obj_attr("egm_ljs", "eta"),
+    "egm_lj_phi": obj_attr("egm_ljs", "phi"),
+    "egm_lj_mass": obj_attr("egm_ljs", "mass", nbins=100, xmax=200),
+    "egm_lj_mass_small": obj_attr("egm_ljs", "mass", nbins=100, xmax=10),
+    "egm_lj_dRSpread": obj_attr("egm_ljs", "dRSpread", nbins=250, xmax=1.0),
     "electron_lj_pt": obj_attr("electron_ljs", "pt", xmax=1000),
     "photon_lj_pt": obj_attr("photon_ljs", "pt", xmax=1000),
     "egm_lj_e": h.Histogram(
@@ -4487,39 +4497,95 @@ hist_defs["dsa_id_eff_genMu_fromA_lxy_selectedDsa_num"] = h.Histogram(
     evt_mask=lambda objs: ak.num(matched(objs["genMus_fromA"], objs["dsaMuons"], 0.4)) > 0,
 )
 
-# Inclusive PF-DSA matched-pair variables used by the final cross-cleaning cut.
-def _cc_good_pf_dsa_pair_mask(dsa):
+
+def _gen_mus_from_a_matched_pf_or_dsa(objs):
+    gen_mus = objs["genMus_fromA"]
+    matched_pf = dR(gen_mus, objs["muons"]) < 0.4
+    matched_dsa = dR(gen_mus, objs["dsaMuons"]) < 0.4
+    return gen_mus[matched_pf | matched_dsa]
+
+
+hist_defs["dsa_id_eff_genMu_fromA_lxy_selectedPf_num"] = h.Histogram(
+    [
+        h.Axis(
+            hist.axis.Regular(100, 0, 400, name="dsa_id_eff_genMu_fromA_lxy_selectedPf_num",
+                              label=r"Gen $Z_d\rightarrow\mu\mu$ $L_{xy}$ [cm]"),
+            lambda objs, mask: lxy(matched(objs["genMus_fromA"], objs["muons"], 0.4)[mask].parent),
+        ),
+    ],
+    evt_mask=lambda objs: ak.num(matched(objs["genMus_fromA"], objs["muons"], 0.4)) > 0,
+)
+
+hist_defs["dsa_id_eff_genMu_fromA_lxy_selectedPfOrDsa_num"] = h.Histogram(
+    [
+        h.Axis(
+            hist.axis.Regular(100, 0, 400, name="dsa_id_eff_genMu_fromA_lxy_selectedPfOrDsa_num",
+                              label=r"Gen $Z_d\rightarrow\mu\mu$ $L_{xy}$ [cm]"),
+            lambda objs, mask: lxy(_gen_mus_from_a_matched_pf_or_dsa(objs)[mask].parent),
+        ),
+    ],
+    evt_mask=lambda objs: ak.num(_gen_mus_from_a_matched_pf_or_dsa(objs)) > 0,
+)
+
+# Inclusive PF-DSA pair variables used by the final cross-cleaning cut.
+def _cc_pf_dsa_pair_mask_num_match_ge1(dsa):
     return ak.fill_none(dsa.good_matched_muons.numMatch >= 1, False)
 
 
-def _cc_good_pf_dsa_pair_event_mask(objs):
-    pair_mask = _cc_good_pf_dsa_pair_mask(objs["dsaMuons"])
+def _cc_pf_dsa_pair_event_mask_num_match_ge1(objs):
+    pair_mask = _cc_pf_dsa_pair_mask_num_match_ge1(objs["dsaMuons"])
     return ak.any(ak.any(pair_mask, axis=2), axis=1)
 
 
-def _cc_good_pf_dsa_dR_outer(objs, mask):
+def _cc_pf_dsa_dR_outer(objs, mask):
     dsa = objs["dsaMuons"][mask]
-    pair_mask = _cc_good_pf_dsa_pair_mask(dsa)
+    return dR_outer(dsa[:, :, None], dsa.good_matched_muons)
+
+
+def _cc_pf_dsa_dR_outer_num_match_ge1(objs, mask):
+    dsa = objs["dsaMuons"][mask]
+    pair_mask = _cc_pf_dsa_pair_mask_num_match_ge1(dsa)
     values = dR_outer(dsa[:, :, None], dsa.good_matched_muons)
     return values[pair_mask]
 
 
-def _cc_good_pf_dsa_segment_fraction(objs, mask):
+def _cc_pf_dsa_segment_fraction(objs, mask):
     dsa = objs["dsaMuons"][mask]
-    pair_mask = _cc_good_pf_dsa_pair_mask(dsa)
+    return dsa.good_matched_muons.numMatch / dsa.nSegments[:, :, None]
+
+
+def _cc_pf_dsa_segment_fraction_num_match_ge1(objs, mask):
+    dsa = objs["dsaMuons"][mask]
+    pair_mask = _cc_pf_dsa_pair_mask_num_match_ge1(dsa)
     values = dsa.good_matched_muons.numMatch / dsa.nSegments[:, :, None]
     return values[pair_mask]
 
 
-def _cc_good_pf_dsa_num_match(objs, mask):
+def _cc_pf_dsa_num_match(objs, mask):
     dsa = objs["dsaMuons"][mask]
-    pair_mask = _cc_good_pf_dsa_pair_mask(dsa)
+    return dsa.good_matched_muons.numMatch
+
+
+def _cc_pf_dsa_num_match_num_match_ge1(objs, mask):
+    dsa = objs["dsaMuons"][mask]
+    pair_mask = _cc_pf_dsa_pair_mask_num_match_ge1(dsa)
     return dsa.good_matched_muons.numMatch[pair_mask]
 
 
-def _cc_good_pf_dsa_n_segments(objs, mask):
+def _cc_pf_dsa_num_match_per_dsa_with_no_match_zero(objs, mask):
     dsa = objs["dsaMuons"][mask]
-    pair_mask = _cc_good_pf_dsa_pair_mask(dsa)
+    max_num_match = ak.max(dsa.good_matched_muons.numMatch, axis=2)
+    return ak.fill_none(max_num_match, 0)
+
+
+def _cc_pf_dsa_n_segments(objs, mask):
+    dsa = objs["dsaMuons"][mask]
+    return ak.broadcast_arrays(dsa.nSegments[:, :, None], dsa.good_matched_muons.numMatch)[0]
+
+
+def _cc_pf_dsa_n_segments_num_match_ge1(objs, mask):
+    dsa = objs["dsaMuons"][mask]
+    pair_mask = _cc_pf_dsa_pair_mask_num_match_ge1(dsa)
     values = ak.broadcast_arrays(dsa.nSegments[:, :, None], dsa.good_matched_muons.numMatch)[0]
     return values[pair_mask]
 
@@ -4528,48 +4594,107 @@ hist_defs["pf_dsa_cc_dR_outer"] = h.Histogram(
     [
         h.Axis(hist.axis.Regular(100, 0, 0.5, name="pf_dsa_cc_dR_outer",
                                  label=r"$\Delta R_{outer}$(DSA, PF)"),
-               _cc_good_pf_dsa_dR_outer),
+               _cc_pf_dsa_dR_outer),
     ],
-    evt_mask=_cc_good_pf_dsa_pair_event_mask,
+)
+
+hist_defs["pf_dsa_cc_dR_outer_numMatchGe1"] = h.Histogram(
+    [
+        h.Axis(hist.axis.Regular(100, 0, 0.5, name="pf_dsa_cc_dR_outer_numMatchGe1",
+                                 label=r"$\Delta R_{outer}$(DSA, PF), shared segments $\geq 1$"),
+               _cc_pf_dsa_dR_outer_num_match_ge1),
+    ],
+    evt_mask=_cc_pf_dsa_pair_event_mask_num_match_ge1,
 )
 
 hist_defs["pf_dsa_cc_segment_fraction"] = h.Histogram(
     [
-        h.Axis(hist.axis.Regular(100, 0, 1.2, name="pf_dsa_cc_segment_fraction",
+        h.Axis(hist.axis.Regular(60, 0, 1.2, name="pf_dsa_cc_segment_fraction",
                                  label=r"Shared segment fraction"),
-               _cc_good_pf_dsa_segment_fraction),
+               _cc_pf_dsa_segment_fraction),
     ],
-    evt_mask=_cc_good_pf_dsa_pair_event_mask,
 )
 
+hist_defs["pf_dsa_cc_segment_fraction_numMatchGe1"] = h.Histogram(
+    [
+        h.Axis(hist.axis.Regular(60, 0, 1.2, name="pf_dsa_cc_segment_fraction_numMatchGe1",
+                                 label=r"Shared segment fraction, shared segments $\geq 1$"),
+               _cc_pf_dsa_segment_fraction_num_match_ge1),
+    ],
+    evt_mask=_cc_pf_dsa_pair_event_mask_num_match_ge1,
+)
 
 hist_defs["pf_dsa_cc_numMatch"] = h.Histogram(
     [
         h.Axis(hist.axis.Regular(10, 0, 10, name="pf_dsa_cc_numMatch",
                                  label=r"PF-DSA shared segments"),
-               _cc_good_pf_dsa_num_match),
+               _cc_pf_dsa_num_match),
     ],
-    evt_mask=_cc_good_pf_dsa_pair_event_mask,
+)
+
+hist_defs["pf_dsa_cc_numMatch_allPairs"] = h.Histogram(
+    [
+        h.Axis(hist.axis.Regular(10, 0, 10, name="pf_dsa_cc_numMatch_allPairs",
+                                 label=r"PF-DSA shared segments, all pairs"),
+               _cc_pf_dsa_num_match),
+    ],
+)
+
+hist_defs["pf_dsa_cc_numMatch_numMatchGe1"] = h.Histogram(
+    [
+        h.Axis(hist.axis.Regular(10, 0, 10, name="pf_dsa_cc_numMatch_numMatchGe1",
+                                 label=r"PF-DSA shared segments $\geq 1$"),
+               _cc_pf_dsa_num_match_num_match_ge1),
+    ],
+    evt_mask=_cc_pf_dsa_pair_event_mask_num_match_ge1,
+)
+
+hist_defs["pf_dsa_cc_numMatch_perDsaWithNoMatchZero"] = h.Histogram(
+    [
+        h.Axis(hist.axis.Regular(10, 0, 10, name="pf_dsa_cc_numMatch_perDsaWithNoMatchZero",
+                                 label=r"PF-DSA shared segments per DSA, no PF match = 0"),
+               _cc_pf_dsa_num_match_per_dsa_with_no_match_zero),
+    ],
 )
 
 hist_defs["pf_dsa_cc_nSegments"] = h.Histogram(
     [
         h.Axis(hist.axis.Regular(40, 0, 40, name="pf_dsa_cc_nSegments",
                                  label=r"DSA muon segments"),
-               _cc_good_pf_dsa_n_segments),
+               _cc_pf_dsa_n_segments),
     ],
-    evt_mask=_cc_good_pf_dsa_pair_event_mask,
+)
+
+hist_defs["pf_dsa_cc_nSegments_numMatchGe1"] = h.Histogram(
+    [
+        h.Axis(hist.axis.Regular(40, 0, 40, name="pf_dsa_cc_nSegments_numMatchGe1",
+                                 label=r"DSA muon segments, shared segments $\geq 1$"),
+               _cc_pf_dsa_n_segments_num_match_ge1),
+    ],
+    evt_mask=_cc_pf_dsa_pair_event_mask_num_match_ge1,
 )
 
 hist_defs["pf_dsa_cc_cut_plane"] = h.Histogram(
     [
         h.Axis(hist.axis.Regular(100, 0, 0.5, name="pf_dsa_cc_dR_outer",
                                  label=r"$\Delta R_{outer}$(DSA, PF)"),
-               _cc_good_pf_dsa_dR_outer),
-        h.Axis(hist.axis.Regular(100, 0, 1.2, name="pf_dsa_cc_segment_fraction",
+               _cc_pf_dsa_dR_outer),
+        h.Axis(hist.axis.Regular(60, 0, 1.2, name="pf_dsa_cc_segment_fraction",
                                  label=r"Shared segment fraction"),
-               _cc_good_pf_dsa_segment_fraction),
+               _cc_pf_dsa_segment_fraction),
     ],
-    evt_mask=_cc_good_pf_dsa_pair_event_mask,
 )
+
+hist_defs["pf_dsa_cc_cut_plane_numMatchGe1"] = h.Histogram(
+    [
+        h.Axis(hist.axis.Regular(100, 0, 0.5, name="pf_dsa_cc_dR_outer_numMatchGe1",
+                                 label=r"$\Delta R_{outer}$(DSA, PF), shared segments $\geq 1$"),
+               _cc_pf_dsa_dR_outer_num_match_ge1),
+        h.Axis(hist.axis.Regular(60, 0, 1.2, name="pf_dsa_cc_segment_fraction_numMatchGe1",
+                                 label=r"Shared segment fraction, shared segments $\geq 1$"),
+               _cc_pf_dsa_segment_fraction_num_match_ge1),
+    ],
+    evt_mask=_cc_pf_dsa_pair_event_mask_num_match_ge1,
+)
+
 

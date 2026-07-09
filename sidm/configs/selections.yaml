@@ -157,6 +157,15 @@ ljsource_cuts_chargeCC: &ljsource_cuts_chargeCC
         - "displaced ID"
         - "all + charge" # cross-cleaning with charge requirement 
 
+ljsource_cuts_segmentFractionLt1: &ljsource_cuts_segmentFractionLt1
+  obj_cuts: &obj_ljsource_cuts_segmentFractionLt1
+      <<: *obj_ljsource_cuts
+      dsaMuons:
+        - "pT > 10 GeV"
+        - "|eta| < 2.4"
+        - "displaced ID"
+        - "all + segment fraction < 1" # final cross-cleaning and reject segment fraction == 1
+
 ljsource_cuts_barrel: &ljsource_cuts_barrel
   obj_cuts: &obj_ljsource_cuts_barrel
     electrons: &electrons_ljsource_cuts_barrel
@@ -312,6 +321,16 @@ base_finalCC_charge: &base_finalCC_charge
   postLj_obj_cuts:
     <<: *base_postLj_obj_cuts
   evt_cuts: 
+    - *evt_baseNoLj
+    - ">=2 LJs"
+
+base_finalCC_segmentFractionLt1: &base_finalCC_segmentFractionLt1
+  obj_cuts:
+    <<: *obj_baseNoLjNoLjsource
+    <<: *obj_ljsource_cuts_segmentFractionLt1
+  postLj_obj_cuts:
+    <<: *base_postLj_obj_cuts
+  evt_cuts:
     - *evt_baseNoLj
     - ">=2 LJs"
 
