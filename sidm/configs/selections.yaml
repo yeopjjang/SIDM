@@ -1549,8 +1549,7 @@ baseNoLj_Even_Muon_Charge: &baseNoLj_Even_Muon_Charge
     ljs:
       - "pT > 30 GeV"
       - "|eta| < 2.4"
-    mu_ljs:
-      - *mu_lj_base
+      - "mu_charge == 0"
   evt_cuts: 
     - *evt_baseNoLj
 
@@ -1621,8 +1620,8 @@ baseNoLj_Even_Muon_Charge_Displacement: &baseNoLj_Even_Muon_Charge_Displacement
     ljs:
       - "pT > 30 GeV"
       - "|eta| < 2.4"
+      - "mu_charge == 0"
     mu_ljs:
-      - *mu_lj_base
       - "displaced"
     egm_ljs:
       - "displaced"
