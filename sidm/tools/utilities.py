@@ -1036,6 +1036,7 @@ def plot_data_mc(
     figsize=(18, 18),
     legend_ncol=3,
     legend_fontsize=19,
+    plot_label=None,
     show=True,
 ):
     """Plot data vs stacked MC backgrounds with optional signal overlays."""
@@ -1134,7 +1135,16 @@ def plot_data_mc(
                 )
                 color_idx += 1
 
-    hep.cms.label(ax=ax_main, data=True, year=year, lumi=lumi)
+    if plot_label is None:
+        hep.cms.label(ax=ax_main, data=True, year=year, lumi=lumi)
+    else:
+        cms_text, qualifier_text, _, _ = hep.cms.label(
+            plot_label,
+            data=True,
+            year=year,
+            lumi=lumi,
+            ax=ax_main,
+        )
 
     if logy:
         ax_main.set_yscale("log")
@@ -1151,6 +1161,12 @@ def plot_data_mc(
 
     fig.set_size_inches(*figsize)
     fig.subplots_adjust(hspace=0.05)
+
+    if plot_label is not None and qualifier_text is not None:
+        fig.canvas.draw()
+        cms_bbox = cms_text.get_window_extent(renderer=fig.canvas.get_renderer())
+        cms_right = ax_main.transAxes.inverted().transform((cms_bbox.x1, cms_bbox.y0))[0]
+        qualifier_text.set_x(cms_right)
 
     if show:
         plt.show()
@@ -1210,3 +1226,61 @@ def pick_mu_mother_categories(obj):
 def pick_pho_mother_categories(obj):
     """Return distinct-parent categories for final-state photons."""
     return pick_mother_categories(obj[abs(obj.pdgId) == 22])
+
+def vx_diff(obj1, obj2):
+    return abs(obj1.vx-obj2.vx)
+
+def vz_diff(obj1, obj2):
+    return abs(obj1.vz-obj2.vz)
+
+def vy_diff(obj1, obj2):
+    return abs(obj1.vy-obj2.vy)
+
+def dxy_diff(obj1, obj2):
+    return abs(obj1.dxy-obj2.dxy)
+
+def dz_diff(obj1, obj2):
+    return abs(obj1.dz-obj2.dz)
+
+def vxy_diff(obj1, obj2):
+    return ((obj1.vx-obj2.vx)**2 +
+            (obj1.vy-obj2.vy)**2)**0.5
+
+def vyz_diff(obj1, obj2):
+    return ((obj1.vy-obj2.vy)**2 +
+            (obj1.vz-obj2.vz)**2)**0.5
+
+def vzx_diff(obj1, obj2):
+    return ((obj1.vz-obj2.vz)**2 +
+            (obj1.vx-obj2.vx)**2)**0.5
+def v3d_diff(obj1, obj2):
+    return ((obj1.vx-obj2.vx)**2 +
+            (obj1.vy-obj2.vy)**2 +
+            (obj1.vz-obj2.vz)**2)**0.5
+
+def innerVx_diff(obj1, obj2):
+    return abs(obj1.innerVx - obj2.innerVx)
+
+def innerVy_diff(obj1, obj2):
+    return abs(obj1.innerVy - obj2.innerVy)
+
+def innerVz_diff(obj1, obj2):
+    return abs(obj1.innerVz - obj2.innerVz)
+
+def innerV3d_diff(obj1, obj2):
+    return ((obj1.innerVx-obj2.innerVx)**2 +
+            (obj1.innerVy-obj2.innerVy)**2 +
+            (obj1.innerVz-obj2.innerVz)**2)**0.5
+
+def innerVxy_diff(obj1, obj2):
+    return ((obj1.innerVx-obj2.innerVx)**2 +
+            (obj1.innerVy-obj2.innerVy)**2)**0.5
+
+def innerVzx_diff(obj1, obj2):
+    return ((obj1.innerVx-obj2.innerVx)**2 +
+            (obj1.innerVz-obj2.innerVz)**2)**0.5
+
+def innerVyz_diff(obj1, obj2):
+    return ((obj1.innerVy-obj2.innerVy)**2 +
+            (obj1.innerVz-obj2.innerVz)**2)**0.5
+    
