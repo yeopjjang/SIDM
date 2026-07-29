@@ -145,50 +145,6 @@ base_sr: &base_sr
     - *evt_sr
     - "2mu2e"
 
-
-# ABCD isolation test regions. Isolation cuts are intentionally omitted so
-# that the working points can be scanned from the resulting 2D histograms.
-test_SR: &test_SR
-  obj_cuts:
-    <<: *obj_baseNoLj
-  postLj_obj_cuts:
-    ljs:
-      - *lj_base
-    mu_ljs:
-      - *mu_lj_base
-      - "displaced"
-      - "dzSpread_mu <= 50"
-      - "vxySpread_mu <= 50"
-      - "dzSpread_pf <= 10"
-      - "vxySpread_pf <= 10"
-    egm_ljs:
-      - "displaced"
-  evt_cuts:
-    - *evt_base
-    - "LJ-LJ dPhi >= 2"
-    - "LJ-LJ invariant mass >= 150 GeV"
-
-test_VR: &test_VR
-  obj_cuts:
-    <<: *obj_baseNoLj
-  postLj_obj_cuts:
-    ljs:
-      - *lj_base
-    mu_ljs:
-      - *mu_lj_base
-      - "inverse displaced"
-      - "dzSpread_mu <= 50"
-      - "vxySpread_mu <= 50"
-      - "dzSpread_pf <= 10"
-      - "vxySpread_pf <= 10"
-    egm_ljs:
-      - "inverse displaced"
-  evt_cuts:
-    - *evt_base
-    - "LJ-LJ dPhi < 2"
-    - "LJ-LJ invariant mass < 150 GeV"
-
-
 ### Control regions and specific studies ###
 
 ljsource_cuts_chargeCC: &ljsource_cuts_chargeCC
@@ -2099,3 +2055,71 @@ data_control_region_2muLj_cosmic_veto_both_fail: &data_control_region_2muLj_cosm
     - "= 2 muLJs"
     - "all cos_alpha(dsa, dsa) > -0.9"
 
+
+# ABCD isolation test regions. Isolation cuts are intentionally omitted so
+# that the working points can be scanned from the resulting 2D histograms.
+test_SR_2mu2e: &test_SR_2mu2e
+  obj_cuts:
+    <<: *obj_baseNoLj
+  postLj_obj_cuts:
+    ljs:
+      - *lj_base
+    mu_ljs:
+      - *mu_lj_base
+      - "displaced"
+    egm_ljs:
+      - "displaced"
+  evt_cuts:
+    - *evt_base
+    - ">=1 mu_ljs"
+    - ">=1 egm_ljs"
+    - "muLJ-egmLJ dPhi >= 2"
+    - "muLJ-egmLJ invariant mass >= 150 GeV"
+
+test_VR_2mu2e: &test_VR_2mu2e
+  obj_cuts:
+    <<: *obj_baseNoLj
+  postLj_obj_cuts:
+    ljs:
+      - *lj_base
+    mu_ljs:
+      - *mu_lj_base
+      - "inverse displaced"
+    egm_ljs:
+      - "inverse displaced"
+  evt_cuts:
+    - *evt_base
+    - ">=1 mu_ljs"
+    - ">=1 egm_ljs"
+    - "muLJ-egmLJ dPhi < 2"
+    - "muLJ-egmLJ invariant mass < 150 GeV"
+
+test_SR_4mu: &test_SR_4mu
+  obj_cuts:
+    <<: *obj_baseNoLj
+  postLj_obj_cuts:
+    ljs:
+      - *lj_base
+    mu_ljs:
+      - *mu_lj_base
+      - "displaced"
+  evt_cuts:
+    - *evt_base
+    - ">=2 mu_ljs"
+    - "muLJ-muLJ dPhi >= 2"
+    - "muLJ-muLJ invariant mass >= 150 GeV"
+
+test_VR_4mu: &test_VR_4mu
+  obj_cuts:
+    <<: *obj_baseNoLj
+  postLj_obj_cuts:
+    ljs:
+      - *lj_base
+    mu_ljs:
+      - *mu_lj_base
+      - "inverse displaced"
+  evt_cuts:
+    - *evt_base
+    - ">=2 mu_ljs"
+    - "muLJ-muLJ dPhi < 2"
+    - "muLJ-muLJ invariant mass < 150 GeV"

@@ -230,7 +230,6 @@ lj_lj_base: &lj_lj_base
   - "lj_lj_invmass_lowRange"
   - "lj_lj_absdR"
   - "lj_lj_absdeta"
-
 mu_matched_jet_base: &mu_matched_jet_base
   - "mu_matched_jet_n"
   - "mu_matched_jet_pt"
@@ -297,6 +296,28 @@ mother_tracking_base: &mother_tracking_base
   - "fs_e_gen_mother_id"
   - "fs_mu_gen_mother_id"
   - "fs_pho_gen_mother_id"
+
+abcd_mother_tracking: &abcd_mother_tracking
+  - "fs_gen_id_2mu2e_mulj_abcd"
+  - "fs_gen_mother_id_2mu2e_mulj_abcd"
+  - "fs_e_gen_mother_id_2mu2e_mulj_abcd"
+  - "fs_mu_gen_mother_id_2mu2e_mulj_abcd"
+  - "fs_pho_gen_mother_id_2mu2e_mulj_abcd"
+  - "fs_gen_id_2mu2e_egmlj_abcd"
+  - "fs_gen_mother_id_2mu2e_egmlj_abcd"
+  - "fs_e_gen_mother_id_2mu2e_egmlj_abcd"
+  - "fs_mu_gen_mother_id_2mu2e_egmlj_abcd"
+  - "fs_pho_gen_mother_id_2mu2e_egmlj_abcd"
+  - "fs_gen_id_4mu_mulj0_abcd"
+  - "fs_gen_mother_id_4mu_mulj0_abcd"
+  - "fs_e_gen_mother_id_4mu_mulj0_abcd"
+  - "fs_mu_gen_mother_id_4mu_mulj0_abcd"
+  - "fs_pho_gen_mother_id_4mu_mulj0_abcd"
+  - "fs_gen_id_4mu_mulj1_abcd"
+  - "fs_gen_mother_id_4mu_mulj1_abcd"
+  - "fs_e_gen_mother_id_4mu_mulj1_abcd"
+  - "fs_mu_gen_mother_id_4mu_mulj1_abcd"
+  - "fs_pho_gen_mother_id_4mu_mulj1_abcd"
 
 lj_kinematics_base: &lj_kinematics_base
   - "mu_lj_pt"
@@ -952,11 +973,9 @@ Muon_selection_base: &Muon_selection_base
   - "mu_lj_pt"
   - "muLj_genA_ptRatio"
   - "mulj_egmlj_invmass"
-  - "mu_lj_isolation"
+  - "mu_lj_iso"
 
 Muon_selection_bkg_base: &Muon_selection_bkg_base
   - "mu_lj_pt"
   - "mulj_egmlj_invmass"
-  - "mu_lj_isolation"
-
-
+  - "mu_lj_iso"

@@ -2665,25 +2665,26 @@ hist_defs = {
                    lambda objs, mask: abs(pick_leptonlike_pdgid(derived_objs["fs_gen_matched_lj"](objs, 0.4))[2].distinctParent.pdgId)),
         ],
     ),
-    # ABCD plane
+    # ABCD Iso
     "mulj_egmlj_iso": h.Histogram(
         [
-            h.Axis(hist.axis.Regular(50, 0, 2, name="mu_lj_iso", label="mu-LJ Isolation"),
-                   lambda objs, mask: objs["mu_ljs"][mask, 0].isolation),
-            h.Axis(hist.axis.Regular(50, 0, 2, name="egm_lj_iso", label="egamma-LJ Isolation"),
-                   lambda objs, mask: objs["egm_ljs"][mask, 0].isolation),
+            h.Axis(hist.axis.Regular(100, 0, 2, name="mu_lj_iso", label="mu-LJ Isolation"),
+                   lambda objs, mask: objs["mu_ljs"][mask][:, 0].isolation),
+            h.Axis(hist.axis.Regular(100, 0, 2, name="egm_lj_iso", label="egamma-LJ Isolation"),
+                   lambda objs, mask: objs["egm_ljs"][mask][:, 0].isolation),
         ],
         evt_mask=lambda objs: (ak.num(objs["mu_ljs"]) > 0) & (ak.num(objs["egm_ljs"]) > 0),
     ),
     "mulj_mulj_iso": h.Histogram(
         [
-            h.Axis(hist.axis.Regular(50, 0, 2, name="mu_lj0_iso", label="Leading mu-LJ Isolation"),
-                   lambda objs, mask: objs["mu_ljs"][mask, 0].isolation),
-            h.Axis(hist.axis.Regular(50, 0, 2, name="mu_lj1_iso", label="Subleading mu-LJ Isolation"),
-                   lambda objs, mask: objs["mu_ljs"][mask, 1].isolation),
+            h.Axis(hist.axis.Regular(100, 0, 2, name="mu_lj0_iso", label="Leading mu-LJ Isolation"),
+                   lambda objs, mask: objs["mu_ljs"][mask][:, 0].isolation),
+            h.Axis(hist.axis.Regular(100, 0, 2, name="mu_lj1_iso", label="Subleading mu-LJ Isolation"),
+                   lambda objs, mask: objs["mu_ljs"][mask][:, 1].isolation),
         ],
         evt_mask=lambda objs: ak.num(objs["mu_ljs"]) > 1,
     ),
+    # ABCD plane
     "lj_lj_absdphi_invmass": h.Histogram(
         [
             h.Axis(hist.axis.Regular(100, 0, 2*math.pi, name=r"|$\Delta\phi$| ($LJ_{0}$, $LJ_{1}$)"),
@@ -4698,3 +4699,140 @@ hist_defs["pf_dsa_cc_cut_plane_numMatchGe1"] = h.Histogram(
 )
 
 
+# ABCD mother tracking
+MU_LJ_ISO_CUT = 0.25
+EGM_LJ_ISO_CUT = 0.10
+
+
+def _abcd_region(pass_first, pass_second):
+    """Encode A/B/C/D as 0/1/2/3 from two isolation pass decisions."""
+    return ak.where(
+        pass_first & pass_second,
+        0,
+        ak.where((~pass_first) & pass_second, 1, ak.where(pass_first, 2, 3)),
+    )
+
+
+def _abcd_region_2mu2e(objs, mask):
+    mu_pass = objs["mu_ljs"][mask][:, 0].isolation < MU_LJ_ISO_CUT
+    egm_pass = objs["egm_ljs"][mask][:, 0].isolation < EGM_LJ_ISO_CUT
+    return _abcd_region(mu_pass, egm_pass)
+
+
+def _abcd_region_4mu(objs, mask):
+    lead_pass = objs["mu_ljs"][mask][:, 0].isolation < MU_LJ_ISO_CUT
+    sublead_pass = objs["mu_ljs"][mask][:, 1].isolation < MU_LJ_ISO_CUT
+    return _abcd_region(lead_pass, sublead_pass)
+
+
+def _abcd_matched_lj_cached(objs, matched_lj_name, r=0.4):
+    """Cache role-specific final-state gen matching for one selected chunk/channel."""
+    key = f"_abcd_matched_{matched_lj_name}_{r}"
+    if key not in objs:
+        objs[key] = derived_objs[matched_lj_name](objs, r)
+    return objs[key]
+
+
+def _abcd_distinct_parent_cached(objs, matched_lj_name, r=0.4):
+    """Cache distinct parents of a role-specific matched collection."""
+    key = f"_abcd_parent_{matched_lj_name}_{r}"
+    if key not in objs:
+        matched = _abcd_matched_lj_cached(objs, matched_lj_name, r)
+        objs[key] = matched.distinctParent
+    return objs[key]
+
+
+def _abcd_fs_gen_value(objs, mask, matched_lj_name, value_name):
+    matched = _abcd_matched_lj_cached(objs, matched_lj_name, 0.4)[mask]
+    if value_name == "fs_gen_id":
+        return abs(matched.pdgId)
+
+    parents = _abcd_distinct_parent_cached(objs, matched_lj_name, 0.4)[mask]
+    if value_name == "fs_gen_mother_id":
+        return abs(parents.pdgId)
+
+    target_pdgid = {
+        "fs_e_gen_mother_id": 11,
+        "fs_mu_gen_mother_id": 13,
+        "fs_pho_gen_mother_id": 22,
+    }[value_name]
+    particle_mask = abs(matched.pdgId) == target_pdgid
+    return abs(parents[particle_mask].pdgId)
+
+
+def _broadcast_abcd_region(objs, mask, matched_lj_name, value_name, region_getter):
+    reference = _abcd_fs_gen_value(objs, mask, matched_lj_name, value_name)
+    region = region_getter(objs, mask)
+    return ak.values_astype(ak.broadcast_arrays(region, reference)[0], "int64")
+
+
+def _make_abcd_mother_hist(
+    axis_name,
+    axis_label,
+    matched_lj_name,
+    region_getter,
+    evt_mask,
+):
+    return h.Histogram(
+        [
+            h.Axis(
+                hist.axis.Regular(1000, 0, 1000, name=axis_name, label=axis_label),
+                lambda objs, mask: _abcd_fs_gen_value(
+                    objs, mask, matched_lj_name, axis_name
+                ),
+            ),
+            h.Axis(
+                hist.axis.IntCategory(
+                    [0, 1, 2, 3],
+                    name="abcd_region",
+                    label="ABCD region (0=A, 1=B, 2=C, 3=D)",
+                ),
+                lambda objs, mask: _broadcast_abcd_region(
+                    objs, mask, matched_lj_name, axis_name, region_getter
+                ),
+            ),
+        ],
+        evt_mask=evt_mask,
+    )
+
+
+_abcd_value_labels = {
+    "fs_gen_id": "Final State Gen pdgID near LJ",
+    "fs_gen_mother_id": "Final State Gen Mother pdgID near LJ",
+    "fs_e_gen_mother_id": "Electron Mother pdgID near LJ",
+    "fs_mu_gen_mother_id": "Muon Mother pdgID near LJ",
+    "fs_pho_gen_mother_id": "Photon Mother pdgID near LJ",
+}
+
+_abcd_lj_roles = {
+    "2mu2e_mulj": (
+        "fs_gen_matched_Lmu_lj",
+        _abcd_region_2mu2e,
+        lambda objs: (ak.num(objs["mu_ljs"]) > 0) & (ak.num(objs["egm_ljs"]) > 0),
+    ),
+    "2mu2e_egmlj": (
+        "fs_gen_matched_Legm_lj",
+        _abcd_region_2mu2e,
+        lambda objs: (ak.num(objs["mu_ljs"]) > 0) & (ak.num(objs["egm_ljs"]) > 0),
+    ),
+    "4mu_mulj0": (
+        "fs_gen_matched_Lmu_lj",
+        _abcd_region_4mu,
+        lambda objs: ak.num(objs["mu_ljs"]) > 1,
+    ),
+    "4mu_mulj1": (
+        "fs_gen_matched_SLmu_lj",
+        _abcd_region_4mu,
+        lambda objs: ak.num(objs["mu_ljs"]) > 1,
+    ),
+}
+
+for _abcd_role, (_matched_lj_name, _region_getter, _evt_mask) in _abcd_lj_roles.items():
+    for _value_name, _value_label in _abcd_value_labels.items():
+        hist_defs[f"{_value_name}_{_abcd_role}_abcd"] = _make_abcd_mother_hist(
+            _value_name,
+            _value_label,
+            _matched_lj_name,
+            _region_getter,
+            _evt_mask,
+        )
