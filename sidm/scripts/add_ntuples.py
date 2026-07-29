@@ -29,6 +29,9 @@ parser.add_argument("-f", "--first-dir", dest="first_dir", action='store_true',
                     help="Choose first option when encountering unexpected directory structure")
 parser.add_argument("-s", "--skim", action='store_true',
                     help="Identify skimmed ntuples")
+parser.add_argument("--samples", nargs='+', default=None,
+                    help=("Only process the specified simplified sample names, e.g. "
+                          "'DYJetsToLL_M10to50 DYJetsToLL_M50'"))
 # fixme: add option to associate multiple subdirectories with one process name
 args = parser.parse_args()
 
@@ -41,6 +44,12 @@ def parse_name(name):
 
     name = name.removeprefix("CutDecayFalse_")
     name = name.removeprefix("LLPnanoAODv1_")
+
+    # Support both production names (DYJetsToLL_M-10to50_...) and skim
+    # directory names (DYJetsToLL_M10to50_LLPnanoAODv1).
+    if name.startswith("DYJetsToLL_M"):
+        mass_range = name.removeprefix("DYJetsToLL_M").removeprefix("-").split("_")[0]
+        return "DYJetsToLL_M" + mass_range
 
     process_names = {
         "SIDM_XXTo2ATo2Mu2E_mXX": "2Mu2E_",
@@ -205,6 +214,9 @@ for sample in samples:
     print(f"{sample.name} --> {simple_name}")
     if simple_name is None:
         continue
+    if args.samples is not None and simple_name not in args.samples:
+        print(f"Skipping {simple_name}: not included in --samples")
+        continue
     output[args.name]["samples"][simple_name] = {}
     sample_path = sample.name
 
@@ -294,4 +306,3 @@ with open(args.cfg, 'a') as out_file:
     out_file.write("\n\n# " + args.comment + "\n")
     yaml.dump(output, out_file, default_flow_style=False)
     out_file.write("\n")
-

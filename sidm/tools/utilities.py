@@ -1144,6 +1144,8 @@ def plot_data_mc(
             year=year,
             lumi=lumi,
             ax=ax_main,
+            loc=0,
+            scilocator_adjust=False,
         )
 
     if logy:

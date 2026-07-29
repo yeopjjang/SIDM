@@ -1,4 +1,5 @@
 from coffea.nanoevents import NanoAODSchema
+from sidm.tools import gen as _gen  # noqa: F401 - installs cycle-safe distinctParent
 
 class LLPNanoAODSchema(NanoAODSchema):
     """LLPNano schema builder
