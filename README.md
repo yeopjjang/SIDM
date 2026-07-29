@@ -232,7 +232,7 @@ The required Python packages (`htcondor<25`, `lpcjobqueue`) were installed as pa
 
 `scaleout.check_voms_proxy()` (called at the top of the example, and again inside `make_lpc_client`) needs `X509_USER_PROXY` visible to the **kernel** — see the proxy note in step 5. The same exported file is spooled to the Condor workers via `use_x509userproxy`, so one export covers both.
 
-To watch the Dask dashboard from your laptop browser, forward its port too: the 5a launch already includes `-L 8787:localhost:8787` (if you started from 5b or dropped it, add it to the `ssh` launch), then open `http://localhost:8787/status`. `make_lpc_client()` pins the dashboard link to `localhost` so the URL shown by the cluster (and printed by the example notebook's `print('dashboard:', cluster.dashboard_link)` cell) matches this tunnel — otherwise `lpcjobqueue` advertises a relative `/proxy/8787/status` link that only resolves under a JupyterHub, not over a plain SSH forward. The repr shows the actual port if 8787 was already taken. The dashboard needs the `bokeh` package (pinned in `requirements.txt`); without it `localhost:8787` still loads but shows a *"Dask needs bokeh>=3.1.0 for the dashboard"* notice instead of the live charts. One caveat: the **Groups** tab (Task Group Graph) can log a harmless `KeyError: 'automatic_retries'` — a bug in distributed's dashboard layout, triggered by coffea's retry wrapper rather than by your run; the main **Status**, task-stream, and worker panels are unaffected, as is the computation itself. The dashboard is optional — the run completes without it.
+To watch the Dask dashboard from your laptop browser, forward its port too: the 5a launch already includes `-L 8787:localhost:8787` (if you started from 5b or dropped it, add it to the `ssh` launch), then open `http://localhost:8787/status`. `make_lpc_client()` pins the dashboard link to `localhost` so the URL shown by the cluster (and printed by the example notebook's `print('dashboard:', cluster.dashboard_link)` cell) matches this tunnel — otherwise `lpcjobqueue` advertises a relative `/proxy/8787/status` link that only resolves under a JupyterHub, not over a plain SSH forward. The repr shows the actual port if 8787 was already taken. To move the dashboard off 8787 deliberately — e.g. when a coffea-casa Dask dashboard is already on that port — pass `make_lpc_client(dashboard_port=8790)` (any free port) and forward that **same** port in your launch (`-L 8790:localhost:8790`). The two sides of the tunnel must use the same number: the printed link uses the scheduler's port, so remapping only the `ssh -L` local port leaves the link pointing at the old one. A pinned port is still only a request — if it too is busy on the node, distributed warns and rebinds to a random free port, so forward whatever port `cluster.dashboard_link` prints. The dashboard needs the `bokeh` package (pinned in `requirements.txt`); without it `localhost:8787` still loads but shows a *"Dask needs bokeh>=3.1.0 for the dashboard"* notice instead of the live charts. One caveat: the **Groups** tab (Task Group Graph) can log a harmless `KeyError: 'automatic_retries'` — a bug in distributed's dashboard layout, triggered by coffea's retry wrapper rather than by your run; the main **Status**, task-stream, and worker panels are unaffected, as is the computation itself. The dashboard is optional — the run completes without it.
 
 **Saving the output.** Write the `.coffea` (and a `.meta.yaml` metadata sidecar via `sidm.tools.metadata`) to the group-writable lpcmetx EOS area so it persists and other CMS users can re-read it:
 
@@ -240,6 +240,22 @@ To watch the Dask dashboard from your laptop browser, forward its port too: the 
 xrdfs cmseos.fnal.gov mkdir -p /store/group/lpcmetx/SIDM/coffea_outputs/$USER/<study>
 xrdcp -f out.coffea root://cmseos.fnal.gov//store/group/lpcmetx/SIDM/coffea_outputs/$USER/<study>/out.coffea
 ```
+
+**Reading a saved output back.** `coffea.util.load` does a local `open()` and rejects `root://` URLs, so `xrdcp` the `.coffea` to local scratch first, then load the local copy. The redirector to use depends on where you run:
+
+```python
+import os, subprocess, tempfile
+from coffea.util import load
+
+lfn   = "/store/group/lpcmetx/SIDM/coffea_outputs/<user>/<study>/out.coffea"
+redir = "root://cmseos.fnal.gov/"     # on LPC / EAF (needs a VOMS proxy or a Kerberos ticket)
+# redir = "root://xcache/"            # on coffea.casa instead (auto-authenticated via SciToken)
+local = os.path.join(tempfile.mkdtemp(), os.path.basename(lfn))
+subprocess.run(["xrdcp", "-f", redir + lfn, local], check=True)
+output = load(local)
+```
+
+The working redirector **flips between facilities**: on LPC use `root://cmseos.fnal.gov//…`; on **coffea.casa** use `root://xcache//…` (the same `cmseos`↔`xcache` swap as the inputs in §6). On coffea.casa the direct `cmseos` door fails (`Auth failed` — no proxy in the session) and the global `cms-xrd-global` redirector times out (group space is not advertised cross-site), so `xcache` is the one that works there — confirmed by running the notebook below. A runnable walkthrough that probes all three redirectors and loads the output plus its `.meta.yaml` sidecar is [`sidm/test_notebooks/coffea_casa_read_output.ipynb`](sidm/test_notebooks/coffea_casa_read_output.ipynb); to *find* which outputs exist in the first place, see [`sidm/test_notebooks/output_browser.ipynb`](sidm/test_notebooks/output_browser.ipynb).
 
 **Troubleshooting — XRootD/EOS read failures.** A run that dies with `ValueError: Empty list provided to reduction` (or workers logging `[ERROR] Operation expired` while opening files) means EOS is timing out the reads, not a fault in the code or the cluster. It affects every executor — the local `IterativeExecutor`/`FuturesExecutor` and the Dask-over-Condor workers all read the same EOS. `skipbadfiles=True` only helps when *some* files are bad; if every open fails there are no chunks left to reduce. Confirm with `xrdfs cmseos.fnal.gov stat /store/group/lpcmetx/SIDM` (it hangs when EOS is degraded), then rerun once EOS recovers.
 
@@ -274,6 +290,8 @@ Everything else (the `processor.Runner` setup, `DaskExecutor(client=client)`, th
 
 For unattended runs without an open notebook, use the Condor scripts path: [condor/README.md](condor/README.md) is the reference, and [`sidm/test_notebooks/lpc_condor_example.ipynb`](sidm/test_notebooks/lpc_condor_example.ipynb) is the runnable walkthrough (sample list → tarball → submit → merge → load and plot).
 
+The merge step is also where per-sample **normalization** is made correct: each Condor job normalizes only its own files (`lumi*xs/sumw_chunk`), and `merge_coffea_chunks_eos.py` re-stitches them into the full-sample normalization rather than inflating yields by the number of jobs — see [condor/README.md](condor/README.md) §17. (The dask path in §7 runs a single pass and normalizes once, so it needs no separate merge.)
+
 ## Code structure
 All the interesting code in this repository is in `SIDM/sidm/`, which is organized into the following subdirectories:
 - `tools` contains the classes and methods that form the backbone of SIDM. In particular, `sidm_processor.py` defines how events are analyzed. We use the NanoAODSchema for the data in our files, as defined within Coffea [here](https://coffea-hep.readthedocs.io/en/latest/api/coffea.nanoevents.NanoAODSchema.html)
@@ -281,6 +299,8 @@ All the interesting code in this repository is in `SIDM/sidm/`, which is organiz
 - `configs` contains yaml configuration files that define how histograms are grouped together into collections and cuts are grouped together into selections. When running `sidm_processor`, one provides names of selections and names of histogram collections to choose which cuts to apply and which histograms to make.
 - `test_notebooks` contains notebooks to test new classes or functionalities as they are added. These notebooks can also serve as a form  of unit test: if you edit some code in a way that you think shouldn't affect the behavior, you can run these notebooks to confirm the output is unchanged.
 - `studies` is where the physics happens. The notebooks in this directory are meant to serve effectively as pages in a lab notebook. The intention is to create a new notebook for each unique physics study and to include markdown comments to describe the intentions and observations of the person performing the study. These notebooks can also serve as unit tests in the same way as those in `test_notebooks`.
+
+Outside `sidm/`, the repository-level `tests/` directory holds the per-PR chain-report CI harness and its committed fixture — see [`tests/README.md`](tests/README.md).
 
 ## Analysis how-tos
 
@@ -290,7 +310,7 @@ I suggest the following workflow for performing a physics study:
 2. Create a new notebook in `studies` with a descriptive name (e.g. `study_lepton_isolation.ipynb`)
 3. Following the examples of the existing notebooks in `studies`, use `sidm_processor` to apply cuts and make histograms starting from an Firefighter ntuple of your choosing. Make sure to describe your reasoning and observations in text as you go.
 4. If you find you need to define new selections, new cuts, or new histograms, follow the guides below.
-5. Commit your changes as you go and submit a Pull Request once you have a reasonable standalone study or have added new selections, cuts, histograms, objects, classes, or features.
+5. Commit your changes as you go and submit a Pull Request once you have a reasonable standalone study or have added new selections, cuts, histograms, objects, classes, or features. Every PR automatically gets an advisory chain report comparing your branch to `main` (cutflows, hist collections, warnings); see [`tests/README.md`](tests/README.md).
 
 ### How to define a new histogram and add it to a collection
 1. Add an entry to the `hist_defs` dictionary inside [hists.py](https://github.com/btcardwell/SIDM/blob/440069c11e78814da88c86e67fe635d4b655ef6d/analysis/definitions/hists.py). One can potentially do this by mimicking the structure of the existing histograms, but here are some details for those who are interested:
@@ -306,6 +326,15 @@ I suggest the following workflow for performing a physics study:
     - Event-level cuts accept or reject whole events and are applied after object-level cuts. For example, one could apply an event-level cut that rejects events without at least two electrons that pass the above-mentioned object-level cut.
 2. After defining your new cut in `cuts.py`, add it's name to an existing selection in [selections.yaml](https://github.com/btcardwell/SIDM/blob/4e6685669067429e8492d4dcfc87f463c86b96d7/analysis/configs/selections.yaml). Alternatively, you can also create an entirely new selection. Note that object-level and event-level cuts must be listed separately within a selection, and object-level cuts are further organized by object type. As with histogram collections, any selections that include the selection to which you added your cut will also include your cut.
 3. That's it! Running `sidm_processor` while specifying the proper selection will now apply your new cut.
+
+### Error bars on plots
+
+`utilities.plot` follows one convention for error bars:
+
+- **Count histograms** (filled from event counts): leave `yerr` alone -- mplhep's default is correct. That is asymmetric Poisson (Garwood) bars for unweighted/unit-weight counts and symmetric `sqrt(sum w^2)` for lumi*xsec-weighted hists, so a raw-count plot showing *asymmetric* bars is expected, not a bug.
+- **Derived quantities** (efficiency, ratio, scale factor, or any hist filled via `.view()`): **pass explicit `yerr`** -- otherwise mplhep draws `sqrt(bin_content)`, which is meaningless for a non-count value. `utilities.get_eff_hist(num, den)` returns the efficiency hist plus the matching `errors` to pass as `yerr`; `utilities.plot_ratio` does this for you (and falls back to a Gaussian interval when the ratio exceeds 1, where the binomial interval is undefined).
+
+One runtime guard to know: `plot_MC_sig_vs_bkg_panels` warns *"background '<name>' has integer variances (looks unweighted) ... check that it is lumi*xsec-weighted"* when a background's per-bin variances are integers -- the hist looks like raw counts rather than lumi*xsec-weighted MC. If you meant to show normalized MC, confirm the weights were applied. It is a guard, not an error; the plot still renders.
 
 ## Miscellaneous how-tos
 
