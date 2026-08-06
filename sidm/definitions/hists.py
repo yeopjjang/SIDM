@@ -744,6 +744,8 @@ hist_defs = {
         evt_mask=lambda objs: ak.num(objs["ljs"]) > 1,
     ),
     "lj_eta_phi": obj_eta_phi("ljs"),
+    "mu_lj_eta_phi": obj_eta_phi("mu_ljs"),
+    "egm_lj_eta_phi": obj_eta_phi("egm_ljs"),
     "lj_electronN": obj_attr("ljs", "electron_n", xmax=10, nbins=10),
     "lj_photonN": obj_attr("ljs", "photon_n", xmax=10, nbins=10),
     "lj_muonN": obj_attr("ljs", "muon_n", xmax=10, nbins=10),

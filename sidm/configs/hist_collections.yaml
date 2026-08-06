@@ -979,3 +979,12 @@ Muon_selection_bkg_base: &Muon_selection_bkg_base
   - "mu_lj_pt"
   - "mulj_egmlj_invmass"
   - "mu_lj_iso"
+
+# Minimal object-level eta-phi maps for the 2018 detector hot-spot diagnostic.
+eta_phi_diagnostic:
+  - "electron_eta_phi"
+  - "photon_eta_phi"
+  - "muon_eta_phi"
+  - "dsaMuon_eta_phi"
+  - "mu_lj_eta_phi"
+  - "egm_lj_eta_phi"
