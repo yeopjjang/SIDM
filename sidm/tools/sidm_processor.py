@@ -376,9 +376,58 @@ class SidmProcessor(processor.ProcessorABC):
             ljs["muons"].metric_table(ljs["muons"], axis=2, metric = utilities.v3d_diff), axis=-1), axis=-1), 0)
 
         # LJ isolation
-        ljs["matched_jet"] = ljs.nearest(objs["jets"], threshold=0.4)       
+        ljs["matched_jet"] = ljs.nearest(objs["jets"], threshold=0.4)
+        dsa_p4_sum = ak.zip(
+            {
+                "x": ak.sum(ljs["dsaMuons"].pt * np.cos(ljs["dsaMuons"].phi), axis=-1),
+                "y": ak.sum(ljs["dsaMuons"].pt * np.sin(ljs["dsaMuons"].phi), axis=-1),
+                "z": ak.sum(ljs["dsaMuons"].pt * np.sinh(ljs["dsaMuons"].eta), axis=-1),
+                "t": ak.sum(
+                    np.sqrt(
+                        (ljs["dsaMuons"].pt * np.cosh(ljs["dsaMuons"].eta)) ** 2
+                        + ljs["dsaMuons"].mass ** 2
+                    ),
+                    axis=-1,
+                ),
+            },
+            with_name="LorentzVector",
+            behavior=nanoaod.behavior,
+        )
+        ljs["dsa_p4_sum"] = dsa_p4_sum
+        ljs["dsa_scalar_pt_sum"] = ak.sum(ljs["dsaMuons"].pt, axis=-1)
+        ljs["dsa_corrected_matched_jet"] = ak.zip(
+            {
+                "x": ljs["matched_jet"].pt * np.cos(ljs["matched_jet"].phi) + dsa_p4_sum.x,
+                "y": ljs["matched_jet"].pt * np.sin(ljs["matched_jet"].phi) + dsa_p4_sum.y,
+                "z": ljs["matched_jet"].pt * np.sinh(ljs["matched_jet"].eta) + dsa_p4_sum.z,
+                "t": ljs["matched_jet"].energy + dsa_p4_sum.t,
+            },
+            with_name="LorentzVector",
+            behavior=nanoaod.behavior,
+        )
+        ljs["dR_dsa_corrected_matched_jet"] = ljs.delta_r(ljs["dsa_corrected_matched_jet"])
         ljs["lepton_fraction"] =  ljs["matched_jet"].chEmEF + ljs["matched_jet"].neEmEF + ljs["matched_jet"].muEF
+        corrected_jet_energy = ljs["dsa_corrected_matched_jet"].energy
+        ljs["dsa_corrected_chEmEF"] = (
+            ljs["matched_jet"].energy * ljs["matched_jet"].chEmEF / corrected_jet_energy
+        )
+        ljs["dsa_corrected_neEmEF"] = (
+            ljs["matched_jet"].energy * ljs["matched_jet"].neEmEF / corrected_jet_energy
+        )
+        ljs["dsa_corrected_muEF"] = (
+            ljs["matched_jet"].energy * ljs["matched_jet"].muEF + dsa_p4_sum.energy
+        ) / corrected_jet_energy
+        ljs["dsa_corrected_lepton_fraction"] = (
+            ljs["dsa_corrected_chEmEF"]
+            + ljs["dsa_corrected_neEmEF"]
+            + ljs["dsa_corrected_muEF"]
+        )
         ljs["isolation"] = ak.fill_none((ljs["matched_jet"].energy / ljs.energy) * (1 - (ljs["lepton_fraction"])), 0)
+        ljs["dsa_corrected_isolation"] = ak.fill_none(
+            (corrected_jet_energy / ljs.energy)
+            * (1 - ljs["dsa_corrected_lepton_fraction"]),
+            0,
+        )
         ljs["dR_matched_jet"] = ljs.delta_r(ljs["matched_jet"])
 
         # todo: add LJ displacement

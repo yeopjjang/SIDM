@@ -2256,6 +2256,27 @@ hist_defs = {
                    lambda objs, mask:  objs["dsamu_ljs"].matched_jet.pt),
         ],
     ),
+    "mu_dsa_corrected_matched_jet_pt": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 800, name="mu_dsa_corrected_matched_jet_pt",
+                   label="Mu DSA-corrected Matched Jet PT [GeV]"),
+                   lambda objs, mask:  objs["mu_ljs"].dsa_corrected_matched_jet.pt),
+        ],
+    ),
+    "pfmu_dsa_corrected_matched_jet_pt": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 800, name="pfmu_dsa_corrected_matched_jet_pt",
+                   label="PF Mu DSA-corrected Matched Jet PT [GeV]"),
+                   lambda objs, mask:  objs["pfmu_ljs"].dsa_corrected_matched_jet.pt),
+        ],
+    ),
+    "dsamu_dsa_corrected_matched_jet_pt": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(50, 0, 800, name="dsamu_dsa_corrected_matched_jet_pt",
+                   label="DSA Mu DSA-corrected Matched Jet PT [GeV]"),
+                   lambda objs, mask:  objs["dsamu_ljs"].dsa_corrected_matched_jet.pt),
+        ],
+    ),
     "egm_matched_jet_pt": h.Histogram(
         [
             h.Axis(hist.axis.Regular(50, 0, 800, name="egm_matched_jet_pt",
@@ -2514,6 +2535,27 @@ hist_defs = {
             h.Axis(hist.axis.Regular(100, 0, 2, name="dsamu_mj_lj_Eratio",
                    label=r"DSA Mu-type $E_{Matched Jet} / E_{LJ}$"),
                    lambda objs, mask:  (objs["dsamu_ljs"].matched_jet.energy / objs["dsamu_ljs"].energy)),
+        ],
+    ),
+    "mu_dsa_corrected_mj_lj_Eratio": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(100, 0, 2, name="mu_dsa_corrected_mj_lj_Eratio",
+                   label=r"Mu-type $E_{DSA-corrected Matched Jet} / E_{LJ}$"),
+                   lambda objs, mask:  (objs["mu_ljs"].dsa_corrected_matched_jet.energy / objs["mu_ljs"].energy)),
+        ],
+    ),
+    "pfmu_dsa_corrected_mj_lj_Eratio": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(100, 0, 2, name="pfmu_dsa_corrected_mj_lj_Eratio",
+                   label=r"PF Mu-type $E_{DSA-corrected Matched Jet} / E_{LJ}$"),
+                   lambda objs, mask:  (objs["pfmu_ljs"].dsa_corrected_matched_jet.energy / objs["pfmu_ljs"].energy)),
+        ],
+    ),
+    "dsamu_dsa_corrected_mj_lj_Eratio": h.Histogram(
+        [
+            h.Axis(hist.axis.Regular(100, 0, 2, name="dsamu_dsa_corrected_mj_lj_Eratio",
+                   label=r"DSA Mu-type $E_{DSA-corrected Matched Jet} / E_{LJ}$"),
+                   lambda objs, mask:  (objs["dsamu_ljs"].dsa_corrected_matched_jet.energy / objs["dsamu_ljs"].energy)),
         ],
     ),
     "egm_mj_lj_Eratio": h.Histogram(
@@ -4838,3 +4880,192 @@ for _abcd_role, (_matched_lj_name, _region_getter, _evt_mask) in _abcd_lj_roles.
             _region_getter,
             _evt_mask,
         )
+
+
+def _dsa_mj_category_ljs(objs, category):
+    mu_ljs = objs["mu_ljs"]
+    if category == "pfonly":
+        return mu_ljs[(mu_ljs.pfMu_n > 0) & (mu_ljs.dsaMu_n == 0)]
+    if category == "dsaonly":
+        return mu_ljs[(mu_ljs.pfMu_n == 0) & (mu_ljs.dsaMu_n > 0)]
+    if category == "mixed":
+        return mu_ljs[(mu_ljs.pfMu_n > 0) & (mu_ljs.dsaMu_n > 0)]
+    raise ValueError(f"Unknown DSA matched-jet category: {category}")
+
+
+def _dsa_mj_matched_category_ljs(objs, category):
+    category_ljs = _dsa_mj_category_ljs(objs, category)
+    return category_ljs[
+        ~ak.is_none(category_ljs.matched_jet.pt, axis=-1)
+    ]
+
+
+def _make_dsa_mj_energy_ratio_hist(category, corrected):
+    jet_field = "dsa_corrected_matched_jet" if corrected else "matched_jet"
+    correction_label = "DSA-corrected" if corrected else "Nominal"
+    return h.Histogram(
+        [
+            h.Axis(
+                hist.axis.Regular(
+                    100,
+                    0,
+                    2,
+                    name=f"{category}_{'corrected' if corrected else 'nominal'}_mj_lj_Eratio",
+                    label=rf"{category} {correction_label} $E_{{jet}}/E_{{LJ}}$",
+                ),
+                lambda objs, mask: (
+                    _dsa_mj_category_ljs(objs, category)[jet_field].energy
+                    / _dsa_mj_category_ljs(objs, category).energy
+                ),
+            ),
+        ],
+    )
+
+
+def _make_dsa_mj_dr_hist(category, corrected):
+    dr_field = "dR_dsa_corrected_matched_jet" if corrected else "dR_matched_jet"
+    correction_label = "DSA-corrected" if corrected else "Nominal"
+    return h.Histogram(
+        [
+            h.Axis(
+                hist.axis.Regular(
+                    50,
+                    0,
+                    0.4,
+                    name=f"{category}_{'corrected' if corrected else 'nominal'}_mj_lj_dR",
+                    label=rf"{category} $\Delta R$(LJ, {correction_label} jet)",
+                ),
+                lambda objs, mask: _dsa_mj_category_ljs(objs, category)[dr_field],
+            ),
+        ],
+    )
+
+
+def _make_dsa_mj_pt_closure_hist(category, corrected):
+    jet_field = "dsa_corrected_matched_jet" if corrected else "matched_jet"
+    correction_label = "DSA-corrected" if corrected else "Nominal"
+    return h.Histogram(
+        [
+            h.Axis(
+                hist.axis.Regular(50, 0, 800, name="lj_pt", label=r"$p_T^{LJ}$ [GeV]"),
+                lambda objs, mask: _dsa_mj_matched_category_ljs(objs, category).pt,
+            ),
+            h.Axis(
+                hist.axis.Regular(
+                    50,
+                    0,
+                    800,
+                    name="jet_pt",
+                    label=rf"$p_T^{{{correction_label} jet}}$ [GeV]",
+                ),
+                lambda objs, mask: _dsa_mj_matched_category_ljs(objs, category)[jet_field].pt,
+            ),
+        ],
+    )
+
+
+for _dsa_mj_category in ("pfonly", "dsaonly", "mixed"):
+    for _dsa_mj_corrected in (False, True):
+        _dsa_mj_state = "corrected" if _dsa_mj_corrected else "nominal"
+        hist_defs[f"{_dsa_mj_category}_{_dsa_mj_state}_mj_lj_Eratio"] = (
+            _make_dsa_mj_energy_ratio_hist(_dsa_mj_category, _dsa_mj_corrected)
+        )
+        hist_defs[f"{_dsa_mj_category}_{_dsa_mj_state}_mj_lj_dR"] = (
+            _make_dsa_mj_dr_hist(_dsa_mj_category, _dsa_mj_corrected)
+        )
+        hist_defs[f"{_dsa_mj_category}_{_dsa_mj_state}_mj_lj_pt2d"] = (
+            _make_dsa_mj_pt_closure_hist(_dsa_mj_category, _dsa_mj_corrected)
+        )
+
+
+hist_defs["mu_lj_dsa_vector_pt_sum"] = h.Histogram(
+    [
+        h.Axis(
+            hist.axis.Regular(100, 0, 800, name="mu_lj_dsa_vector_pt_sum",
+                              label=r"LJ DSA vector-sum $p_T$ [GeV]"),
+            lambda objs, mask: objs["mu_ljs"].dsa_p4_sum.pt,
+        ),
+    ],
+)
+
+hist_defs["mu_lj_dsa_scalar_pt_sum"] = h.Histogram(
+    [
+        h.Axis(
+            hist.axis.Regular(100, 0, 800, name="mu_lj_dsa_scalar_pt_sum",
+                              label=r"LJ DSA scalar $p_T$ sum [GeV]"),
+            lambda objs, mask: objs["mu_ljs"].dsa_scalar_pt_sum,
+        ),
+    ],
+)
+
+hist_defs["mu_dsa_corrected_minus_nominal_jet_pt"] = h.Histogram(
+    [
+        h.Axis(
+            hist.axis.Regular(100, -200, 800, name="mu_dsa_corrected_minus_nominal_jet_pt",
+                              label=r"$p_T^{corrected jet}-p_T^{nominal jet}$ [GeV]"),
+            lambda objs, mask: (
+                objs["mu_ljs"].dsa_corrected_matched_jet.pt
+                - objs["mu_ljs"].matched_jet.pt
+            ),
+        ),
+    ],
+)
+
+
+def _make_dsa_corrected_lj_attr_hist(obj_name, attr, nbins, xmin, xmax, label):
+    return h.Histogram(
+        [
+            h.Axis(
+                hist.axis.Regular(nbins, xmin, xmax, name=f"{obj_name}_{attr}", label=label),
+                lambda objs, mask: objs[obj_name][attr],
+            ),
+        ],
+    )
+
+
+def _make_dsa_iso_delta_hist(obj_name, prefix):
+    return h.Histogram(
+        [
+            h.Axis(
+                hist.axis.Regular(
+                    100,
+                    -0.01,
+                    0.01,
+                    name=f"{prefix}_dsa_corrected_minus_nominal_isolation",
+                    label=rf"{prefix} $I_{{corrected}}-I_{{nominal}}$",
+                ),
+                lambda objs, mask: (
+                    objs[obj_name].dsa_corrected_isolation
+                    - objs[obj_name].isolation
+                ),
+            ),
+        ],
+    )
+
+
+for _dsa_iso_obj in ("mu_ljs", "pfmu_ljs", "dsamu_ljs"):
+    _dsa_iso_prefix = _dsa_iso_obj.removesuffix("_ljs")
+    hist_defs[f"{_dsa_iso_prefix}_dsa_corrected_isolation"] = (
+        _make_dsa_corrected_lj_attr_hist(
+            _dsa_iso_obj,
+            "dsa_corrected_isolation",
+            50,
+            0,
+            2,
+            rf"{_dsa_iso_prefix} DSA-corrected LJ isolation",
+        )
+    )
+    hist_defs[f"{_dsa_iso_prefix}_dsa_corrected_minus_nominal_isolation"] = (
+        _make_dsa_iso_delta_hist(_dsa_iso_obj, _dsa_iso_prefix)
+    )
+
+
+for _dsa_fraction in ("chEmEF", "neEmEF", "muEF", "lepton_fraction"):
+    hist_defs[f"mu_dsa_corrected_{_dsa_fraction}"] = _make_dsa_corrected_lj_attr_hist(
+        "mu_ljs",
+        f"dsa_corrected_{_dsa_fraction}",
+        100,
+        0,
+        1.2,
+        rf"Mu-LJ DSA-corrected {_dsa_fraction}",
+    )
